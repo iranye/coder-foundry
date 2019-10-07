@@ -1,0 +1,44 @@
+*** My Work ***
+Deliverables due 10/07
+Check Code into Github
+Sum of all Fears exercise
+Add tests w/ Selenium
+
+** My Website **
+Create "put in random numbers" button into applicable modals
+Move facts-from-five error control into right-side column
+Fix main page update logo and re-position
+Use technology logos (e.g., for HTML, HTML5, jQuery, etc).
+Perl (or other) script to perform replacement of code within <pre> tags from main.js
+Contact Form (w/ configured SMTP)
+Invalid inputs should be indicated w/ red outline & associated message.
+Determine how to test on mobile device
+Remove CTA (Call To Action) and all related from style.css
+Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
+
+* Template *
+Choose AN APPROVED TEMPLATE that has everthing you need: e.g., tabs, toggle effects (to collapse/show blocks of text), display code
+Create C# Asp.Net (.Net Framework) project => Empty
+Import main html file (e.g., index.html)
+Change <title> content
+ONLY drag into project file(s) that are absolutely necessary.
+Add folders: Content, Scripts and import each referenced file into the project (CSS => Content, JS => Scripts)
+Update references USING THE SAME ORDER
+Add folder: Images and import (referenced image files (or all image files))
+Fix errors (e.g., missing fonts)
+
+* Customize *
+Change text, map, layout, images
+Navigation elements should include at least: HOME, ABOUT ME, PROJECTS, CODING CHALLENGES, Contact Me
+favicon
+Update footer to include original info plus: "Modified by Ira Nye"
+
+Portfolio, Coding Challenges sections should be consistent (e.g., copy + paste)
+
+
+* Portfolio *
+
+** Homework **
+W3 schools tutorials: JavaScript, JQuery, Bootstrap 4
+Choose a Bootstrap template to use
+

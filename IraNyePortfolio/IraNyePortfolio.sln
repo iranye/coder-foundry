@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio", "Portfolio\Portfolio.csproj", "{EBF00412-E69A-4212-B7A8-06E64E3A3B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IraNyePortfolio", "IraNyePortfolio\IraNyePortfolio.csproj", "{C3F02997-6229-4EB0-82EE-2EDF2CFBF9EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EBF00412-E69A-4212-B7A8-06E64E3A3B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBF00412-E69A-4212-B7A8-06E64E3A3B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBF00412-E69A-4212-B7A8-06E64E3A3B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBF00412-E69A-4212-B7A8-06E64E3A3B80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F02997-6229-4EB0-82EE-2EDF2CFBF9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F02997-6229-4EB0-82EE-2EDF2CFBF9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F02997-6229-4EB0-82EE-2EDF2CFBF9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F02997-6229-4EB0-82EE-2EDF2CFBF9EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
