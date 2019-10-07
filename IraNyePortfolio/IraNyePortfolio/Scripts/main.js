@@ -1,5 +1,5 @@
-﻿$(document).ready(function () {
-    $("#button-factorial").click(function () {
+﻿$(document).ready(function() {
+    $("#button-factorial").click(function() {
         $("#output-factorial").text("");
         $("#error-factorial").text("");
 
@@ -10,7 +10,7 @@
             $("#error-factorial").text("Please enter a positive number up to " + maxAllowed);
             return;
         }
-        
+
         var result = 1;
         for (var n = result; n <= number; n++) {
             result *= n;
@@ -20,7 +20,7 @@
         $("#output-factorial").text(message);
     });
 
-    $("#button-facts-from-five").click(function () {
+    $("#button-facts-from-five").click(function() {
         $("#error-facts-from-five").text("");
         $(".result-box").css('visibility', 'hidden');
 
@@ -43,7 +43,7 @@
             $("#error-facts-from-five").text(message);
             return;
         }
-        
+
         $(".result-box").css('visibility', 'visible');
 
         var min = getMin(numbsArr);
@@ -62,7 +62,7 @@
         $("#output-facts-from-five-product").text(product);
     });
 
-    $("#button-fizzbuzz").click(function () {
+    $("#button-fizzbuzz").click(function() {
         console.log("Running: fizzbuzz");
 
         $("#error-fizzbuzz").text("");
@@ -85,7 +85,7 @@
         $("#output-fizzbuzz").text(result);
     });
 
-    $("#btn-prime-factorization").click(function () {
+    $("#btn-prime-factorization").click(function() {
         console.log("Running: prime-factorization");
 
         $("#error-prime-factorization").text("");
@@ -112,7 +112,7 @@
         $("#output-prime-factorization").text(message);
     });
 
-    $("#button-palindrome").click(function () {
+    $("#button-palindrome").click(function() {
         var input = $("#input-palindrome").val().trim();
         var word = input.toUpperCase();
         console.log(`massaged input: ${word}`);
@@ -135,73 +135,109 @@
         $("#output-palindrome").text(result);
     });
 
-    var defaultSearchReplaceInput = `.?(o)(.*)~~$1 => $2
+    $("#btn-sum-all-fears").click(function() {
+        console.log("Running sum-all-fears");
+
+        $("#output-sum-all-fears").text("");
+        $("#error-sum-all-fears").text("");
+
+        var number1 = Number($("#input-sum-all-fears-1").val());
+        var number2 = Number($("#input-sum-all-fears-2").val());
+        var number3 = Number($("#input-sum-all-fears-3").val());
+        var number4 = Number($("#input-sum-all-fears-4").val());
+        var number5 = Number($("#input-sum-all-fears-5").val());
+        var number6 = Number($("#input-sum-all-fears-6").val());
+        var numberK = Number($("#input-sum-all-fears-k").val());
+
+        var numbsArr = [number1, number2, number3, number4, number5, number6];
+
+        if (containsNonNumbers(numbsArr)) {
+            $("#error-sum-all-fears").text("one or more entries are invalid");
+            return;
+        }
+
+        var message = "";
+        if (containsOverflowNumber(numbsArr)) {
+            message = "One or more entries are too big or small. ";
+            message += "Each number must be between " + Number.MIN_SAFE_INTEGER + " and " + Number.MAX_SAFE_INTEGER;
+            $("#error-sum-all-fears").text(message);
+            return;
+        }
+
+        var maxAllowed = Number.MAX_SAFE_INTEGER;
+        if (isNaN(numberK) || numberK > maxAllowed || numberK < 1) {
+            $("#error-sum-all-fears").text("Please enter a positive number for K up to " + maxAllowed);
+            return;
+        }
+
+        message = `${numberK} NOT found as a sum of 2 array elements`;
+
+        var found = 0;
+        do {
+            var leftEl = numbsArr.shift();
+            console.log(`leftEl: ${leftEl}`);
+            for (var i = 0; i < numbsArr.length; i++) {
+                if (leftEl+numbsArr[i] === numberK) {
+                    message = `${numberK} exists as ${leftEl} + ${numbsArr[i]}`;
+                    found = 1;
+                    break;
+                }
+            }
+
+        } while (!found && numbsArr.length > 0);
+
+        $("#output-sum-all-fears").text(message);
+    });
+
+    $("#btn-search-replace-change-input").click(function () {
+        console.log("You clicked: btn-search-replace-change-input");
+
+        var defaultSearchReplaceInput = `.?(o)(.*)~~$1 => $2
 foo
 toe
 octopus
 razor`;
 
-    $("#btn-search-replace-change-input").click(function () {
-        console.log("You clicked: btn-search-replace-change-input");
         console.log(`defaultSearchReplaceInput: ${defaultSearchReplaceInput}`);
 
-        $("#input-search-replace").value = "";
+        $("#input-search-replace").text("");
         $("#input-search-replace").value = defaultSearchReplaceInput;
         // $("#input-search-replace").text(defaultSearchReplaceInput);
     });
 
     $("#btn-search-replace").click(function () {
-        var input = $("#input-search-replace").val().trim();
-
+        console.log("running search-replace");
         $("#error-search-replace").text("");
         $("#output-search-replace").text("");
 
-        if (input.length === 0) {
-            $("#input-search-replace").text(defaultSearchReplaceInput);
+        var re = $("#input-search-replace-pattern").val();
+        if (!re.length) {
+            $("#error-search-replace").text("Please enter a pattern.");
             return;
         }
+
+        var newText = $("#input-search-replace-replacement").val();
+        if (!newText.length) {
+            $("#error-search-replace").text("Please enter Replacement Text.");
+            return;
+        }
+
+        var input = $("#input-search-replace").val().trim();
+        if (input.length === 0) {
+            $("#error-search-replace").text("Please enter at least 1 line for input text");
+            return;
+        }
+
         var lines = input.split("\n");
         console.log(`lines found: ${lines.length}`);
-        if (lines.length < 2) {
-            $("#error-search-replace")
-                .text(
-                    "Please enter at least 2 lines.  Line 1 should contain the pattern and lines 2 through n are the input lines.");
+        if (lines.length === 0) {
+            $("#error-search-replace").text("Please enter at least 1 line for input text");
             return;
-        }
-
-        var newText = "";
-        
-        if (lines[0].match("~~")) {
-            var a = lines[0].split("~~");
-            if (a.length < 2) {
-                $("#error-search-replace")
-                    .text(
-                        "Invalid pattern on Line 1, which should contain the pattern and lines 2 through n are the input lines.");
-                return;
-            }
-
-            var re = a[0].trim();
-            if (!re.length) {
-                $("#error-search-replace")
-                    .text(
-                        "Missing the search pattern that should be to the left of the ~~.");
-                return;
-            }
-
-            newText = a[1].trim();
-            console.log(`newText: ${newText}`);
-
-            if (!newText.length) {
-                $("#error-search-replace")
-                    .text(
-                        "Missing the replace pattern that should be to the right of the ~~.");
-                return;
-            }
         }
 
         var pattern = new RegExp(re);
         console.log(`pattern: ${pattern}`);
-        for (var i = 1; i < lines.length; i++) {
+        for (var i = 0; i < lines.length; i++) {
             var line = lines[i].trim();
             if (line.length === 0) { // skip whitespace-only lines
                 continue;
@@ -233,39 +269,37 @@ razor`;
     });
 
     function createTask(item) {
-        var markup = `<li><button style="width: 22px; height: 25px;" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done">D</button> ${item}</li>`;
+        var markup = `<li><button style="width: 25px; height: 25px;" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done">D</button> ${item}</li>`;
         var tasks = $("#tasks");
         tasks.after(markup);
     }
 
     $("#modal-facts-from-five .btn-toggle-code").click(function () {
         $("#modal-facts-from-five .div-code").toggle();
-
     });
 
     $("#modal-factorial .btn-toggle-code").click(function () {
         $("#modal-factorial .div-code").toggle();
-
     });
 
     $("#modal-fizzbuzz .btn-toggle-code").click(function () {
         $("#modal-fizzbuzz .div-code").toggle();
-
     });
 
     $("#modal-palindrome .btn-toggle-code").click(function () {
         $("#modal-palindrome .div-code").toggle();
+    });
 
+    $("#modal-sum-all-fears .btn-toggle-code").click(function () {
+        $("#modal-sum-all-fears .div-code").toggle();
     });
 
     $("#modal-prime-factorization .btn-toggle-code").click(function () {
         $("#modal-prime-factorization .div-code").toggle();
-
     });
 
     $("#modal-search-replace .btn-toggle-code").click(function () {
         $("#modal-search-replace .div-code").toggle();
-
     });
 
     $("#modal-todo-list .btn-toggle-code").click(function () {
