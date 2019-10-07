@@ -914,6 +914,11 @@ font-size: 11px;
     width: 91%;
 }
 
+#modal-search-replace textarea {
+    width: 100%;
+    min-height: 200px;
+}
+
 /*--------------------
 7. Components
 --------------------*/

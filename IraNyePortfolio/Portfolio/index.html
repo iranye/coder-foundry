@@ -70,7 +70,11 @@
                 <div class="col-lg-12 text-center">
                     <div class="section-title">
                         <h2>About Me</h2>
-                        <p>My name is Ira Nye and I am working towards becoming a full-stack developer using the .Net Framework.  I moved from Portland, OR to Winston-Salem in September 2019 and my family loves it.</p>
+                        <p>
+                            My name is Ira Nye and I am currently immersed in the Coder Foundry code-camp working towards becoming a full-stack developer using the .Net Framework.
+                            I moved from Portland, OR to Winston-Salem in September 2019 and so far my family loves it.
+                            When I'm not working, I like hiking, camping and the occasional science-fiction novel.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -200,6 +204,34 @@
                     </div>
                 </div>
                 <!-- end code-challenge item -->
+                <!-- start code-challenge item -->
+                <div class="col-md-4 col-0-gutter">
+                    <div class="ot-portfolio-item">
+                        <figure class="effect-bubba">
+                            <img src="images/demo/portfolio-1.jpg" alt="img02" class="img-responsive" />
+                            <figcaption>
+                                <h2>Regex Search & Replace</h2>
+                                <p>Search & Replace</p>
+                                <a href="#" data-toggle="modal" data-target="#modal-search-replace">Search & Replace</a>
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <!-- end code-challenge item -->
+                <!-- start code-challenge item -->
+                <div class="col-md-4 col-0-gutter">
+                    <div class="ot-portfolio-item">
+                        <figure class="effect-bubba">
+                            <img src="images/demo/portfolio-1.jpg" alt="img02" class="img-responsive" />
+                            <figcaption>
+                                <h2>ToDo List</h2>
+                                <p>ToDo List</p>
+                                <a href="#" data-toggle="modal" data-target="#modal-todo-list">ToDo List</a>
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <!-- end code-challenge item -->
             </div> <!--end row-->
         </div><!-- end container -->
     </section>
@@ -305,31 +337,6 @@
         </div><!-- end container -->
     </section>
 
-    <section class="dark-bg short-section stats-bar">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-md-3 mb-sm-30">
-                    <div class="counter-item">
-                        <h2 class="stat-number" data-n="9">0</h2>
-                        <h6>awards</h6>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-sm-30">
-                    <div class="counter-item">
-                        <h2 class="stat-number" data-n="167">0</h2>
-                        <h6>Clients</h6>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-sm-30">
-                    <div class="counter-item">
-                        <h2 class="stat-number" data-n="34">0</h2>
-                        <h6>Project</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section id="contact" class="dark-bg">
         <div class="container">
             <div class="row">
@@ -343,7 +350,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="section-text">
-                        <h4>My Location</h4>
+                        <h4>Ira Nye</h4>
                         <p>1231 Shields Rd #5, Kernersville, NC 27284</p>
                         <p><i class="fa fa-phone"></i>(503) 729-0473</p>
                         <p><i class="fa fa-envelope"></i> iranye@gmail.com</p>
@@ -869,7 +876,7 @@ function getFizzBuzz(fizzVal, buzzVal) {
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Enter a word" id="input-palindrome"
                                        required="" data-validation-required-message="Please enter a word."
-                                       value="  paNamanap ">
+                                       value="  AManAPlanACanalPanama ">
                                 <p class="help-block text-danger"></p>
                                 <button id="button-palindrome" class="btn">Run</button>
                             </div>
@@ -1019,6 +1026,199 @@ function getPrimeFactors(input) {
             </div>
         </div>
     </div>
+    <!-- end modal -->
+    <!-- start modal -->
+    <div id="modal-search-replace" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="search-replace-label">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="search-replace-label">Prime Factorization</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>Enter Text into the Text Area and click Run to perform Search & Replace.</h3>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <textarea name="inbox" id="input-search-replace"></textarea>
+                                <p class="help-block text-danger"></p>
+                                <div class="text-center">
+                                    <button id="btn-search-replace" class="btn" style="margin-bottom: 5px;">Run</button>
+                                    <button id="btn-search-replace-change-input" class="btn">Use Default Input</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-5">
+                            <textarea name="outbox" id="output-search-replace">(.+)~~$1</textarea>
+                            <p class="help-block text-danger"></p>
+                            <span id="error-search-replace"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-view row">
+                    <div class="row">
+                        <button class="btn btn-sm btn-dark btn-toggle-code">Toggle Code View</button>
+                    </div>
+                    <div class="row">
+                        <div class="div-code">
+                            <pre class="brush:js">
+    var defaultSearchReplaceInput = `.?(o)(.*)~~$1 => $2
+foo
+toe
+octopus
+razor`;
+
+    $("#btn-search-replace-change-input").click(function () {
+        $("#input-search-replace").text(defaultSearchReplaceInput);
+    });
+
+    $("#btn-search-replace").click(function () {
+        var input = $("#input-search-replace").val().trim();
+
+        $("#error-search-replace").text("");
+        $("#output-search-replace").text("");
+
+        if (input.length === 0) {
+            $("#input-search-replace").text(defaultSearchReplaceInput);
+            return;
+        }
+        var lines = input.split("\n");
+        console.log(`lines found: ${lines.length}`);
+        if (lines.length < 2) {
+            $("#error-search-replace")
+                .text(
+                    "Please enter at least 2 lines.  Line 1 should contain the pattern and lines 2 through n are the input lines.");
+            return;
+        }
+
+        var newText = "";
+        
+        if (lines[0].match("~~")) {
+            var a = lines[0].split("~~");
+            if (a.length < 2) {
+                $("#error-search-replace")
+                    .text(
+                        "Invalid pattern on Line 1, which should contain the pattern and lines 2 through n are the input lines.");
+                return;
+            }
+
+            var re = a[0].trim();
+            if (!re.length) {
+                $("#error-search-replace")
+                    .text(
+                        "Missing the search pattern that should be to the left of the ~~.");
+                return;
+            }
+
+            newText = a[1].trim();
+            console.log(`newText: ${newText}`);
+
+            if (!newText.length) {
+                $("#error-search-replace")
+                    .text(
+                        "Missing the replace pattern that should be to the right of the ~~.");
+                return;
+            }
+        }
+
+        var pattern = new RegExp(re);
+        console.log(`pattern: ${pattern}`);
+        for (var i = 1; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (line.length === 0) { // skip whitespace-only lines
+                continue;
+            }
+            console.log(`line {i} (before): ${line}`);
+            line = line.replace(pattern, newText);
+            console.log(`line {i} (after): ${line}`);
+            line += "\r\n";
+            $("#output-search-replace").append(line);
+        }
+    });
+                    </pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
+    <!-- start modal -->
+<div id="modal-todo-list" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="todo-list-label">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="todo-list-label">Palindrome</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Enter a task and click to add it to your To-Do List.</h3>
+                        <div class="form-group">
+                            <input id="taskName" type="text" autocomplete="off" class="form-control" placeholder="Please Enter a Task"
+                                   style="margin-bottom: 5px;" value="Feed Fluffy">
+                            <button id="btn-add-task" class="btn btn-sm">Add Task</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div id="output-todo-list" >
+                            <h3>My To-Do List</h3>
+                            <ul id="tasks"></ul>
+                        </div>
+                        <span id="error-todo-list"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-view row">
+                <div class="row">
+                    <button class="btn btn-sm btn-dark btn-toggle-code">Toggle Code View</button>
+                </div>
+                <div class="row">
+                    <div class="div-code">
+                        <pre class="brush:js">
+        $("#btn-add-task").click(function () {
+        console.log("Adding Task");
+        var taskControl = $("#taskName");
+
+        $("#error-todo-list").text("");
+        $(".result-box").css('visibility', 'visible');
+
+        var taskMassaged = taskControl.val().trim();
+        if (taskMassaged.length === 0) {
+            $("#error-todo-list").text("Please enter a task");
+            return;
+        }
+
+        createTask(taskMassaged);
+        taskControl.val("");
+        taskControl.focus();
+    });
+
+    function createTask(item) {
+        var markup = `<li><button style="width: 22px; height: 25px;" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done">D</button> ${item}</li>`;
+        var tasks = $("#tasks");
+        tasks.after(markup);
+    }
+                    </pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- end modal -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
