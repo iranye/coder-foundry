@@ -48,25 +48,6 @@ namespace IrasBlog.Migrations
 
             var adminId = userManager.FindByEmail(emailAdmin).Id;
             userManager.AddToRole(adminId, "Admin");
-
-            // TODO:
-            // Fix stuff that should be NULLABLE
-            // 
-            //if (adminRole != null && adminUser != null)
-            //{
-            //    IdentityRole adminId = context.Roles.FirstOrDefault(r => r.Name == "Admin");
-            //    IdentityUserRole userRole = new IdentityUserRole
-            //    {
-            //        UserId = adminUser.Id,
-            //        RoleId = adminId.Id
-            //    };
-            //    adminUser = new IdentityUser
-            //    {
-            //        Email = emailAdmin,
-            //        PasswordHash = "AMlRT8BSnPtRTG4AjyicGvN/SeJfh/4yHb+1R5dwqjHXANYuVcId+nuPKZGZwdsBCQ=="
-            //    };
-            //}
-
         }
     }
 }

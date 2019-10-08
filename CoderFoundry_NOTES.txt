@@ -18,6 +18,10 @@ Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
 * Bugs *
 Search & Replace modal fails to clear output box (probably bad jQuery)
 
+* Blog Site *
+Fix stuff that should be NULLABLE
+
+
 * Template *
 Choose AN APPROVED TEMPLATE that has everthing you need: e.g., tabs, toggle effects (to collapse/show blocks of text), display code
 Create C# Asp.Net (.Net Framework) project => Empty

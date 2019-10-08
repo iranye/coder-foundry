@@ -10,8 +10,7 @@ syntax: glob
 *.suo
 *.csproj.user
 *.user
-~*.*
-*.*#
+*~lock*.*
 _ReSharper.*
 *.mot
 *.bak
