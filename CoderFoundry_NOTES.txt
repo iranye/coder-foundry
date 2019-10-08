@@ -16,7 +16,6 @@ Determine how to test on mobile device
 Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
 
 * Bugs *
-Add Task in ToDo List modal results in <ul></ul><li>The Task</li> and an error occurs trying to reference jquery-3.4.1.min.js
 Search & Replace modal fails to clear output box (probably bad jQuery)
 
 * Template *

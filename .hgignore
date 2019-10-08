@@ -11,6 +11,7 @@ syntax: glob
 *.csproj.user
 *.user
 ~*.*
+*.*#
 _ReSharper.*
 *.mot
 *.bak

@@ -269,9 +269,9 @@ razor`;
     });
 
     function createTask(item) {
-        var markup = `<li><button style="width: 25px; height: 25px;" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done">D</button> ${item}</li>`;
-        var tasks = $("#tasks");
-        tasks.after(markup);
+        var tasks = document.getElementById("tasks");
+        var markup = `<li><button style="width: 12px; height: 14px; background-color: #FCBE03" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done"></button> ${item}</li>`;
+        tasks.insertAdjacentHTML("beforeend", markup);
     }
 
     $("#modal-facts-from-five .btn-toggle-code").click(function () {

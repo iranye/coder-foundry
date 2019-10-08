@@ -1350,7 +1350,6 @@ razor`;
                             <div id="output-todo-list">
                                 <h3>My To-Do List</h3>
                                 <ul id="tasks" style="list-style: none">
-                                    <li></li>
                                 </ul>
                             </div>
                             <span id="error-todo-list"></span>
@@ -1365,7 +1364,8 @@ razor`;
                     <div class="row">
                         <div class="div-code">
                             <pre class="brush:js">
-        $("#btn-add-task").click(function () {
+
+    $("#btn-add-task").click(function () {
         console.log("Adding Task");
         var taskControl = $("#taskName");
 
@@ -1384,9 +1384,9 @@ razor`;
     });
 
     function createTask(item) {
-        var markup = `<li><button style="width: 22px; height: 25px;" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done">D</button> ${item}</li>`;
-        var tasks = $("#tasks");
-        tasks.after(markup);
+        var tasks = document.getElementById("tasks");
+        var markup = `<li><button style="width: 12px; height: 14px; background-color: #FCBE03" onclick="deleteTask(this)" title="Mark as Done" alt="Mark as Done"></button> ${item}</li>`;
+        tasks.insertAdjacentHTML("beforeend", markup);
     }
                     </pre>
                         </div>
