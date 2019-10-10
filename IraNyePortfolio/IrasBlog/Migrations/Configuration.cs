@@ -31,14 +31,14 @@ namespace IrasBlog.Migrations
                 moderatorRole = roleManager.Create(new IdentityRole { Name = "Moderator" });
             }
 
-            string emailAdmin = "admin@domain.com";
+            string adminEmail = "admin@domain.com";
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            if (!context.Users.Any(u => u.Email == emailAdmin))
+            if (!context.Users.Any(u => u.Email == adminEmail))
             {
                 userManager.Create(new ApplicationUser
                 {
-                    UserName = emailAdmin,
-                    Email = emailAdmin,
+                    UserName = adminEmail,
+                    Email = adminEmail,
                     FirstName = "Admin",
                     LastName = "User",
                     DisplayName = "Admin"
@@ -46,8 +46,24 @@ namespace IrasBlog.Migrations
 
             }
 
-            var adminId = userManager.FindByEmail(emailAdmin).Id;
+            var adminId = userManager.FindByEmail(adminEmail).Id;
             userManager.AddToRole(adminId, "Admin");
+
+            string moderatorEmail = "moderator@coderfoundry.com";
+            if (!context.Users.Any(u => u.Email == moderatorEmail))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = moderatorEmail,
+                    Email = moderatorEmail,
+                    FirstName = "CoderFoundry",
+                    LastName = "Moderator",
+                    DisplayName = "CF Moderator"
+                }, "Password-1");
+            }
+
+            var moderatorId = userManager.FindByEmail(moderatorEmail).Id;
+            userManager.AddToRole(moderatorId, "Moderator");
         }
     }
 }

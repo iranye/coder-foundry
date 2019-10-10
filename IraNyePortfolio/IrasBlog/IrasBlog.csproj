@@ -169,6 +169,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BlogPostsController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -177,6 +178,14 @@
     <Compile Include="Migrations\201910081838424_Initial.cs" />
     <Compile Include="Migrations\201910081838424_Initial.Designer.cs">
       <DependentUpon>201910081838424_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910091524582_OverrideDefaults.cs" />
+    <Compile Include="Migrations\201910091524582_OverrideDefaults.Designer.cs">
+      <DependentUpon>201910091524582_OverrideDefaults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910091545098_RemoveConstraintOnBlogPostBody.cs" />
+    <Compile Include="Migrations\201910091545098_RemoveConstraintOnBlogPostBody.Designer.cs">
+      <DependentUpon>201910091545098_RemoveConstraintOnBlogPostBody.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -188,22 +197,32 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\all.css" />
+    <Content Include="Content\all.min.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\clean-blog.min.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\about-bg.jpg" />
+    <Content Include="Images\contact-bg.jpg" />
+    <Content Include="Images\home-bg.jpg" />
+    <Content Include="Images\post-bg.jpg" />
+    <Content Include="Images\post-sample-image.jpg" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="webfonts\fa-brands-400.svg" />
+    <Content Include="webfonts\fa-regular-400.svg" />
+    <Content Include="webfonts\fa-solid-900.svg" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\clean-blog.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -248,19 +267,27 @@
     <Content Include="Views\BlogPosts\Details.cshtml" />
     <Content Include="Views\BlogPosts\Edit.cshtml" />
     <Content Include="Views\BlogPosts\Index.cshtml" />
+    <Content Include="Views\Comments\Delete.cshtml" />
+    <Content Include="Views\Comments\Details.cshtml" />
+    <Content Include="Views\Comments\Edit.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
+    <Content Include="webfonts\fa-brands-400.eot" />
+    <Content Include="webfonts\fa-brands-400.ttf" />
+    <Content Include="webfonts\fa-brands-400.woff" />
+    <Content Include="webfonts\fa-brands-400.woff2" />
+    <Content Include="webfonts\fa-regular-400.eot" />
+    <Content Include="webfonts\fa-regular-400.ttf" />
+    <Content Include="webfonts\fa-regular-400.woff" />
+    <Content Include="webfonts\fa-regular-400.woff2" />
+    <Content Include="webfonts\fa-solid-900.eot" />
+    <Content Include="webfonts\fa-solid-900.ttf" />
+    <Content Include="webfonts\fa-solid-900.woff" />
+    <Content Include="webfonts\fa-solid-900.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
@@ -268,6 +295,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201910081838424_Initial.resx">
       <DependentUpon>201910081838424_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091524582_OverrideDefaults.resx">
+      <DependentUpon>201910091524582_OverrideDefaults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091545098_RemoveConstraintOnBlogPostBody.resx">
+      <DependentUpon>201910091545098_RemoveConstraintOnBlogPostBody.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

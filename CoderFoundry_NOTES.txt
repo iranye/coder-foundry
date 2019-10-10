@@ -18,9 +18,17 @@ Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
 * Bugs *
 Search & Replace modal fails to clear output box (probably bad jQuery)
 
-* Blog Site *
+** Blog Site **
 Fix stuff that should be NULLABLE
+Add Additional Fields in Create User (Register) Page.
+Disallow Modifications made by Moderators
+View All Posts vs Only Published Posts
 
+* Tests *
+Test order of Blogs
+Test which page gets loaded after Blog:
+	Edit
+	Delete
 
 * Template *
 Choose AN APPROVED TEMPLATE that has everthing you need: e.g., tabs, toggle effects (to collapse/show blocks of text), display code

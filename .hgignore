@@ -19,6 +19,8 @@ _ReSharper.*
 *.exe
 *.git
 *.log
+*.ldf
+*.mdf
 *.mp4
 *.baml
 *.cache

@@ -12,11 +12,37 @@ namespace IrasBlog.Models
         public int Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
+
+        [Required]
+        [StringLength(255)]
         public string Title { get; set; }
         public string Abstract { get; set; }
 
+        [Required]
         [Display(Name="Blog Body")]
         public string BlogPostBody { get; set; }
+
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public string BlogPostBodyPreview {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(BlogPostBody))
+                {
+                    int defaultLength = 60;
+                    int usableLength = defaultLength;
+                    string ellipses = "...";
+                    if (BlogPostBody.Length < defaultLength)
+                    {
+                        ellipses = "";
+                        usableLength = BlogPostBody.Length;
+                    }
+                    return BlogPostBody.Substring(0, usableLength) + ellipses;
+                }
+
+                return String.Empty;
+            }
+        }
+
         public string ImagePath { get; set; }
         public bool Published { get; set; }
 

@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace IrasBlog.Models
 {
     public class Comment
     {
         public int Id { get; set; }
+
+        [Required]
         public int BlogPostId { get; set; }
+
+        [Required]
         public string AuthorId { get; set; }
+
+        [Required]
+        [Display(Name = "Comment Body")]
         public string CommentBody { get; set; }
-        //public DateTimeOffset Created { get; set; }
-        //public DateTimeOffset? Updated { get; set; }
 
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
