@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace IrasBlog.Models
 {
@@ -18,8 +16,12 @@ namespace IrasBlog.Models
         public string Title { get; set; }
         public string Abstract { get; set; }
 
+        [StringLength(255)]
+        public string Slug { get; set; }
+
         [Required]
         [Display(Name="Blog Body")]
+        [AllowHtml]
         public string BlogPostBody { get; set; }
 
         [System.ComponentModel.DataAnnotations.Schema.NotMapped]

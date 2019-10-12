@@ -2,7 +2,7 @@
 @model IrasBlog.Models.BlogPost
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('~/Images/post-bg.jpg')">
+<header class="masthead" style="background-image: url('/Images/post-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -14,7 +14,6 @@
                         Posted by
                         @Html.ActionLink("Ira Nye", "About", "Home")
                         on @Model.Created.ToString("MMM dd, yyyy")
-                        <a href=@Url.Action("About", "Home")>[About Me]</a>
                     </span>
                 </div>
             </div>
@@ -27,55 +26,59 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
-                @Model.BlogPostBody
+                @Html.Raw(Model.BlogPostBody)
 
-                <p>
-                    Placeholder text by
-                    <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-                    <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.
-                </p>
+                <br />
+                <div class="row">
+                    <hr />
+                    <span class="align-center">There are @Model.Comments.Count comment(s)!</span>
+                    <hr />
+                </div>
+
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="post-preview row">
+                        <h1>Comments</h1>
+                        <div class="col-lg-8 col-md-10 mx-auto">
+                            @comment.CommentBody
+                        </div>
+                        <div class="post-meta col-12">
+                            By @if (comment.Author.DisplayName == null)
+                            {@comment.Author.Email} @comment.Author.DisplayName on @comment.Created.ToString("M/d/yy")
+                        </div>
+                        <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
+                        @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
+                            @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
+                        }
+                    </div>
+                    <hr />
+                }
+                <div class="row">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("BlogPostId", Model.Id)
+                            <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
+                            <button class="btn btn-default" type="submit">Comment</button>
+                        }
+                    }
+                </div>
+                <hr />
+                <div class="row">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span class="text-info"><strong>@Html.ActionLink("Edit ", "Edit", new {slug = Model.Slug})</strong></span>
+                        <span class="text-info">&nbsp;|&nbsp;</span>
+                    }
+                    <span class="text-info col-md-3"><strong>@Html.ActionLink("Back to List", "Index", "Home")</strong></span>
+                </div>
             </div>
         </div>
     </div>
 </article>
-
-<hr />
-<br />
-<h1>Comments</h1>
-<hr />
-@foreach (var comment in Model.Comments)
-{
-    <div class="post-preview row">
-        <div class="col-12">
-            @comment.CommentBody
-        </div>
-        <div class="post-meta col-12">
-            By @if (comment.Author.DisplayName == null) {@comment.Author.Email} @comment.Author.DisplayName on @comment.Created.ToString("M/d/yy")
-        </div>
-        <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
-        @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)
-        {
-            @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
-            @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
-        }
-    </div>
-    <hr />
-}
-<div class="form-group">
-    @if (User.Identity.IsAuthenticated)
-    {
-        using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("BlogPostId", Model.Id)
-            <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
-            <button class="btn btn-default" type="submit">Comment</button>
-        }
-    }
-
-</div>
-@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-@Html.ActionLink("Back to List", "Index")
-
 
 

@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<IrasBlog.Models.BlogPost>
 
 <!-- Page Header -->
-    <header class="masthead" style="background-image: url('~/Images/home-bg.jpg')">
+    <header class="masthead" style="background-image: url('/Images/home-bg.jpg')">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <div class="site-heading">
-                        <h1>Clean Blog</h1>
-                        <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                        <h1>Ira in the Skyra</h1>
+                        <span class="subheading">My Full-Stack Code Camp Immersion Notes</span>
                     </div>
                 </div>
             </div>
@@ -35,15 +35,13 @@
                         Posted by
                         @Html.ActionLink("Ira Nye", "About", "Home")
                         on @blogPost.Created.ToString("MMM dd, yyyy")
-                        <a href=@Url.Action("About", "Home")>[About Me]</a>
-
                     </p>
                 </div>
                 <hr>
 
             }
             
-        <button id="btnDoSomething" class="btn btn-secondary">DoSomething</button>
+        <button id="btnDoSomething" class="btn btn-secondary" visility:hidden>DoSomething</button>
             <!-- Pager -->
             <div class="clearfix">
                 <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
@@ -54,7 +52,9 @@
 @section scripts
 {
     <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        $("#btnDoSomething").toggle();
+
         $("#btnDoSomething").click(function() {
             console.log("foobar");
         });

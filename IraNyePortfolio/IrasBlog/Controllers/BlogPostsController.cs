@@ -4,8 +4,10 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using IrasBlog.Helpers;
 using IrasBlog.Models;
 
 namespace IrasBlog.Controllers
@@ -54,11 +56,24 @@ namespace IrasBlog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles="Admin")]
         public ActionResult Create([Bind(Include = "Title,Abstract,BlogPostBody,Published")] BlogPost blogPost)
         {
+            blogPost.Slug = blogPost.Title.GenerateSlug();
+            if (String.IsNullOrWhiteSpace(blogPost.Slug))
+            {
+                ModelState.AddModelError("Title", @"Invalid Title (results in empty surrogate key)");
+                return View(blogPost);
+            }
+            if (db.BlogPosts.Any(p => p.Slug == blogPost.Slug))
+            {
+                ModelState.AddModelError("Title", @"Invalid Title (unable to create unique surrogate key)");
+                return View(blogPost);
+            }
             if (ModelState.IsValid)
             {
                 blogPost.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
                 db.BlogPosts.Add(blogPost);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -67,14 +82,14 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
-        // GET: BlogPosts/Edit/5
-        public ActionResult Edit(int? id)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Edit(string slug)
         {
-            if (id == null)
+            if (slug == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BlogPost blogPost = db.BlogPosts.Find(id);
+            BlogPost blogPost = db.BlogPosts.FirstOrDefault(b => b.Slug == slug);
             if (blogPost == null)
             {
                 return HttpNotFound();
@@ -87,10 +102,13 @@ namespace IrasBlog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Created,Updated,Title,Abstract,BlogPostBody,ImagePath,Published")] BlogPost blogPost)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Edit([Bind(Include = "Id,Created,Title,Abstract,BlogPostBody,ImagePath,Published,Slug")] BlogPost blogPost, string foo)
         {
             if (ModelState.IsValid)
             {
+                //blogPost.Updated = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                blogPost.Updated = DateTime.Now;
                 db.Entry(blogPost).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -98,7 +116,7 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
-        // GET: BlogPosts/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -116,6 +134,7 @@ namespace IrasBlog.Controllers
         // POST: BlogPosts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             BlogPost blogPost = db.BlogPosts.Find(id);

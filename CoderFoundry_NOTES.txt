@@ -23,9 +23,18 @@ Fix stuff that should be NULLABLE
 Add Additional Fields in Create User (Register) Page.
 Disallow Modifications made by Moderators
 View All Posts vs Only Published Posts
+Change "Hello blahblah@foo.com" to DisplayName
+Change Manage Page
+Switch Detail action to use slug instead of id
+
+* Fix layout/formatting issues *
+Blog Index (Admin All Blogs Page)
+Log In
 
 * Tests *
 Test order of Blogs
+Test that normal user or moderator has no option to: Edit,Delete,etc Blogs
+Limit # Blogs on Index and provide "See Older Posts" button
 Test which page gets loaded after Blog:
 	Edit
 	Delete
