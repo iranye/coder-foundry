@@ -37,7 +37,8 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
-        // GET: BlogPosts/Create
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             var dateTimeStamp = $"{DateTime.Now.ToString("yyyyMddHHmmss")}";
@@ -82,6 +83,7 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(string slug)
         {
@@ -116,6 +118,7 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
