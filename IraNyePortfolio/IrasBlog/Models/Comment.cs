@@ -10,11 +10,11 @@ namespace IrasBlog.Models
         [Required]
         public int BlogPostId { get; set; }
 
-        [Required]
         public string AuthorId { get; set; }
 
         [Required]
         [Display(Name = "Comment Body")]
+        [StringLength(512)]
         public string CommentBody { get; set; }
 
         public DateTime Created { get; set; }

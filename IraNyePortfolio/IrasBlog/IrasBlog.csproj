@@ -200,6 +200,10 @@
     <Compile Include="Migrations\201910121753169_SetMyEmailToAdmin.Designer.cs">
       <DependentUpon>201910121753169_SetMyEmailToAdmin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910142019490_AdjustCommentSchema.cs" />
+    <Compile Include="Migrations\201910142019490_AdjustCommentSchema.Designer.cs">
+      <DependentUpon>201910142019490_AdjustCommentSchema.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BlogPost.cs" />
@@ -453,6 +457,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910121753169_SetMyEmailToAdmin.resx">
       <DependentUpon>201910121753169_SetMyEmailToAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910142019490_AdjustCommentSchema.resx">
+      <DependentUpon>201910142019490_AdjustCommentSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

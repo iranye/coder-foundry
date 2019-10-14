@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <div class="site-heading">
-                        <h1>Ira in the Skyra</h1>
+                        <h1>Ira Nye Reflections</h1>
                         <span class="subheading">My Full-Stack Code Camp Immersion Notes</span>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
             @foreach (var blogPost in Model)
             {
                 <div class="post-preview">
-                    <a href="@Url.Action("Details", "BlogPosts", new {id = blogPost.Id})">
+                    <a href="@Url.Action("Details", "BlogPosts", new {slug = blogPost.Slug})">
                         <h2 class="post-title">
                             @blogPost.Title
                         </h2>

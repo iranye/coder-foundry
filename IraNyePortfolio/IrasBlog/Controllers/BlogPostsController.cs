@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using IrasBlog.Helpers;
 using IrasBlog.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IrasBlog.Controllers
 {
@@ -22,22 +24,34 @@ namespace IrasBlog.Controllers
             return View(db.BlogPosts.OrderByDescending(b => b.Created).ToList());
         }
 
-        // GET: BlogPosts/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string slug)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BlogPost blogPost = db.BlogPosts.Find(id);
+            var blogPost = db.BlogPosts.FirstOrDefault(b => b.Slug == slug);
             if (blogPost == null)
             {
                 return HttpNotFound();
             }
+
+            var rand = new Random();
+            var commentChars = "abcdefghijklmnopqustuvwxys";
+            var randomString = commentChars.Substring(0, rand.Next(0, commentChars.Length));
+
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var user = userManager.FindById(User.Identity.GetUserId());
+            if (Request.IsAuthenticated) //  && blogPost.Comments.Count == 0
+            {
+                blogPost.Comments.Add(new Comment
+                {
+                    BlogPostId = blogPost.Id,
+                    AuthorId = User.Identity.GetUserId(),
+                    Author = user,
+                    CommentBody = $"This is the Comment Body '{randomString}'",
+                    Created = DateTime.Now
+                });
+            }
             return View(blogPost);
         }
 
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
@@ -83,7 +97,6 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(string slug)
         {
@@ -118,7 +131,6 @@ namespace IrasBlog.Controllers
             return View(blogPost);
         }
 
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
