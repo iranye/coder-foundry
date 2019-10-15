@@ -176,6 +176,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\HelperMethods.cs" />
     <Compile Include="Migrations\201910081838424_Initial.cs" />
     <Compile Include="Migrations\201910081838424_Initial.Designer.cs">
       <DependentUpon>201910081838424_Initial.cs</DependentUpon>
@@ -433,6 +434,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

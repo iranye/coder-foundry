@@ -2,7 +2,7 @@
 @model IrasBlog.Models.BlogPost
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('/Images/post-bg.jpg')">
+<header class="masthead">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -25,15 +25,15 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="col-lg-8 col-md-10 col-md-offset-2 mx-auto">
                 @Html.Raw(Model.BlogPostBody)
 
                 <br />
-                <div class="post-preview row">
-                    <p class="row">
-                        <h1>Comments</h1><span>There are @Model.Comments.Count comment(s)!</span>
-                    </p>
-                </div>
+                <hr />
+                <p class="row">
+                    <h1>Comments</h1>
+                </p>
+                <hr />
                 @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
                 {
                     <div class="post-preview row">
@@ -90,9 +90,17 @@
 @section scripts
 {
     <script>
+
         $('#btnSubmit').prop("disabled", true);
         var initVal = $('#txtComment').val(); // "Add Comment...";
+
         $(document).ready(function(){
+            $(".masthead").css("background-image", "url(/Images/post-bg.jpg)");
+            @if (!String.IsNullOrWhiteSpace(@Model.ImagePath))
+            {
+                @: $(".masthead").css("background-image", "url(\"@Model.ImagePath\")");
+            }
+
             $('#txtComment').on("keyup", action);
             function action() {
                 if($('#txtComment').val().length > 0 && $('#txtComment').val() !== initVal) {

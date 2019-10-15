@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -32,23 +33,6 @@ namespace IrasBlog.Controllers
                 return HttpNotFound();
             }
 
-            var rand = new Random();
-            var commentChars = "abcdefghijklmnopqustuvwxys";
-            var randomString = commentChars.Substring(0, rand.Next(0, commentChars.Length));
-
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            var user = userManager.FindById(User.Identity.GetUserId());
-            if (Request.IsAuthenticated) //  && blogPost.Comments.Count == 0
-            {
-                blogPost.Comments.Add(new Comment
-                {
-                    BlogPostId = blogPost.Id,
-                    AuthorId = User.Identity.GetUserId(),
-                    Author = user,
-                    CommentBody = $"This is the Comment Body '{randomString}'",
-                    Created = DateTime.Now
-                });
-            }
             return View(blogPost);
         }
 
@@ -72,7 +56,7 @@ namespace IrasBlog.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles="Admin")]
-        public ActionResult Create([Bind(Include = "Title,Abstract,BlogPostBody,Published")] BlogPost blogPost)
+        public ActionResult Create([Bind(Include = "Title,Abstract,BlogPostBody,Published")] BlogPost blogPost, HttpPostedFileBase imageFile)
         {
             blogPost.Slug = blogPost.Title.GenerateSlug();
             if (String.IsNullOrWhiteSpace(blogPost.Slug))
@@ -87,6 +71,14 @@ namespace IrasBlog.Controllers
             }
             if (ModelState.IsValid)
             {
+                if (HelperMethods.IsWebFriendlyImage(imageFile))
+                {
+                    // Run filename through URL Friendly method then Apply a timestamp to filename to avoid naming collisions
+                    var fileName = imageFile.FileName.GenerateSlug();
+                    var massagedFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{DateTime.Now.Ticks}{Path.GetExtension(fileName)}";
+                    imageFile.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), massagedFileName));
+                    blogPost.ImagePath = $"/Uploads/{massagedFileName}";
+                }
                 blogPost.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
                 db.BlogPosts.Add(blogPost);

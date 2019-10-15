@@ -8,7 +8,7 @@ namespace IrasBlog.Helpers
         {
             string str = RemoveAccent(phrase).ToLower();
             // invalid chars           
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
+            str = Regex.Replace(str, @"[^.a-z0-9\s-]", "");
 
             // convert multiple spaces into one space   
             str = Regex.Replace(str, @"\s+", " ").Trim();

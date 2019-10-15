@@ -48,7 +48,7 @@ namespace IrasBlog.Models
         public string ImagePath { get; set; }
         public bool Published { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
         public BlogPost()
         {
