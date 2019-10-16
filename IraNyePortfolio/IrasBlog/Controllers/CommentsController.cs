@@ -35,27 +35,23 @@ namespace IrasBlog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // public ActionResult Create([Bind(Include = "Id,CommentBody")] Comment comment)
-        public ActionResult Create([Bind(Include = "BlogPostId,CommentBody")] Comment comment)
+        public ActionResult Create([Bind(Include = "BlogPostId,CommentBody")] Comment comment, string slug)
         {
             var blogPost = db.BlogPosts.Find(comment.BlogPostId);
 
             if (blogPost == null)
             {
                 ModelState.AddModelError("BlogPost", @"Failed to find associated BlogPost");
-                return RedirectToAction("Index", "Home", comment.BlogPostId);
-                //return View(comment.Id);
+                return RedirectToAction("Details", "BlogPosts", new { slug });
             }
 
-            var slug = blogPost.Slug;
+            //var slug = blogPost.Slug;
             if (ModelState.IsValid)
             {
                 comment.AuthorId = User.Identity.GetUserId();
                 comment.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                 db.Comments.Add(comment);
                 db.SaveChanges();
-
-                return RedirectToAction("Details", "BlogPosts", new {slug = slug});
             }
 
             return RedirectToAction("Details", "BlogPosts", new {slug});
@@ -83,13 +79,20 @@ namespace IrasBlog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,CommentBody,Created,Updated,UpdateReason")] Comment comment)
+        public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,CommentBody,Created,Updated,UpdateReason")] Comment comment, string slug)
         {
+            if (string.IsNullOrEmpty(comment.UpdateReason))
+            {
+                ModelState.AddModelError("UpdateReason", "You must provide an update reason.");
+                comment.BlogPost = db.BlogPosts.AsNoTracking().FirstOrDefault(b => b.Id == comment.BlogPostId);
+                return View(comment);
+            }
             if (ModelState.IsValid)
             {
+                comment.Updated = DateTime.Now;
                 db.Entry(comment).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "BlogPosts", new { slug });
             }
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
             ViewBag.BlogPostId = new SelectList(db.BlogPosts, "Id", "Title", comment.BlogPostId);

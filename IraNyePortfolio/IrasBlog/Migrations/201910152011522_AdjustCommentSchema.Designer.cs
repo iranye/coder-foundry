@@ -13,7 +13,7 @@ namespace IrasBlog.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201910142019490_AdjustCommentSchema"; }
+            get { return "201910152011522_AdjustCommentSchema"; }
         }
         
         string IMigrationMetadata.Source

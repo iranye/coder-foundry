@@ -197,13 +197,9 @@
     <Compile Include="Migrations\201910111727291_ChangeSlugRemoveRequired.Designer.cs">
       <DependentUpon>201910111727291_ChangeSlugRemoveRequired.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201910121753169_SetMyEmailToAdmin.cs" />
-    <Compile Include="Migrations\201910121753169_SetMyEmailToAdmin.Designer.cs">
-      <DependentUpon>201910121753169_SetMyEmailToAdmin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910142019490_AdjustCommentSchema.cs" />
-    <Compile Include="Migrations\201910142019490_AdjustCommentSchema.Designer.cs">
-      <DependentUpon>201910142019490_AdjustCommentSchema.cs</DependentUpon>
+    <Compile Include="Migrations\201910152011522_AdjustCommentSchema.cs" />
+    <Compile Include="Migrations\201910152011522_AdjustCommentSchema.Designer.cs">
+      <DependentUpon>201910152011522_AdjustCommentSchema.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -224,6 +220,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\about-bg.jpg" />
     <Content Include="Images\contact-bg.jpg" />
+    <Content Include="Images\edit-bg.jpg" />
     <Content Include="Images\home-bg.jpg" />
     <Content Include="Images\login-bg.jpg" />
     <Content Include="Images\post-bg.jpg" />
@@ -360,6 +357,7 @@
     <Content Include="webfonts\fa-brands-400.svg" />
     <Content Include="webfonts\fa-regular-400.svg" />
     <Content Include="webfonts\fa-solid-900.svg" />
+    <None Include="Properties\PublishProfiles\IrasBlog - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\clean-blog.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -457,11 +455,8 @@
     <EmbeddedResource Include="Migrations\201910111727291_ChangeSlugRemoveRequired.resx">
       <DependentUpon>201910111727291_ChangeSlugRemoveRequired.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910121753169_SetMyEmailToAdmin.resx">
-      <DependentUpon>201910121753169_SetMyEmailToAdmin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910142019490_AdjustCommentSchema.resx">
-      <DependentUpon>201910142019490_AdjustCommentSchema.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201910152011522_AdjustCommentSchema.resx">
+      <DependentUpon>201910152011522_AdjustCommentSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

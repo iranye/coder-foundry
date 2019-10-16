@@ -76,8 +76,13 @@ namespace IrasBlog.Controllers
                     // Run filename through URL Friendly method then Apply a timestamp to filename to avoid naming collisions
                     var fileName = imageFile.FileName.GenerateSlug();
                     var massagedFileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{DateTime.Now.Ticks}{Path.GetExtension(fileName)}";
-                    imageFile.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), massagedFileName));
-                    blogPost.ImagePath = $"/Uploads/{massagedFileName}";
+                    var dirPath = Server.MapPath("~/Uploads/");
+                    if (HelperMethods.EnsureDirectoryExists(dirPath))
+                    {
+                        var filePath = Path.Combine(dirPath, massagedFileName);
+                        imageFile.SaveAs(filePath);
+                        blogPost.ImagePath = $"/Uploads/{massagedFileName}";
+                    }
                 }
                 blogPost.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 

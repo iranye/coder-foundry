@@ -28,59 +28,62 @@
             <div class="col-lg-8 col-md-10 col-md-offset-2 mx-auto">
                 @Html.Raw(Model.BlogPostBody)
 
-                <br />
                 <hr />
-                <p class="row">
-                    <h1>Comments</h1>
-                </p>
+                <h1>Comments</h1>
                 <hr />
                 @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
                 {
-                    <div class="post-preview row">
-                        <div class="col-lg-8 col-md-10 mx-auto">
-                            @comment.CommentBody
+                    <div class="row">
+                        <div class="col-sm-3 comment-metadata">
+                            [@comment.Author.Email @comment.Created.ToString("M/d/yy")]
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="comment">
+                                @comment.CommentBody
+                            </div>
+                        </div>
+                        <div class="col-sm-3 comment-admin">
+                            <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
+                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)
+                            {
+                                @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-sm" })
+                                @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-sm" })
+                            }
                         </div>
                     </div>
-                    <div class="post-meta col-12">
-                        By @comment.Author.Email on @comment.Created.ToString("M/d/yy")
-                    </div>
-                    <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
-                    if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)
-                    {
-                        @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
-                        @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
-                    }
                     <hr />
                 }
-                <div class="row">
-                    @if (User.Identity.IsAuthenticated)
+            <div class="row">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    using (Html.BeginForm("Create", "Comments", FormMethod.Post))
                     {
-                        using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("BlogPostId", Model.Id)
-                            @*<textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>*@
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Slug)
+                        @Html.Hidden("BlogPostId", Model.Id)
 
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                            <div class="form-group">
-                                <div class="col-md-10">
-                                    @Html.TextArea("CommentBody", new { row = 5, cols = 50, placeholder="Add Comment...", id="txtComment" })
-                                </div>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.TextArea("CommentBody", new {row = 5, cols = 50, placeholder = "Add Comment...", id = "txtComment"})
                             </div>
-                            
-                            <button class="btn btn-default" type="submit" id="btnSubmit">Comment</button>
-                        }
+                        </div>
+
+                        <button class="btn btn-default" type="submit" id="btnSubmit">Comment</button>
                     }
-                </div>
+                }
+            </div>
                 <hr />
                 <div class="row">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <span class="text-info"><strong>@Html.ActionLink("Edit ", "Edit", new { slug = Model.Slug })</strong></span>
-                        <span class="text-info">&nbsp;|&nbsp;</span>
-                    }
-                    <span class="text-info col-md-3"><strong>@Html.ActionLink("Back to List", "Index", "Home")</strong></span>
+                    <div class="col-md-offset-3 col-md-8">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <span class="text-info"><strong>@Html.ActionLink("Edit ", "Edit", new { slug = Model.Slug })</strong></span>
+                            <span class="text-info">&nbsp;|&nbsp;</span>
+                        }
+                        <span class="text-info col-md-3"><strong>@Html.ActionLink("Back to List", "Index", "Home")</strong></span>
+                    </div>
                 </div>
             </div>
         </div>

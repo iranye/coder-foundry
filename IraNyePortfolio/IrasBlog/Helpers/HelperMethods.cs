@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Drawing;
+using System.IO;
+using System.Threading;
 
 namespace IrasBlog.Helpers
 {
@@ -37,6 +39,33 @@ namespace IrasBlog.Helpers
                 Debug.WriteLine(ex.Message);
                 return false;
             }
+        }
+
+        public static bool EnsureDirectoryExists(string dirPath)
+        {
+            bool ret = false;
+            if (!String.IsNullOrWhiteSpace(dirPath))
+            {
+                if (Directory.Exists(dirPath))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e);
+                    }
+
+                    Thread.Sleep(1000);
+                    ret = Directory.Exists(dirPath);
+                }
+            }
+            return ret;
         }
     }
 }
