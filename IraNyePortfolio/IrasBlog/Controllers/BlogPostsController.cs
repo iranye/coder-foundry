@@ -32,7 +32,6 @@ namespace IrasBlog.Controllers
             {
                 return HttpNotFound();
             }
-
             return View(blogPost);
         }
 
@@ -58,6 +57,11 @@ namespace IrasBlog.Controllers
         [Authorize(Roles="Admin")]
         public ActionResult Create([Bind(Include = "Title,Abstract,BlogPostBody,Published")] BlogPost blogPost, HttpPostedFileBase imageFile)
         {
+            if (string.IsNullOrWhiteSpace(blogPost.Title))
+            {
+                ModelState.AddModelError("Invalid Title", "You must provide a Blog Title.");
+                return View(blogPost);
+            }
             blogPost.Slug = blogPost.Title.GenerateSlug();
             if (String.IsNullOrWhiteSpace(blogPost.Slug))
             {

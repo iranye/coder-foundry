@@ -15,21 +15,6 @@ namespace IrasBlog.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         
-        // GET: Comments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Comment comment = db.Comments.Find(id);
-            if (comment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(comment);
-        }
-
         // POST: Comments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -45,7 +30,6 @@ namespace IrasBlog.Controllers
                 return RedirectToAction("Details", "BlogPosts", new { slug });
             }
 
-            //var slug = blogPost.Slug;
             if (ModelState.IsValid)
             {
                 comment.AuthorId = User.Identity.GetUserId();
@@ -74,7 +58,6 @@ namespace IrasBlog.Controllers
             return View(comment);
         }
 
-        // POST: Comments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -96,11 +79,10 @@ namespace IrasBlog.Controllers
             }
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
             ViewBag.BlogPostId = new SelectList(db.BlogPosts, "Id", "Title", comment.BlogPostId);
-            return View(comment);
+            return RedirectToAction("Details", "BlogPosts", new { slug });
         }
 
-        // GET: Comments/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, string slug)
         {
             if (id == null)
             {
@@ -111,10 +93,15 @@ namespace IrasBlog.Controllers
             {
                 return HttpNotFound();
             }
-            return View(comment);
+            db.Comments.Remove(comment);
+            db.SaveChanges();
+            if (String.IsNullOrWhiteSpace(slug))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Details", "BlogPosts", new { slug });
         }
 
-        // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -122,7 +109,7 @@ namespace IrasBlog.Controllers
             Comment comment = db.Comments.Find(id);
             db.Comments.Remove(comment);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)
