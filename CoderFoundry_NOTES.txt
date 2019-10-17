@@ -21,13 +21,9 @@ Search & Replace modal fails to clear output box (probably bad jQuery)
 ** Blog Site **
 Update Edit Blog page to allow upload of image
 Update image in Edit Blog page to match Details
-Update Delete-Confirm View to be consisten w/ other pages
-Test Delete BlogPost w/ Comments (Comments get deleted too)
 Figure what exactly what Remember Me checkbox does
-Figure what happens when too long of a Comment is added.
 Show a blog's picture on the index page (both).
-Check if (image) file exists in view if possible
-Test Delete Comment or Blog via manually entering link
+Update "Back to List" in Blog Details if SearchStr is not empty
 
 Add Additional Fields in Create User (Register) Page.
 Disallow Modifications made by Moderators

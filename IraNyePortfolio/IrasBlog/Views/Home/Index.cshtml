@@ -1,24 +1,39 @@
-﻿@model IEnumerable<IrasBlog.Models.BlogPost>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<IrasBlog.Models.BlogPost>
 
 <!-- Page Header -->
-    <header class="masthead" style="background-image: url('/Images/home-bg.jpg')">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-10 mx-auto">
-                    <div class="site-heading">
-                        <h1>Ira Nye Reflections</h1>
-                        <span class="subheading">My Full-Stack Code Camp Immersion Notes</span>
-                    </div>
+<header class="masthead" style="background-image: url('/Images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>Ira Nye Reflections</h1>
+                    <span class="subheading">My Full-Stack Code Camp Immersion Notes</span>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
+<style>
+    #searchStr {
+        border-radius: 5px;
+    }
+</style>
 <!-- Main Content -->
 <div class="container">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
+            @using (Html.BeginForm("Index", "Home", FormMethod.Get, htmlAttributes: new {@class = "form"}))
+            {
+                <div class="form-group">
+                    <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search" autocomplete="off"/>
+                    <button class="btn btn-default" type="submit" style="margin-top: -5px; padding: 0px;">
+                        <img src='/Images/gakuseisean-radium-search.ico' height="32" width="32" />
+                    </button>
+                </div>
+            }
             @foreach (var blogPost in Model)
             {
                 <div class="post-preview">
@@ -40,11 +55,11 @@
                 <hr>
 
             }
-            
-        <button id="btnDoSomething" class="btn btn-secondary" visility:hidden>DoSomething</button>
+
             <!-- Pager -->
             <div class="clearfix">
-                <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("Index", new {page}))
             </div>
         </div>
     </div>
@@ -52,12 +67,10 @@
 @section scripts
 {
     <script>
-    $(document).ready(function () {
-        $("#btnDoSomething").toggle();
-
-        $("#btnDoSomething").click(function() {
-            console.log("foobar");
+        $(document).ready(function () {
+            "use strict";
+            const message = 'hello world';
+            console.log(message);
         });
-    });
     </script>
 }
