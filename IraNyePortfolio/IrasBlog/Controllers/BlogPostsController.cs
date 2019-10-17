@@ -140,11 +140,9 @@ namespace IrasBlog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             BlogPost blogPost = db.BlogPosts.Find(id);
-            if (blogPost == null)
-            {
-                return HttpNotFound();
-            }
-            return View(blogPost);
+            db.BlogPosts.Remove(blogPost);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // POST: BlogPosts/Delete/5
@@ -153,6 +151,7 @@ namespace IrasBlog.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
+            // TODO: DELETE THIS Action
             BlogPost blogPost = db.BlogPosts.Find(id);
             db.BlogPosts.Remove(blogPost);
             db.SaveChanges();

@@ -39,7 +39,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Abstract, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Abstract, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Abstract, new { htmlAttributes = new { @class = "form-control", @id="textAbstract"  } })
                 @Html.ValidationMessageFor(model => model.Abstract, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BlogPostBody, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BlogPostBody, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.BlogPostBody, new { htmlAttributes = new { @class = "form-control", @id="textBody"  } })
                 @Html.ValidationMessageFor(model => model.BlogPostBody, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -86,4 +86,36 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function(){
+            $(".masthead").css("background-image", "url(/Images/post-bg.jpg)");
+            @if (!String.IsNullOrWhiteSpace(@Model.ImagePath))
+            {
+                @: $(".masthead").css("background-image", "url(\"@Model.ImagePath\")");
+            }
+
+            var titleLimit = 250;
+
+            $('#textTitle').keyup(function () {
+
+                $(this).val($(this).val().substring(0, titleLimit));
+            });
+
+            var abstractLimit = 500;
+
+            $('#textAbstract').keyup(function () {
+
+                $(this).val($(this).val().substring(0, abstractLimit));
+            });
+
+            var bodyLimit = 8000;
+
+            $('#textBody').keyup(function () {
+
+                $(this).val($(this).val().substring(0, bodyLimit));
+            });
+
+        });
+    </script>
 }
