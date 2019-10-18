@@ -18,6 +18,7 @@ Thumbs.db
 *.aps
 *.bak
 *.cache
+*.config
 *.ilk
 *.log
 *.ncb
@@ -27,5 +28,7 @@ Thumbs.db
 *.suo
 *.user
 *.vspscc
+App_Data/
 [Rr]elease*/
 _ReSharper*/
+Uploads/

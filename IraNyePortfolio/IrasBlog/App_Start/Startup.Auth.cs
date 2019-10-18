@@ -54,15 +54,15 @@ namespace IrasBlog
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "460270217921458",
+               appSecret: "3c433f555a49e5b3f2f8e1652db27417");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "286560462120-qnu90jfm0bvaih74vcfaj9d7blcaurkg.apps.googleusercontent.com",
+                ClientSecret = "H5aERltCrHEUIuuRCTYhN2xK"
+            });
         }
     }
 }

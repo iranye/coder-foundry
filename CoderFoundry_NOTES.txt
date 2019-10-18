@@ -24,6 +24,13 @@ Update image in Edit Blog page to match Details
 Figure what exactly what Remember Me checkbox does
 Show a blog's picture on the index page (both).
 Update "Back to List" in Blog Details if SearchStr is not empty
+Tiny Editor controls aren't appearing in Blog Create View (they DO appear in Edit)
+
+* Email Provider *
+Google: https://support.google.com/a/answer/176600?hl=en
+Yahoo: https://help.yahoo.com/kb/SLN4724.html
+Outlook: https://www.outlook-apps.com/outlook-com-pop-settings/
+More…: https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html
 
 Add Additional Fields in Create User (Register) Page.
 Disallow Modifications made by Moderators
