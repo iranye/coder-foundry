@@ -1,5 +1,9 @@
 ﻿@model IrasBlog.Models.EmailModel
 
+@{
+    ViewBag.Message = "Please Send me a message";
+}
+
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('/Images/post-bg.jpg')">
     <div class="overlay"></div>
@@ -8,7 +12,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="post-heading">
                     <span class="meta">
-                        <h1>Please Send me a message</h1>
+                        <h1>@ViewBag.Message</h1>
                     </span>
                 </div>
             </div>

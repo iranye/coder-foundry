@@ -68,7 +68,7 @@ namespace IrasBlog.Controllers
                     var svc = new PersonalEmail();
                     await svc.SendAsync(mailMessage);
 
-                    return View(new EmailModel());
+                    return RedirectToAction("Index", "Home");
                 }
                 catch(Exception ex)
                 {
