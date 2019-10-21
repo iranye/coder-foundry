@@ -1,3 +1,8 @@
+*** Fix Before Gihub Push ***
+Startup.Auth.cs
+Migrations\Configuration.cs
+
+
 *** My Work ***
 Deliverables due 10/07
 Check Code into Github
@@ -26,6 +31,10 @@ Show a blog's picture on the index page (both).
 Update "Back to List" in Blog Details if SearchStr is not empty
 Blog Body formatting fails to preserve newlines.
 Nuke and re-create github repo coder-foundry (or re-generate Google API & Facebook Keys)
+
+* BugTracker *
+https://localhost:44340/
+
 
 * Email Provider *
 Google: https://support.google.com/a/answer/176600?hl=en

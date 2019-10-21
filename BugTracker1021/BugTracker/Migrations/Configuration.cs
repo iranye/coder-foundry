@@ -1,3 +1,7 @@
+using BugTracker.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
 namespace BugTracker.Migrations
 {
     using System;
