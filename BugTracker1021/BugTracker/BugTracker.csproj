@@ -184,10 +184,27 @@
     <Compile Include="Migrations\201910211845273_UpdateUserModel.Designer.cs">
       <DependentUpon>201910211845273_UpdateUserModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910211924039_AddProjectAndTicketTypes.cs" />
+    <Compile Include="Migrations\201910211924039_AddProjectAndTicketTypes.Designer.cs">
+      <DependentUpon>201910211924039_AddProjectAndTicketTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910211936171_OverrideDefaultConventions.cs" />
+    <Compile Include="Migrations\201910211936171_OverrideDefaultConventions.Designer.cs">
+      <DependentUpon>201910211936171_OverrideDefaultConventions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910211947587_PopulateStatusesTable.cs" />
+    <Compile Include="Migrations\201910211947587_PopulateStatusesTable.Designer.cs">
+      <DependentUpon>201910211947587_PopulateStatusesTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectStatus.cs" />
+    <Compile Include="Models\TicketStatus.cs" />
+    <Compile Include="Models\Ticket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -270,6 +287,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910211845273_UpdateUserModel.resx">
       <DependentUpon>201910211845273_UpdateUserModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211924039_AddProjectAndTicketTypes.resx">
+      <DependentUpon>201910211924039_AddProjectAndTicketTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211936171_OverrideDefaultConventions.resx">
+      <DependentUpon>201910211936171_OverrideDefaultConventions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211947587_PopulateStatusesTable.resx">
+      <DependentUpon>201910211947587_PopulateStatusesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
