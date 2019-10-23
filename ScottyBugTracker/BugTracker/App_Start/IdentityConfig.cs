@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -14,12 +18,99 @@ using BugTracker.Models;
 
 namespace BugTracker
 {
+    public class PersonalEmail
+    {
+        public async Task SendAsync(MailMessage message)
+        {
+            var user = WebConfigurationManager.AppSettings["emailFrom"];
+            var password = WebConfigurationManager.AppSettings["password"];
+            var host = WebConfigurationManager.AppSettings["host"];
+            var port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
+
+            using (var smtp = new SmtpClient()
+            {
+                Host = host,
+                Port = port,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(user, password)
+            })
+            {
+                try
+                {
+                    await smtp.SendMailAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    await Task.FromResult(0);
+                }
+            }
+        }
+    }
+
     public class EmailService : IIdentityMessageService
     {
+        public async Task SendAsync(MailMessage message)
+        {
+            var user = WebConfigurationManager.AppSettings["emailFrom"];
+            var password = WebConfigurationManager.AppSettings["password"];
+            var host = WebConfigurationManager.AppSettings["host"];
+            var port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
+
+            using (var smtp = new SmtpClient()
+            {
+                Host = host,
+                Port = port,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(user, password)
+            })
+            {
+                try
+                {
+                    await smtp.SendMailAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    await Task.FromResult(0);
+                }
+            }
+        }
+
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var user = WebConfigurationManager.AppSettings["emailFrom"];
+            var password = WebConfigurationManager.AppSettings["password"];
+            var host = WebConfigurationManager.AppSettings["host"];
+            var port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
+
+            using (var smtpClient = new SmtpClient()
+            {
+                Host = host,
+                Port = port,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(user, password)
+            })
+            {
+                var mailMessage = new MailMessage(user, message.Destination)
+                {
+                    Subject = message.Subject,
+                    Body = message.Body,
+                    IsBodyHtml = true
+                };
+                return smtpClient.SendMailAsync(mailMessage);
+                //return smtpClient.SendMailAsync(user,
+                //    message.Destination,
+                //    message.Subject,
+                //    message.Body);
+            }
         }
     }
 

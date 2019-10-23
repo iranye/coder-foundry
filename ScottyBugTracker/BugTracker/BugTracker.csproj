@@ -168,6 +168,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmailModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -180,6 +181,10 @@
     <Compile Include="Migrations\201910231516225_AddPropertiesToModels.cs" />
     <Compile Include="Migrations\201910231516225_AddPropertiesToModels.Designer.cs">
       <DependentUpon>201910231516225_AddPropertiesToModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910231814034_UpdateUserModel.cs" />
+    <Compile Include="Migrations\201910231814034_UpdateUserModel.Designer.cs">
+      <DependentUpon>201910231814034_UpdateUserModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -209,6 +214,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="private.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -254,6 +260,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Account\ResendEmailConfirmation.cshtml" />
+    <Content Include="Views\Account\ConfirmationSent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -277,6 +285,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910231516225_AddPropertiesToModels.resx">
       <DependentUpon>201910231516225_AddPropertiesToModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910231814034_UpdateUserModel.resx">
+      <DependentUpon>201910231814034_UpdateUserModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
