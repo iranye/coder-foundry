@@ -1,3 +1,4 @@
+using System.Web.Configuration;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -46,6 +47,23 @@ namespace BugTracker.Migrations
                 submitterRole = roleManager.Create(new IdentityRole { Name = "Submitter" });
             }
 
+            if (!context.Roles.Any(r => r.Name == "DemoAdmin"))
+            {
+                adminRole = roleManager.Create(new IdentityRole { Name = "DemoAdmin" });
+            }
+            if (!context.Roles.Any(r => r.Name == "DemoProjectManager"))
+            {
+                projectManagerRole = roleManager.Create(new IdentityRole { Name = "DemoProjectManager" });
+            }
+            if (!context.Roles.Any(r => r.Name == "DemoDeveloper"))
+            {
+                developerRole = roleManager.Create(new IdentityRole { Name = "DemoDeveloper" });
+            }
+            if (!context.Roles.Any(r => r.Name == "DemoSubmitter"))
+            {
+                submitterRole = roleManager.Create(new IdentityRole { Name = "DemoSubmitter" });
+            }
+
             string adminEmail = "admin@domain.com";
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             if (!context.Users.Any(u => u.Email == adminEmail))
@@ -75,6 +93,11 @@ namespace BugTracker.Migrations
                     DisplayName = "Project Manager"
                 }, "Password-1");
             }
+
+            CreateUser(context, userManager, "Demo", "Admin", "Admin", isDemo: true);
+            CreateUser(context, userManager, "Demo", "ProjectManager", "ProjectManager", isDemo: true);
+            CreateUser(context, userManager, "Demo", "Developer", "Developer", isDemo: true);
+            CreateUser(context, userManager, "Demo", "Submitter", "Submitter", isDemo: true);
 
             var projectManagerId = userManager.FindByEmail(projectManagerEmail).Id;
             userManager.AddToRole(projectManagerId, "ProjectManager");
@@ -110,6 +133,26 @@ namespace BugTracker.Migrations
 
             var submitterId = userManager.FindByEmail(submitterEmail).Id;
             userManager.AddToRole(submitterId, "Submitter");
+        }
+
+        private void CreateUser(ApplicationDbContext context, UserManager<ApplicationUser> userManager, string firstName, string lastName, string role, bool isDemo=false)
+        {
+            var password = isDemo ? WebConfigurationManager.AppSettings["DemoPassword"] : WebConfigurationManager.AppSettings["DefaultPassword"];
+            string mailinatorEmail = $"{firstName}.{lastName}@mailinator.com";
+            if (!context.Users.Any(u => u.Email == mailinatorEmail))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = mailinatorEmail,
+                    Email = mailinatorEmail,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DisplayName = $"{firstName} {lastName}"
+                }, password);
+            }
+
+            var userId = userManager.FindByEmail(mailinatorEmail).Id;
+            userManager.AddToRole(userId, role);
         }
     }
 }

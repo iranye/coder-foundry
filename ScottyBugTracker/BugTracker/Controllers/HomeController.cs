@@ -30,7 +30,7 @@ namespace BugTracker.Controllers
                 Subject = "Here's your job offer",
                 Body = "100K per year enough?"
             };
-            return View(new EmailModel());
+            return View(emailModel);
         }
 
         [HttpPost]
