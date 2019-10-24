@@ -133,6 +133,15 @@ namespace BugTracker.Migrations
 
             var submitterId = userManager.FindByEmail(submitterEmail).Id;
             userManager.AddToRole(submitterId, "Submitter");
+
+            //var projects = context.Projects.ToList();
+            //if (projects.Count == 0)
+            //{
+            //    return;
+            //}
+            //context.Tickets.AddOrUpdate(
+            //    t => t.Title,
+            //    new Ticket{ProjectId = projects.FirstOrDefault(p => !String.IsNullOrWhiteSpace(p.Name)).Id});
         }
 
         private void CreateUser(ApplicationDbContext context, UserManager<ApplicationUser> userManager, string firstName, string lastName, string role, bool isDemo=false)

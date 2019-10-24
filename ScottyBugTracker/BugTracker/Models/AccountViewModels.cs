@@ -50,6 +50,7 @@ namespace BugTracker.Models
     {
         [Required]
         [Display(Name = "Email")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -79,6 +80,16 @@ namespace BugTracker.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -108,5 +119,17 @@ namespace BugTracker.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class LoginRegisterViewModel
+    {
+        public LoginViewModel LoginViewModel { get; set; }
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public LoginRegisterViewModel()
+        {
+            LoginViewModel = new LoginViewModel();
+            RegisterViewModel = new RegisterViewModel();
+        }
     }
 }
