@@ -1,0 +1,94 @@
+﻿@model IEnumerable<BugTracker.ViewModels.ManageRolesViewModel>
+@{
+    ViewBag.Title = "ManageRoles";
+}
+
+<style>
+    .controlWide {
+        width: 100%;
+    }
+    #UserIds {
+        height: 180px;
+    }
+    .marginTop {
+        margin-top: 5px;
+    }
+    .email {
+        font-size: .7em;
+    }
+</style>
+<h2>Manage Roles</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.FullName)</th>
+                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                <th>@Html.DisplayNameFor(m => m.Role)</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Role)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-5">
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-12">
+                    @Html.ListBox("UserIds", null, new { @class = "controlWide", style = "height: 180px; width: 100%;" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="margin-top: 5px;">
+                    @Html.DropDownList("Role", null, "-- Select Role --", new { @class = "controlWide" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 5px;">
+                    <button id="btnSubmit" type="submit" class="btn btn-primary controlWide">Save</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+        $('#btnSubmit').prop("disabled", true);
+        var initVal = $('#txtComment').val();
+
+        $(document).ready(function () {
+            $('#UserIds').change(function () {
+                console.log("change");
+                var selectedValues = $('#UserIds').val();
+                console.log(selectedValues.length);
+                if (selectedValues.length === 0) {
+                    $('#btnSubmit').prop("disabled", true);
+                }
+                else {
+                    $('#btnSubmit').prop("disabled", false);
+                }
+            });
+        });
+    </script>
+}
+

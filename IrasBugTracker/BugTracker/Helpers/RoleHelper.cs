@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BugTracker.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace BugTracker.Helpers
+{
+    public class RoleHelper
+    {
+        ApplicationDbContext db = new ApplicationDbContext();
+
+        public void AddUserToRole(string userId, string role)
+        {
+            string message = "";
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+            var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                message = $"User '{userId}' NOT FOUND";
+                throw new Exception(message);
+            }
+
+            var roleFromDb = db.Roles.FirstOrDefault(r => r.Name == role);
+            if (roleFromDb == null)
+            {
+                message = $"Invalid Role '{role}'";
+                throw new Exception(message);
+            }
+            userManager.AddToRole(user.Id, role);
+        }
+
+        public void RemoveUserFromRole(string userId, string roleToRemove)
+        {
+            string message = "";
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+            var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                message = $"User '{userId}' NOT FOUND";
+                throw new Exception(message);
+            }
+
+            IdentityRole roleFromDb = db.Roles.FirstOrDefault(r => r.Name == roleToRemove);
+            if (roleFromDb == null)
+            {
+                message = $"Invalid Role '{roleToRemove}'";
+                throw new Exception(message);
+            }
+
+            userManager.RemoveFromRole(user.Id, roleToRemove);
+        }
+
+        /// <summary>
+        /// Get a User's Currently Assigned Role(s)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public ICollection<string> GetUserCurrentlyAssignedRoles(string userId)
+        {
+            string message = "";
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+            var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                message = $"User '{userId}' NOT FOUND";
+                throw new Exception(message);
+            }
+
+            return userManager.GetRoles(user.Id);
+        }
+    }
+}
