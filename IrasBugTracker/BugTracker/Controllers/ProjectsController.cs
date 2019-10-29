@@ -9,19 +9,20 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
+    [Authorize(Roles = "Admin, ProjectManager")]
     public class ProjectsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
         private readonly ProjectHelper _projectHelper = new ProjectHelper();
-
-        // GET: Projects
+        
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_db.Projects.ToList());
         }
 
-        // GET: Projects/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)

@@ -64,103 +64,40 @@ namespace BugTracker.Migrations
                 submitterRole = roleManager.Create(new IdentityRole { Name = "DemoSubmitter" });
             }
 
-            string adminEmail = "admin@domain.com";
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            if (!context.Users.Any(u => u.Email == adminEmail))
-            {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    FirstName = "Admin",
-                    LastName = "Nye",
-                    DisplayName = "Admin Nye"
-                }, "Password-1");
-            }
 
-            var adminId = userManager.FindByEmail(adminEmail).Id;
-            userManager.AddToRole(adminId, "Admin");
+            CreateUser(context, userManager, "Admin", "Nye", "Admin", "admin@domain.com");
+            CreateUser(context, userManager, "SuperUser", "Steve", "Admin", "admin@mailinator.com");
+            CreateUser(context, userManager, "Peter", "PM", "Admin", "pm@coderfoundry.com");
+            CreateUser(context, userManager, "Dave", "Developer", "Developer", "dev@coderfoundry.com", isDemo: false);
+            CreateUser(context, userManager, "Sally", "Submitter", "Submitter", isDemo: false);
 
-            string projectManagerEmail = "pm@coderfoundry.com";
-            if (!context.Users.Any(u => u.Email == projectManagerEmail))
-            {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = projectManagerEmail,
-                    Email = projectManagerEmail,
-                    FirstName = "Project",
-                    LastName = "Manager",
-                    DisplayName = "Project Manager"
-                }, "Password-1");
-            }
-
-            CreateUser(context, userManager, "Demo", "Admin", "Admin", isDemo: true);
-            CreateUser(context, userManager, "Demo", "ProjectManager", "ProjectManager", isDemo: true);
-            CreateUser(context, userManager, "Demo", "Developer", "Developer", isDemo: true);
-            CreateUser(context, userManager, "Demo", "Submitter", "Submitter", isDemo: true);
-
-            var projectManagerId = userManager.FindByEmail(projectManagerEmail).Id;
-            userManager.AddToRole(projectManagerId, "ProjectManager");
-
-            string devEmail = "dev@coderfoundry.com";
-            if (!context.Users.Any(u => u.Email == devEmail))
-            {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = devEmail,
-                    Email = devEmail,
-                    FirstName = "Dev",
-                    LastName = "Guy",
-                    DisplayName = "Dev Guy"
-                }, "Password-1");
-            }
-
-            var devId = userManager.FindByEmail(devEmail).Id;
-            userManager.AddToRole(devId, "Developer");
-
-            string submitterEmail = "submitter@coderfoundry.com";
-            if (!context.Users.Any(u => u.Email == submitterEmail))
-            {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = submitterEmail,
-                    Email = submitterEmail,
-                    FirstName = "Sally",
-                    LastName = "Submitter",
-                    DisplayName = "Sally Submitter"
-                }, "Password-1");
-            }
-
-            var submitterId = userManager.FindByEmail(submitterEmail).Id;
-            userManager.AddToRole(submitterId, "Submitter");
-
-            //var projects = context.Projects.ToList();
-            //if (projects.Count == 0)
-            //{
-            //    return;
-            //}
-            //context.Tickets.AddOrUpdate(
-            //    t => t.Title,
-            //    new Ticket{ProjectId = projects.FirstOrDefault(p => !String.IsNullOrWhiteSpace(p.Name)).Id});
+            CreateUser(context, userManager, "Demo", "Admin", "DemoAdmin", isDemo: true);
+            CreateUser(context, userManager, "Demo", "ProjectManager", "DemoProjectManager", isDemo: true);
+            CreateUser(context, userManager, "Demo", "Developer", "DemoDeveloper", isDemo: true);
+            CreateUser(context, userManager, "Demo", "Submitter", "DemoSubmitter", isDemo: true);
         }
 
-        private void CreateUser(ApplicationDbContext context, UserManager<ApplicationUser> userManager, string firstName, string lastName, string role, bool isDemo = false)
+        private void CreateUser(ApplicationDbContext context, UserManager<ApplicationUser> userManager, string firstName, string lastName, string role, string email=null, bool isDemo = false)
         {
             var password = isDemo ? WebConfigurationManager.AppSettings["DemoPassword"] : WebConfigurationManager.AppSettings["DefaultPassword"];
-            string mailinatorEmail = $"{firstName}.{lastName}@mailinator.com";
-            if (!context.Users.Any(u => u.Email == mailinatorEmail))
+            if (String.IsNullOrWhiteSpace(email))
+            {
+                email = $"{firstName}.{lastName}@mailinator.com";
+            }
+            if (!context.Users.Any(u => u.Email == email))
             {
                 userManager.Create(new ApplicationUser
                 {
-                    UserName = mailinatorEmail,
-                    Email = mailinatorEmail,
+                    UserName = email,
+                    Email = email,
                     FirstName = firstName,
                     LastName = lastName,
                     DisplayName = $"{firstName} {lastName}"
                 }, password);
             }
 
-            var userId = userManager.FindByEmail(mailinatorEmail).Id;
+            var userId = userManager.FindByEmail(email).Id;
             userManager.AddToRole(userId, role);
         }
     }

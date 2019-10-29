@@ -8,6 +8,7 @@ using BugTracker.ViewModels;
 
 namespace BugTracker.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ManageUsersController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
