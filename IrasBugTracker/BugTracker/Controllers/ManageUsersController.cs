@@ -44,10 +44,9 @@ namespace BugTracker.Controllers
         {
             foreach (var userId in userIds)
             {
-                var currentRole = roleHelper.GetUserCurrentlyAssignedRoles(userId).FirstOrDefault();
-                if (currentRole != null)
+                foreach (var currentlyAssignedRole in roleHelper.GetUserCurrentlyAssignedRoles(userId))
                 {
-                    roleHelper.RemoveUserFromRole(userId, currentRole);
+                    roleHelper.RemoveUserFromRole(userId, currentlyAssignedRole);
                 }
             }
 

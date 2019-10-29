@@ -24,11 +24,18 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
-                    
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("My Projects", "AssignedIndex", "Projects")</li>
+                    }
                     @if (User.IsInRole("Admin"))
                     {
+                        <li>@Html.ActionLink("All Projects", "Index", "Projects")</li>
                         <li>@Html.ActionLink("Manage Users", "ManageRoles", "ManageUsers")</li>
+                    }
+                    @if (User.IsInRole("ProjectManager"))
+                    {
+                        <li>@Html.ActionLink("All Projects", "Index", "Projects")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

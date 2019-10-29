@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -15,11 +16,19 @@ namespace BugTracker.Controllers
         private ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
         private readonly ProjectHelper _projectHelper = new ProjectHelper();
-        
+
         [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_db.Projects.ToList());
+        }
+
+        [AllowAnonymous]
+        public ActionResult AssignedIndex()
+        {
+            var currentUserId = User.Identity.GetUserId();
+            var projectsAssigned = _db.Projects.Where(p => p.Members.Any(m => m.Id == currentUserId));
+            return View(projectsAssigned.ToList());
         }
 
         [AllowAnonymous]

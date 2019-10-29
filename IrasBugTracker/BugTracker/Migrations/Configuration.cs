@@ -68,6 +68,7 @@ namespace BugTracker.Migrations
 
             CreateUser(context, userManager, "Admin", "Nye", "Admin", "admin@domain.com");
             CreateUser(context, userManager, "SuperUser", "Steve", "Admin", "admin@mailinator.com");
+            CreateUser(context, userManager, "Peter", "PM", "ProjectManager", "pm@coderfoundry.com");
             CreateUser(context, userManager, "Peter", "PM", "Admin", "pm@coderfoundry.com");
             CreateUser(context, userManager, "Dave", "Developer", "Developer", "dev@coderfoundry.com", isDemo: false);
             CreateUser(context, userManager, "Sally", "Submitter", "Submitter", isDemo: false);

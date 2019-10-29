@@ -41,7 +41,8 @@ namespace BugTracker.Helpers
             try
             {
                 var senderEmail = $"Web Admin<{EmailSendFrom}>";
-                var mailMsg = new MailMessage(senderEmail, EmailSendFrom)
+                var recipientEmail = model.Email;
+                var mailMsg = new MailMessage(senderEmail, recipientEmail)
                 {
                     Subject = "Confirm your Account",
                     Body = $"Please confirm your Account (at BugTracker) by clicking <a href=\"{callbackUrl}\"here</a>",
@@ -60,15 +61,17 @@ namespace BugTracker.Helpers
 
         public static async Task ComposeEmailAsync(ForgotPasswordViewModel model, string callbackUrl)
         {
+            var strFormat = "<p>You have a message From: <bold>{0}</bold> ({1})</p><p>Message:</p><p>{2}</p>";
+            var appName = "BugTracker";
+
             try
             {
-                var senderEmail = $"Web Admin<{EmailSendFrom}>";
-                var mailMsg = new MailMessage(senderEmail, EmailSendFrom)
-                {
-                    Subject = "Reset Password",
-                    Body = $"Please reset your password (at BugTracker) by clicking <a href=\"{callbackUrl}\"here</a>",
-                    IsBodyHtml = true
-                };
+                var senderEmail = $"{EmailSendFrom}<{EmailSendFrom}>";
+                var recipientEmail = model.Email;
+                var mailMsg = new MailMessage(senderEmail, recipientEmail);
+                mailMsg.Subject = $"({appName}) Forgot Password";
+                mailMsg.Body = callbackUrl;
+                mailMsg.IsBodyHtml = true;
 
                 var svc = new PersonalEmail();
                 await svc.SendAsync(mailMsg);

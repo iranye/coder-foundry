@@ -53,6 +53,16 @@ namespace BugTracker
             //app.UseTwitterAuthentication(
             //   consumerKey: "",
             //   consumerSecret: "");
+
+            app.UseFacebookAuthentication(
+                appId: "460270217921458",
+                appSecret: "3c433f555a49e5b3f2f8e1652db27417");
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "286560462120-240egg8eaug3guqqut4is5m0gs1nvksg.apps.googleusercontent.com",
+                ClientSecret = "_9EHr3mmI-pv5MqnSypGBMT8"
+            });
         }
     }
 }

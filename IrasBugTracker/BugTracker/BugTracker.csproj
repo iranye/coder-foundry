@@ -176,6 +176,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\PersonalEmail.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\RoleHelper.cs" />
     <Compile Include="Migrations\201910252110065_Initial.cs" />
@@ -185,6 +186,10 @@
     <Compile Include="Migrations\201910252115020_AddModels.cs" />
     <Compile Include="Migrations\201910252115020_AddModels.Designer.cs">
       <DependentUpon>201910252115020_AddModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910291619531_RequireFirstAndLastName.cs" />
+    <Compile Include="Migrations\201910291619531_RequireFirstAndLastName.Designer.cs">
+      <DependentUpon>201910291619531_RequireFirstAndLastName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -270,6 +275,7 @@
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Projects\ManageMembers.cshtml" />
+    <Content Include="Views\Projects\AssignedIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -293,6 +299,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910252115020_AddModels.resx">
       <DependentUpon>201910252115020_AddModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910291619531_RequireFirstAndLastName.resx">
+      <DependentUpon>201910291619531_RequireFirstAndLastName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
