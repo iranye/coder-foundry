@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -11,6 +12,12 @@ namespace BugTracker
 {
     public partial class Startup
     {
+        private static readonly string GoogleClientId = WebConfigurationManager.AppSettings["GoogleClientId"];
+        private static readonly string GoogleClientSecret = WebConfigurationManager.AppSettings["GoogleClientSecret"];
+
+        private static readonly string FacebookAppId = WebConfigurationManager.AppSettings["FacebookAppId"];
+        private static readonly string FacebookAppSecret = WebConfigurationManager.AppSettings["FacebookAppSecret"];
+
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -55,13 +62,13 @@ namespace BugTracker
             //   consumerSecret: "");
 
             app.UseFacebookAuthentication(
-                appId: "460270217921458",
-                appSecret: "3c433f555a49e5b3f2f8e1652db27417");
+                appId: FacebookAppId,
+                appSecret: FacebookAppSecret);
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "286560462120-240egg8eaug3guqqut4is5m0gs1nvksg.apps.googleusercontent.com",
-                ClientSecret = "_9EHr3mmI-pv5MqnSypGBMT8"
+                ClientId = GoogleClientId,
+                ClientSecret = GoogleClientSecret
             });
         }
     }
