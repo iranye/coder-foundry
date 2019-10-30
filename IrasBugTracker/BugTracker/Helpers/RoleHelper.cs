@@ -75,5 +75,22 @@ namespace BugTracker.Helpers
 
             return userManager.GetRoles(user.Id);
         }
+
+        public bool UserIsInRole(string userId, string roleName)
+        {
+            var currentRolesByUserId = GetUserCurrentlyAssignedRoles(userId);
+            return currentRolesByUserId.Contains(roleName);
+        }
+
+        public string GetDisplayName(string userId)
+        {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var user = userManager.FindById(userId);
+            if (String.IsNullOrWhiteSpace(user.DisplayName))
+            {
+                return $"{user.FirstName}";
+            }
+            return user.DisplayName;
+        }
     }
 }

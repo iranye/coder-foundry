@@ -6,6 +6,20 @@ namespace BugTracker.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
+        [Display(Name = "First Name")]
+        [StringLength(50, ErrorMessage = "First Name must be between {2} and {1} characters long.", MinimumLength = 1)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        [StringLength(50, ErrorMessage = "Last Name must be between {2} and {1} characters long.", MinimumLength = 1)]
+        public string LastName { get; set; }
+
+        [Display(Name = "Display Name")]
+        [StringLength(90)]
+        public string DisplayName { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
@@ -73,6 +87,10 @@ namespace BugTracker.Models
         [Display(Name = "Last Name")]
         [StringLength(50, ErrorMessage = "Last Name must be between {2} and {1} characters long.", MinimumLength = 1)]
         public string LastName { get; set; }
+
+        [Display(Name = "Display Name")]
+        [StringLength(90)]
+        public string DisplayName { get; set; }
 
         [Required]
         [EmailAddress]

@@ -151,10 +151,12 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+                var displayName = String.IsNullOrWhiteSpace(model.DisplayName) ? $"{model.FirstName} {model.LastName}" : model.DisplayName;
                 var user = new ApplicationUser
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    DisplayName = displayName,
                     UserName = model.Email,
                     Email = model.Email
                 };
@@ -383,7 +385,15 @@ namespace BugTracker.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var displayName = String.IsNullOrWhiteSpace(model.DisplayName) ? $"{model.FirstName} {model.LastName}" : model.DisplayName;
+                var user = new ApplicationUser
+                {
+                    FirstName = model.FirstName,
+                    LastName= model.LastName,
+                    DisplayName = displayName,
+                    UserName = model.Email, 
+                    Email = model.Email
+                };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

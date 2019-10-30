@@ -30,7 +30,7 @@ namespace BugTracker.ViewModels
         {
         }
 
-        public Project Project { get; private set; }
+        public Project Project { get; set; }
         public ICollection<ManageMembersViewModel> Members { get; set; } = new HashSet<ManageMembersViewModel>();
         public ICollection<ManageMembersViewModel> NonMembers { get; set; } = new HashSet<ManageMembersViewModel>();
 

@@ -1,4 +1,5 @@
-﻿using BugTracker.Helpers;
+﻿using System;
+using BugTracker.Helpers;
 using BugTracker.Models;
 using BugTracker.ViewModels;
 using System.Collections.Generic;
@@ -69,6 +70,31 @@ namespace BugTracker.Controllers
             return View(project);
         }
 
+        public ActionResult ManageScottyUsers(int id)
+        {
+            foreach (var user in _projectHelper.AllUsersOnProject(id))
+            {
+                string currentPm = null;
+                if (_roleHelper.UserIsInRole(user.Id, "ProjectManager"))
+                {
+                    currentPm = user.Id;
+                }
+            }
+
+            //ViewBag.ProjectManagerId =
+            //    new SelectList(_roleHelper.UserIsInRole("ProjectManager"), "Id", "Email", currentPm);
+            //var projDevs = new List<string>();
+            //foreach (var user in _projectHelper.AllUsersOnProject(id))
+            //{
+            //    if (_roleHelper.GetUserCurrentlyAssignedRoles(user.Id).Any(r => r == "Developer"))
+            //    {
+            //        projDevs.Add(user.Id);
+            //    }
+            //}
+            //ViewBag.Developers = new MultiSelectList(_roleHelper.UsersInRole("Developer"), "Id", "Email");
+            return View();
+        }
+
         public ActionResult ManageMembers(int? id)
         {
             if (id == null)
@@ -76,6 +102,10 @@ namespace BugTracker.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Project project = _db.Projects.Find(id);
+            if (project == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
             ProjectMembersViewModel projectMembersViewModel = new ProjectMembersViewModel(project);
 
             ViewBag.ProjectId = id;
@@ -108,15 +138,15 @@ namespace BugTracker.Controllers
                         });
                 }
             }
-            ViewBag.AllUsers = new MultiSelectList(projectMembersViewModel.AllUsers, "Id", "Email");
-            ViewBag.MemberIds = new MultiSelectList(projectMembersViewModel.Members, "Id", "Email");
-            ViewBag.NonMemberIds = new MultiSelectList(projectMembersViewModel.NonMembers, "Id", "Email");
+            ViewBag.MembersToAdd = new SelectList(new List<string>());
+            ViewBag.MembersToRemove = new SelectList(new List<string>());
+
             return View(projectMembersViewModel);
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageMembers(List<string> memberIds, List<string> nonMemberIds, int projectId)
+        public ActionResult ManageMembers(List<string> membersToRemove, List<string> membersToAdd, int projectId = 0)
         {
             Project project = _db.Projects.Find(projectId);
             if (project == null)
@@ -125,24 +155,24 @@ namespace BugTracker.Controllers
             }
 
             // Remove Action
-            if (memberIds != null)
+            if (membersToRemove != null)
             {
-                foreach (var userId in memberIds)
+                foreach (var email in membersToRemove)
                 {
-                    _projectHelper.RemoveUserFromProject(userId, projectId);
+                    _projectHelper.RemoveUserFromProjectByEmail(email, projectId);
                 }
             }
 
             // Add Action
-            if (nonMemberIds != null)
+            if (membersToAdd != null)
             {
-                foreach (var userId in nonMemberIds)
+                foreach (var email in membersToAdd)
                 {
-                    _projectHelper.AddUserToProject(userId, projectId);
+                    _projectHelper.AddUserToProjectByEmail(email, projectId);
                 }
             }
 
-            return RedirectToAction("ManageMembers", "Projects", projectId);
+            return RedirectToAction("ManageMembers", "Projects", new {id = projectId});
         }
 
         // GET: Projects/Edit/5
