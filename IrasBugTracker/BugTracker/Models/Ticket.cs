@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,10 @@ namespace BugTracker.Models
     {
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(255, ErrorMessage = "Title must be between {2} and {1} characters long.", MinimumLength = 3)]
         public string Title { get; set; }
+
         public string Description { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
@@ -20,6 +24,7 @@ namespace BugTracker.Models
         public int TicketPriorityId { get; set; }
         public int TicketStatusId { get; set; }
         public int TicketTypeId { get; set; }
+
         public string OwnerId { get; set; }
         public string AssignedToId { get; set; }
 
@@ -31,5 +36,9 @@ namespace BugTracker.Models
 
         public virtual ApplicationUser Owner { get; set; }
         public virtual ApplicationUser AssignedTo { get; set; }
+        
+        public virtual ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>();
+        public virtual ICollection<TicketHistory> Events { get; set; } = new List<TicketHistory>();
+        public virtual ICollection<TicketNotification> Notifications { get; set; } = new List<TicketNotification>();
     }
 }

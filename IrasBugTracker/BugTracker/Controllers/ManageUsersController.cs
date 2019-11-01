@@ -8,27 +8,26 @@ using BugTracker.ViewModels;
 
 namespace BugTracker.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, DemoAdmin")]
     public class ManageUsersController : Controller
     {
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
-        private readonly RoleHelper roleHelper = new RoleHelper();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly RoleHelper _roleHelper = new RoleHelper();
 
-        // GET: Admin
         public ActionResult ManageRoles()
         {
-            ViewBag.UserIds = new MultiSelectList(db.Users, "Id", "Email");
-            ViewBag.Role = new SelectList(db.Roles, "Name", "Name");
+            ViewBag.UserIds = new MultiSelectList(_db.Users.OrderBy(u => u.Email), "Id", "Email");
+            ViewBag.Role = new SelectList(_db.Roles, "Name", "Name");
 
             var users = new List<ManageRolesViewModel>();
-            foreach (var user in db.Users.ToList())
+            foreach (var user in _db.Users.ToList())
             {
                 users.Add(
                     new ManageRolesViewModel
                     {
                         FullName = $"{user.FirstName} {user.LastName}",
                         Email = user.Email,
-                        Role = roleHelper.GetUserCurrentlyAssignedRoles(user.Id).FirstOrDefault()
+                        Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault()
                     });
             }
             return View(users);
@@ -44,9 +43,9 @@ namespace BugTracker.Controllers
         {
             foreach (var userId in userIds)
             {
-                foreach (var currentlyAssignedRole in roleHelper.GetUserCurrentlyAssignedRoles(userId))
+                foreach (var currentlyAssignedRole in _roleHelper.ListUserRolesByUserId(userId))
                 {
-                    roleHelper.RemoveUserFromRole(userId, currentlyAssignedRole);
+                    _roleHelper.RemoveUserFromRole(userId, currentlyAssignedRole);
                 }
             }
 
@@ -56,7 +55,7 @@ namespace BugTracker.Controllers
             }
             foreach (var userId in userIds)
             {
-                roleHelper.AddUserToRole(userId, role);
+                _roleHelper.AddUserToRole(userId, role);
             }
             return RedirectToAction("ManageRoles", "ManageUsers");
         }
@@ -65,7 +64,7 @@ namespace BugTracker.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

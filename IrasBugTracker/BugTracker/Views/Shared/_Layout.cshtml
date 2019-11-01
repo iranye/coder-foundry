@@ -23,8 +23,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("My Projects", "AssignedIndex", "Projects")</li>
@@ -37,6 +37,10 @@
                     @if (User.IsInRole("ProjectManager"))
                     {
                         <li>@Html.ActionLink("All Projects", "Index", "Projects")</li>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

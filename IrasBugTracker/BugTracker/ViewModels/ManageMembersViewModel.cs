@@ -26,18 +26,17 @@ namespace BugTracker.ViewModels
     /// </summary>
     public class ProjectMembersViewModel
     {
-        public ProjectMembersViewModel()
-        {
-        }
-
         public Project Project { get; set; }
         public ICollection<ManageMembersViewModel> Members { get; set; } = new HashSet<ManageMembersViewModel>();
         public ICollection<ManageMembersViewModel> NonMembers { get; set; } = new HashSet<ManageMembersViewModel>();
 
-        public ICollection<ManageMembersViewModel> AllUsers 
-        { 
+        public ICollection<ManageMembersViewModel> AllUsers
+        {
             get { return Members.Union(NonMembers).ToList(); }
         }
+
+        public ProjectMembersViewModel()
+        {}
 
         public ProjectMembersViewModel(Project project)
         {

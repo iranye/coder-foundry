@@ -11,20 +11,19 @@ using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
-    [Authorize(Roles = "Admin, ProjectManager")]
     public class ProjectsController : Controller
     {
-        private ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
         private readonly ProjectHelper _projectHelper = new ProjectHelper();
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         public ActionResult Index()
         {
             return View(_db.Projects.ToList());
         }
 
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult AssignedIndex()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -32,7 +31,7 @@ namespace BugTracker.Controllers
             return View(projectsAssigned.ToList());
         }
 
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -44,16 +43,17 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(project);
         }
 
-        // GET: Projects/Create
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Projects/Create
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -70,31 +70,7 @@ namespace BugTracker.Controllers
             return View(project);
         }
 
-        public ActionResult ManageScottyUsers(int id)
-        {
-            foreach (var user in _projectHelper.AllUsersOnProject(id))
-            {
-                string currentPm = null;
-                if (_roleHelper.UserIsInRole(user.Id, "ProjectManager"))
-                {
-                    currentPm = user.Id;
-                }
-            }
-
-            //ViewBag.ProjectManagerId =
-            //    new SelectList(_roleHelper.UserIsInRole("ProjectManager"), "Id", "Email", currentPm);
-            //var projDevs = new List<string>();
-            //foreach (var user in _projectHelper.AllUsersOnProject(id))
-            //{
-            //    if (_roleHelper.GetUserCurrentlyAssignedRoles(user.Id).Any(r => r == "Developer"))
-            //    {
-            //        projDevs.Add(user.Id);
-            //    }
-            //}
-            //ViewBag.Developers = new MultiSelectList(_roleHelper.UsersInRole("Developer"), "Id", "Email");
-            return View();
-        }
-
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         public ActionResult ManageMembers(int? id)
         {
             if (id == null)
@@ -121,7 +97,7 @@ namespace BugTracker.Controllers
                             Id = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
                             Email = user.Email,
-                            Role = _roleHelper.GetUserCurrentlyAssignedRoles(user.Id).FirstOrDefault(),
+                            Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault(),
                             IsMember = true
                         });
                 }
@@ -133,7 +109,7 @@ namespace BugTracker.Controllers
                             Id = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
                             Email = user.Email,
-                            Role = _roleHelper.GetUserCurrentlyAssignedRoles(user.Id).FirstOrDefault(),
+                            Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault(),
                             IsMember = false
                         });
                 }
@@ -146,6 +122,7 @@ namespace BugTracker.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         public ActionResult ManageMembers(List<string> membersToRemove, List<string> membersToAdd, int projectId = 0)
         {
             Project project = _db.Projects.Find(projectId);
@@ -175,7 +152,7 @@ namespace BugTracker.Controllers
             return RedirectToAction("ManageMembers", "Projects", new {id = projectId});
         }
 
-        // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -190,7 +167,7 @@ namespace BugTracker.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
+        [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -204,32 +181,6 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Index");
             }
             return View(project);
-        }
-
-        // GET: Projects/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Project project = _db.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-            return View(project);
-        }
-
-        // POST: Projects/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Project project = _db.Projects.Find(id);
-            _db.Projects.Remove(project);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

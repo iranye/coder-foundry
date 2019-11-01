@@ -176,6 +176,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\TicketCommentsController.cs" />
+    <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,6 +186,7 @@
     <Compile Include="Helpers\PersonalEmail.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\RoleHelper.cs" />
+    <Compile Include="Helpers\TicketHelper.cs" />
     <Compile Include="Migrations\201910252110065_Initial.cs" />
     <Compile Include="Migrations\201910252110065_Initial.Designer.cs">
       <DependentUpon>201910252110065_Initial.cs</DependentUpon>
@@ -195,6 +198,18 @@
     <Compile Include="Migrations\201910291619531_RequireFirstAndLastName.cs" />
     <Compile Include="Migrations\201910291619531_RequireFirstAndLastName.Designer.cs">
       <DependentUpon>201910291619531_RequireFirstAndLastName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910311326354_PopulateTicketTables.cs" />
+    <Compile Include="Migrations\201910311326354_PopulateTicketTables.Designer.cs">
+      <DependentUpon>201910311326354_PopulateTicketTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910311410340_FixNullableFlags.cs" />
+    <Compile Include="Migrations\201910311410340_FixNullableFlags.Designer.cs">
+      <DependentUpon>201910311410340_FixNullableFlags.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs" />
+    <Compile Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.Designer.cs">
+      <DependentUpon>201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -277,13 +292,15 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ManageUsers\ManageRoles.cshtml" />
     <Content Include="Views\Projects\Create.cshtml" />
-    <Content Include="Views\Projects\Delete.cshtml" />
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Projects\ManageMembers.cshtml" />
     <Content Include="Views\Projects\AssignedIndex.cshtml" />
-    <Content Include="Views\Projects\ManageScottyUsers.cshtml" />
+    <Content Include="Views\Tickets\Create.cshtml" />
+    <Content Include="Views\Tickets\Details.cshtml" />
+    <Content Include="Views\Tickets\Edit.cshtml" />
+    <Content Include="Views\Tickets\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -310,6 +327,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910291619531_RequireFirstAndLastName.resx">
       <DependentUpon>201910291619531_RequireFirstAndLastName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910311326354_PopulateTicketTables.resx">
+      <DependentUpon>201910311326354_PopulateTicketTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910311410340_FixNullableFlags.resx">
+      <DependentUpon>201910311410340_FixNullableFlags.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.resx">
+      <DependentUpon>201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -11,12 +11,12 @@ namespace BugTracker.Helpers
 {
     public class RoleHelper
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public void AddUserToRole(string userId, string role)
         {
             string message = "";
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
 
             var user = userManager.FindById(userId);
             if (user == null)
@@ -25,7 +25,7 @@ namespace BugTracker.Helpers
                 throw new Exception(message);
             }
 
-            var roleFromDb = db.Roles.FirstOrDefault(r => r.Name == role);
+            var roleFromDb = _db.Roles.FirstOrDefault(r => r.Name == role);
             if (roleFromDb == null)
             {
                 message = $"Invalid Role '{role}'";
@@ -37,7 +37,7 @@ namespace BugTracker.Helpers
         public void RemoveUserFromRole(string userId, string roleToRemove)
         {
             string message = "";
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
 
             var user = userManager.FindById(userId);
             if (user == null)
@@ -46,7 +46,7 @@ namespace BugTracker.Helpers
                 throw new Exception(message);
             }
 
-            IdentityRole roleFromDb = db.Roles.FirstOrDefault(r => r.Name == roleToRemove);
+            IdentityRole roleFromDb = _db.Roles.FirstOrDefault(r => r.Name == roleToRemove);
             if (roleFromDb == null)
             {
                 message = $"Invalid Role '{roleToRemove}'";
@@ -61,10 +61,10 @@ namespace BugTracker.Helpers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public ICollection<string> GetUserCurrentlyAssignedRoles(string userId)
+        public ICollection<string> ListUserRolesByUserId(string userId)
         {
             string message = "";
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
 
             var user = userManager.FindById(userId);
             if (user == null)
@@ -78,13 +78,13 @@ namespace BugTracker.Helpers
 
         public bool UserIsInRole(string userId, string roleName)
         {
-            var currentRolesByUserId = GetUserCurrentlyAssignedRoles(userId);
+            var currentRolesByUserId = ListUserRolesByUserId(userId);
             return currentRolesByUserId.Contains(roleName);
         }
 
         public string GetDisplayName(string userId)
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             var user = userManager.FindById(userId);
             if (String.IsNullOrWhiteSpace(user.DisplayName))
             {

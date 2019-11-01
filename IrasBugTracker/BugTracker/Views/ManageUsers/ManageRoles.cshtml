@@ -21,14 +21,16 @@
 
 <div class="row">
     <div class="col-md-7">
-        <table class="table">
+        <table class="table index-table">
+            <thead>
             <tr>
                 <th>@Html.DisplayNameFor(m => m.FullName)</th>
                 <th>@Html.DisplayNameFor(m => m.Email)</th>
                 <th>@Html.DisplayNameFor(m => m.Role)</th>
             </tr>
-
-            @foreach (var item in Model)
+            </thead>
+            <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Email))
             {
                 <tr>
                     <td>
@@ -42,6 +44,7 @@
                     </td>
                 </tr>
             }
+            </tbody>
         </table>
     </div>
     <div class="col-md-5">

@@ -1,0 +1,179 @@
+﻿@model BugTracker.Models.Ticket
+
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    
+    .comment-metadata {
+        font-size: 1em;
+        font-style: italic;
+        display: block;
+        margin: 0;
+        text-align: left;
+    }
+
+    .text-area-wide {
+        min-width: 380px;
+    }
+</style>
+<h2>Ticket - @Model.Title</h2>
+
+<!-- Ticket Content -->
+<article>
+    <div class="container">
+        <div class="row"><div>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Assignee")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.AssignedTo.FirstName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Owner")
+                    </dt>
+
+                    <dd>
+                        <span>@Html.DisplayFor(model => model.Owner.DisplayName)&nbsp;&lt;@Html.DisplayFor(model => model.Owner.Email)&gt;</span>
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Project")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Project.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TicketPriority.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketPriority.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TicketStatus.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketStatus.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TicketType.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TicketType.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Created)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Created)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Updated)
+                    </dd>
+
+                </dl>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-md-12">
+                    <hr />
+                    <h1>Comments</h1>
+                    <hr />
+                    @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
+                    {
+                        <div class="row">
+                            <div class="col-sm-3 comment-metadata">
+                                @comment.Author.DisplayName @comment.Created.ToString("M/d/yy")
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    @comment.CommentBody
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
+                        {
+                            <div class="row">
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id)
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.TextArea("CommentBody", new { row = 5, cols = 1000, placeholder = "Add Comment...", id = "txtComment", @class="text-area-wide" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default" type="submit" id="btnSubmit">Comment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    <hr />
+                    <div class="row">
+                        <span class="col-md-3"><strong>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|&nbsp;<strong>@Html.ActionLink("Back to List", "Index")</strong></strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+@section scripts
+{
+    <script>
+
+        $('#btnSubmit').prop("disabled", true);
+        var initVal = $('#txtComment').val();
+
+        $(document).ready(function(){
+            var commentLimit = 1500;
+
+            $('#txtComment').keyup(function () {
+
+                // Enable Submit only when a Comment is entered.
+                if($('#txtComment').val().length > 0 && $('#txtComment').val() !== initVal) {
+                    $('#btnSubmit').prop("disabled", false);
+                }else {
+                    $('#btnSubmit').prop("disabled", true);
+                }
+
+                $(this).val($(this).val().substring(0, commentLimit));
+            });
+        });
+    </script>
+}

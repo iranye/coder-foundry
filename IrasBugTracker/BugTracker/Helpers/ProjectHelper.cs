@@ -12,13 +12,13 @@ namespace BugTracker.Helpers
 {
     public class ProjectHelper
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
 
         public bool UserIsOnProject(string userId, int projectId)
         {
             bool ret = false;
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project != null)
             {
                 return project.Members.Any(u => u.Id == userId);
@@ -29,7 +29,7 @@ namespace BugTracker.Helpers
 
         public ICollection<Project> ListUserProjects(string userId)
         {
-            ApplicationUser user = db.Users.Find(userId);
+            ApplicationUser user = _db.Users.Find(userId);
             return user == null ? null : user.Projects.ToList();
         }
 
@@ -40,21 +40,21 @@ namespace BugTracker.Helpers
                 return;
             }
 
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project != null)
             {
-                ApplicationUser user = db.Users.Find(userId);
+                ApplicationUser user = _db.Users.Find(userId);
                 if (user != null)
                 {
                     project.Members.Add(user);
-                    db.SaveChanges();
+                    _db.SaveChanges();
                 }
             }
         }
 
         public void AddUserToProjectByEmail(string email, int projectId)
         {
-            ApplicationUser user = db.Users.FirstOrDefault(u => u.Email == email);
+            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Email == email);
             if (user == null)
             {
                 return;
@@ -64,17 +64,17 @@ namespace BugTracker.Helpers
                 return;
             }
 
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project != null)
             {
                 project.Members.Add(user);
-                db.SaveChanges();
+                _db.SaveChanges();
             }
         }
 
         public void RemoveUserFromProjectByEmail(string email, int projectId)
         {
-            ApplicationUser user = db.Users.FirstOrDefault(u => u.Email == email);
+            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Email == email);
             if (user == null)
             {
                 return;
@@ -84,12 +84,12 @@ namespace BugTracker.Helpers
                 return;
             }
 
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project != null)
             {
                 project.Members.Remove(user);
-                db.Entry(project).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(project).State = EntityState.Modified;
+                _db.SaveChanges();
             }
         }
 
@@ -100,22 +100,22 @@ namespace BugTracker.Helpers
                 return;
             }
 
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project != null)
             {
-                ApplicationUser user = db.Users.Find(userId);
+                ApplicationUser user = _db.Users.Find(userId);
                 if (user != null)
                 {
                     project.Members.Remove(user);
-                    db.Entry(project).State = EntityState.Modified;
-                    db.SaveChanges();
+                    _db.Entry(project).State = EntityState.Modified;
+                    _db.SaveChanges();
                 }
             }
         }
 
         public ICollection<ApplicationUser> AllUsersOnProject(int projectId)
         {
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project == null)
             {
                 return new HashSet<ApplicationUser>();
@@ -125,7 +125,7 @@ namespace BugTracker.Helpers
 
         public ICollection<ApplicationUser> AllUsersNotOnProject(int projectId)
         {
-            var project = db.Projects.Find(projectId);
+            var project = _db.Projects.Find(projectId);
             if (project == null)
             {
                 return null;
