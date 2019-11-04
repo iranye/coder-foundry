@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -37,6 +38,10 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+
+            var userId = User.Identity.GetUserId();
+            ViewBag.CanUpdate = _roleHelper.UserIsInRole(userId, "Admin") ||
+                                _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
             return View(ticket);
         }
 
@@ -57,7 +62,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Submitter,DemoSubmitter")]
-        public ActionResult Create([Bind(Include = "Title,Description,ProjectId,TicketPriorityId,TicketTypeId")] Ticket ticket)
+        public ActionResult Create([Bind(Include = "Title,Description,ProjectId,TicketPriorityId,TicketTypeId")] Ticket ticket, HttpPostedFileBase attachmentFile)
         {
             if (ModelState.IsValid)
             {
@@ -66,8 +71,31 @@ namespace BugTracker.Controllers
                 {
                     ticket.OwnerId = currentUserId;
                     ticket.Created = DateTime.Now;
+                    TicketAttachment attachment = null;
 
-                    // TODO: Add (extension?) method to get default status
+                    if (HelperMethods.IsWebFriendlyImage(attachmentFile))
+                    {
+                        attachment = new TicketAttachment
+                        {
+                            CreatedById = currentUserId,
+                            CreatedDateTime = DateTime.Now,
+                        };
+
+                        // Run filename through URL Friendly method then Apply a timestamp to filename to avoid naming collisions
+                        var fileName = attachmentFile.FileName.GenerateSlug();
+                        var massagedFileName = fileName.ApplyDateTimeStamp();
+                        var dirPath = Server.MapPath("~/Uploads/");
+                        
+                        if (HelperMethods.EnsureDirectoryExists(dirPath))
+                        {
+                            var filePath = Path.Combine(dirPath, massagedFileName);
+                            attachmentFile.SaveAs(filePath);
+                            attachment.MediaPath = $"/Uploads/{massagedFileName}";
+                            ticket.Attachments.Add(attachment);
+                        }
+                    }
+
+                    // TODO: Add (extension?) method to get default status (or implement Enums)
                     var ticketStatusOpen = _db.TicketStatuses.FirstOrDefault(s => s.Name == "Open");
                     ticket.TicketStatusId = ticketStatusOpen.Id;
                     var ticketPriorityUnknown = _db.TicketPriorities.FirstOrDefault(s => s.Name == "Unknown");

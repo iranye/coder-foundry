@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Helpers;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 
@@ -12,6 +13,8 @@ namespace BugTracker.Controllers
     public class TicketCommentsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly ProjectHelper _projectHelper = new ProjectHelper();
+        private readonly RoleHelper _roleHelper = new RoleHelper();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -27,14 +30,17 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
-                comment.TicketId = id;
-                comment.AuthorId = User.Identity.GetUserId();
-                comment.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                _db.TicketComments.Add(comment);
-                var res = _db.SaveChanges();
-                if (res == 0)
+                var userId = User.Identity.GetUserId();
+                var canUpdate = _roleHelper.UserIsInRole(userId, "Admin") ||
+                            _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+
+                if (canUpdate)
                 {
-                    // Save to History
+                    comment.TicketId = id;
+                    comment.AuthorId = User.Identity.GetUserId();
+                    comment.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                    _db.TicketComments.Add(comment);
+                    var res = _db.SaveChanges();
                 }
             }
 

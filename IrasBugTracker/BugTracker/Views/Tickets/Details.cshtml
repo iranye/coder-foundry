@@ -102,6 +102,25 @@
             <div class="row">
                 <div class="col-lg-8 col-md-12">
                     <hr />
+                    <h1>Attachments</h1>
+                    <hr />
+                    @foreach (var attachment in Model.Attachments.OrderBy(a => a.CreatedDateTime))
+                    {
+                        <div class="row">
+                            <div class="col-sm-3 comment-metadata">
+                                @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
+                            </div>
+                            <div class="col-sm-9">
+                                <img src="@attachment.MediaPath" height="250" width="250" />
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-md-12">
+                    <hr />
                     <h1>Comments</h1>
                     <hr />
                     @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
@@ -118,7 +137,7 @@
                         </div>
                         <hr />
                     }
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated && ViewBag.CanUpdate)
                     {
                         using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
                         {
@@ -145,7 +164,13 @@
                     }
                     <hr />
                     <div class="row">
-                        <span class="col-md-3"><strong>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|&nbsp;<strong>@Html.ActionLink("Back to List", "Index")</strong></strong></span>
+                        <span class="col-md-3">
+                            @if (User.Identity.IsAuthenticated && ViewBag.CanUpdate)
+                            {
+                                <strong>@Html.ActionLink("Edit | ", "Edit", new {id = Model.Id})</strong>
+                            }
+                            <strong>@Html.ActionLink("Back to List", "Index")</strong>
+                        </span>
                     </div>
                 </div>
             </div>
