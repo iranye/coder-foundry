@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,12 @@ namespace BugTracker.Models
     public class Ticket
     {
         public int Id { get; set; }
+
+        [NotMapped]
+        public string DisplayableId
+        {
+            get { return Id.ToString("000"); }
+        }
 
         [Required]
         [StringLength(255, ErrorMessage = "Title must be between {2} and {1} characters long.", MinimumLength = 3)]

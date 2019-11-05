@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BugTracker.Models;
+﻿using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace BugTracker.Helpers
 {
@@ -76,6 +75,26 @@ namespace BugTracker.Helpers
             return userManager.GetRoles(user.Id);
         }
 
+        /// <summary>
+        /// Retrieve the Role with highest Access-Level
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>The role by UserID w/ highest Access-Level</returns>
+        public string GetRoleByUserId(string userId)
+        {
+            var roles = ListUserRolesByUserId(userId);
+            var role = roles.FirstOrDefault();
+            if (roles.Count > 1)
+            {
+                role = roles.Contains("Admin") ? "Admin"
+                    : roles.Contains("ProjectManager") ? "ProjectManager"
+                    : roles.Contains("Developer") ? "Developer"
+                    : role;
+            }
+
+            return role;
+        }
+
         public bool UserIsInRole(string userId, string roleName)
         {
             var currentRolesByUserId = ListUserRolesByUserId(userId);
@@ -91,6 +110,39 @@ namespace BugTracker.Helpers
                 return $"{user.FirstName}";
             }
             return user.DisplayName;
+        }
+
+        public IEnumerable<ApplicationUser> UsersInRole(string role)
+        {
+            ICollection<ApplicationUser> usersInRole = new HashSet<ApplicationUser>();
+            if (String.IsNullOrWhiteSpace(role))
+            {
+                return usersInRole;
+            }
+
+            int maxLen = 50;
+            if (role.Length > maxLen)
+            {
+                role = role.Substring(0, maxLen);
+            }
+            SqlParameter param1 = new SqlParameter("@Role", role);
+            
+            var userIds = _db.Database.SqlQuery<string>("GetUsersInRole @Role", param1).ToList();
+
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
+            if (userIds != null)
+            {
+                foreach (var userId in userIds)
+                {
+                    var user = userManager.FindById(userId);
+                    if (user != null)
+                    {
+                        usersInRole.Add(user);
+                    }
+                }
+            }
+
+            return usersInRole;
         }
     }
 }

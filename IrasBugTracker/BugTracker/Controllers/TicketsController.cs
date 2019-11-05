@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Helpers;
@@ -17,14 +18,63 @@ namespace BugTracker.Controllers
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        private readonly ProjectHelper _projectHelper = new ProjectHelper();
         private readonly RoleHelper _roleHelper = new RoleHelper();
         private readonly TicketHelper _ticketHelper = new TicketHelper();
+        private readonly TicketHistoryHelper _ticketHistoryHelper = new TicketHistoryHelper();
 
         public ActionResult Index()
         {
             var tickets = _db.Tickets; // .Include(t => t.AssignedTo).Include(t => t.Owner).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
             return View(_ticketHelper.ListMyTickets());
+        }
+
+        public ActionResult AssignToUser(int? id)
+        {
+            // DO NOT USE: ASSIGN USERS IN Ticket Details Page
+            var ticket = _db.Tickets.Find(id);
+            if (ticket == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var users = _roleHelper.UsersInRole("Developer").ToList();
+            ViewBag.AssignedToUserId = new SelectList(users, "Id", "FullName", ticket.AssignedToId);
+            return RedirectToAction("Details", "Tickets", new { ticket.Id});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AssignTicket(Ticket model) // TODO: Fix this to take "Selected UserId from DropDown" & TicketID
+        {
+            var ticket = _db.Tickets.Find(model.Id);
+            if (ticket == null)
+            {
+                return HttpNotFound();
+            }
+
+            ticket.AssignedToId = model.AssignedToId;
+            _db.SaveChanges();
+
+            var callbackUrl = Url.Action("Details", "Tickets", new {id = ticket.Id}, protocol: Request.Url.Scheme);
+
+            try
+            {
+                PersonalEmail svc = new PersonalEmail();
+                IdentityMessage msg = new IdentityMessage();
+                ApplicationUser user = null;
+
+                msg.Body = "You have been assigned a new Ticket." + Environment.NewLine +
+                           "Please click the following link to view the details " +
+                           "<a href=\"" + callbackUrl + "\">New Ticket</a>";
+                msg.Destination = user.Email;
+                msg.Subject = "BugTracker Ticket Notification";
+            }
+            catch (Exception ex)
+            {
+                await Task.FromResult(0);
+            }
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult Details(int? id)
@@ -39,9 +89,11 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
+            var users = _roleHelper.UsersInRole("Developer").ToList();
+            ViewBag.AssignedToUserId = new SelectList(users, "Id", "DisplayName", ticket.AssignedToId);
+
             var userId = User.Identity.GetUserId();
-            ViewBag.CanUpdate = _roleHelper.UserIsInRole(userId, "Admin") ||
-                                _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+            ViewBag.CanAddContent = _ticketHelper.CanAddContent(userId, ticket);
             return View(ticket);
         }
 
@@ -138,12 +190,20 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                var oldTicket = _db.Tickets.Find(ticket.Id);
+                ticket.Updated = DateTime.Now;
+
+
                 _db.Entry(ticket).State = EntityState.Modified;
                 _db.SaveChanges();
+
+                _ticketHistoryHelper.RecordHistoricalChanges(oldTicket, ticket);
+
+                var user = _db.Users.Find(User.Identity.GetUserId());
                 return RedirectToAction("Index");
             }
             //ViewBag.AssignedToId = new SelectList(db.ApplicationUsers, "Id", "FirstName", ticket.AssignedToId);
@@ -152,7 +212,7 @@ namespace BugTracker.Controllers
             //ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Name", ticket.TicketStatusId);
             //ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-            return View(ticket);
+            return RedirectToAction("Details", "Tickets", new {ticket.Id});
         }
 
         protected override void Dispose(bool disposing)

@@ -21,7 +21,7 @@ namespace BugTracker.Helpers
             var project = _db.Projects.Find(projectId);
             if (project != null)
             {
-                return project.Members.Any(u => u.Id == userId);
+                ret = project.Members.Any(u => u.Id == userId);
             }
 
             return ret;

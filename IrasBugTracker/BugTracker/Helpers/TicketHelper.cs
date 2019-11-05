@@ -12,6 +12,7 @@ namespace BugTracker.Helpers
     public class TicketHelper
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly ProjectHelper _projectHelper = new ProjectHelper();
         private readonly RoleHelper _roleHelper = new RoleHelper();
 
         public int SetDefaultTicketStatus()
@@ -31,17 +32,9 @@ namespace BugTracker.Helpers
             var userId = HttpContext.Current.User.Identity.GetUserId();
             var user = _db.Users.Find(userId);
 
-            var myRoles = _roleHelper.ListUserRolesByUserId(userId);
-            var myRole = myRoles.FirstOrDefault();
-            if (myRoles.Count > 1)
-            {
-                myRole = myRoles.Contains("Admin") ? "Admin"
-                    : myRoles.Contains("ProjectManager") ? "ProjectManager"
-                    : myRoles.Contains("Developer") ? "Developer"
-                    : myRole;
-            }
+            var currentRoleByUserId = _roleHelper.GetRoleByUserId(userId);
 
-            switch (myRole)
+            switch (currentRoleByUserId)
             {
                 case "Admin":
                 case "DemoAdmin":
@@ -64,6 +57,31 @@ namespace BugTracker.Helpers
             }
 
             return myTickets;
+        }
+
+        /// <summary>
+        /// Determine if User has permission to add Content (e.g., Comments or Attachments) to a Ticket.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
+        public bool CanAddContent(string userId, Ticket ticket)
+        {
+            bool ret = false;
+            ICollection<string> currentRolesByUserId = _roleHelper.ListUserRolesByUserId(userId);
+            ret = currentRolesByUserId.Contains("Admin");
+
+            if (!ret)
+            {
+                ret = currentRolesByUserId.Contains("ProjectManager")
+                      && _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+            }
+            if (!ret)
+            {
+                ret = userId == ticket.AssignedToId || userId == ticket.OwnerId;
+            }
+
+            return ret;
         }
     }
 }

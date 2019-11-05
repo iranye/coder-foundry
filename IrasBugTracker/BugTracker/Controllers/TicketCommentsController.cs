@@ -13,8 +13,7 @@ namespace BugTracker.Controllers
     public class TicketCommentsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
-        private readonly ProjectHelper _projectHelper = new ProjectHelper();
-        private readonly RoleHelper _roleHelper = new RoleHelper();
+        private readonly TicketHelper _ticketHelper = new TicketHelper();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -31,10 +30,9 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
-                var canUpdate = _roleHelper.UserIsInRole(userId, "Admin") ||
-                            _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+                var canAddContent = _ticketHelper.CanAddContent(userId, ticket);
 
-                if (canUpdate)
+                if (canAddContent)
                 {
                     comment.TicketId = id;
                     comment.AuthorId = User.Identity.GetUserId();

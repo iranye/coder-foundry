@@ -176,6 +176,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\TicketAttachmentsController.cs" />
     <Compile Include="Controllers\TicketCommentsController.cs" />
     <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -188,6 +189,7 @@
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\RoleHelper.cs" />
     <Compile Include="Helpers\TicketHelper.cs" />
+    <Compile Include="Helpers\TicketHistoryHelper.cs" />
     <Compile Include="Migrations\201910252110065_Initial.cs" />
     <Compile Include="Migrations\201910252110065_Initial.Designer.cs">
       <DependentUpon>201910252110065_Initial.cs</DependentUpon>
@@ -211,6 +213,10 @@
     <Compile Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs" />
     <Compile Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.Designer.cs">
       <DependentUpon>201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911051910341_AddGetUsersByRoleSproc.cs" />
+    <Compile Include="Migrations\201911051910341_AddGetUsersByRoleSproc.Designer.cs">
+      <DependentUpon>201911051910341_AddGetUsersByRoleSproc.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -338,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911011638447_TicketCollectionUpdatesAndStrLenLimits.resx">
       <DependentUpon>201911011638447_TicketCollectionUpdatesAndStrLenLimits.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911051910341_AddGetUsersByRoleSproc.resx">
+      <DependentUpon>201911051910341_AddGetUsersByRoleSproc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
