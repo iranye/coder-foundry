@@ -83,5 +83,39 @@ namespace BugTracker.Helpers
 
             return ret;
         }
+
+        public bool CanEdit(string userId, Ticket ticket)
+        {
+            bool ret = false;
+            ICollection<string> currentRolesByUserId = _roleHelper.ListUserRolesByUserId(userId);
+            ret = currentRolesByUserId.Contains("Admin");
+
+            if (!ret)
+            {
+                ret = currentRolesByUserId.Contains("ProjectManager")
+                      && _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+            }
+            if (!ret)
+            {
+                ret = userId == ticket.AssignedToId;
+            }
+
+            return ret;
+        }
+
+        public bool CanChangeAssignment(string userId, Ticket ticket)
+        {
+            bool ret = false;
+            ICollection<string> currentRolesByUserId = _roleHelper.ListUserRolesByUserId(userId);
+            ret = currentRolesByUserId.Contains("Admin");
+
+            if (!ret)
+            {
+                ret = currentRolesByUserId.Contains("ProjectManager")
+                      && _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
+            }
+
+            return ret;
+        }
     }
 }

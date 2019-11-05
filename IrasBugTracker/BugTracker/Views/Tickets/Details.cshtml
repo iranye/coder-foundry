@@ -39,29 +39,7 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.AssignedTo.FirstName)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayName("Update Assignee")
-                    </dt>
-
-                    <dd>
-                        @using (Html.BeginForm("AssignTicket", "Tickets", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @Html.DropDownList("AssignedToUserId", null, "-- Select User --", new {@class = "controlWide"})
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6" style="margin-top: 5px;">
-                                    <button id="btnSubmit" type="submit" class="btn btn-primary controlWide">Save</button>
-                                </div>
-                            </div>
-                        }
+                        @Html.DisplayFor(model => model.AssignedTo.DisplayName)
                     </dd>
                     
                     <dt>
@@ -214,9 +192,9 @@
                     <hr />
                     <div class="row">
                         <span class="col-md-3">
-                            @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
+                            @if (User.Identity.IsAuthenticated && ViewBag.CanEdit)
                             {
-                                <strong>@Html.ActionLink("Edit | ", "Edit", new { id = Model.Id })</strong>
+                                <strong>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</strong>
                             }
                             <strong>@Html.ActionLink("Back to List", "Index")</strong>
                         </span>

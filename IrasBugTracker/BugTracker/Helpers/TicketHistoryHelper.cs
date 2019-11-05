@@ -12,9 +12,28 @@ namespace BugTracker.Helpers
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
 
-        public void RecordHistoricalChanges(Ticket oldTicket, Ticket newTicket)
+        public void RecordHistoricalChanges(string userId, Ticket oldTicket, Ticket newTicket)
         {
+            if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
+            {
+                var updateDateTime = newTicket.Updated.GetValueOrDefault();
+                if (updateDateTime == DateTime.MinValue)
+                {
+                    updateDateTime = DateTime.Now;
+                }
 
+                var record = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "TicketStatus",
+                    OldValue = oldTicket.TicketStatus.Name,
+                    NewValue = newTicket.TicketStatus.Name,
+                    ChangedDateTime = updateDateTime,
+                    ChangedById = userId
+                };
+                _db.TicketHistorys.Add(record);
+                _db.SaveChanges();
+            }
         }
     }
 }
