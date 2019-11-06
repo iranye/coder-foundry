@@ -23,6 +23,78 @@ Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
 * Bugs *
 Search & Replace modal fails to clear output box (probably bad jQuery)
 
+*** BugTracker ***
+** Other **
+Clean Up ProjectMembersViewModel (don't need separate AllUsers property)
+Refactor (make DRY) code to bring in attachment
+Support non-image attachments
+Be able to filter Project Members Table to show/un-show Users who have/don't have a checkbox
+Update "MyProjects" Page w/ TicketsCount, when clicked on gives a list of tickets for that Project
+Separate DB for Demo Interface
+
+** Refs **
+Link to another controller with parameter (E.g., Link to Project Details from TicketIndex View: @Html.ActionLink(item.Project.Name, "Details", "Projects", new { id = item.ProjectId }, null)
+update-database -verbose -TargetMigration:"TicketCollectionUpdatesAndStrLenLimits"
+UpdatedDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+return RedirectToAction("Details", "Tickets", new {ticket.Id});
+	$(document).ready(function() {
+    });
+	
+
+
+                    <dt>
+                        @Html.DisplayName("Update Assignee")
+                    </dt>
+
+                    <dd>
+                        @using (Html.BeginForm("AssignTicket", "Tickets", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.DropDownList("AssignedToUserId", null, "-- Select User --", new {@class = "controlWide"})
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6" style="margin-top: 5px;">
+                                    <button id="btnSubmit" type="submit" class="btn btn-primary controlWide">Save</button>
+                                </div>
+                            </div>
+                        }
+                    </dd>
+
+** Deliverables **
+* Week 1 *
+Authenticated users must be able to change their name and password
+Authenticated users must be able to recover a lost password
+Create Projects – Administrators and Project Managers must be able to create new projects
+Edit Projects – Administrators and Project Managers must be able to edit existing projects
+List Projects – Administrators, Project Managers, Developers, and Submitters must be able to view a list of projects they are assigned to. Administrators and Project Managers must be able to view a separate list of all projects. 
+Administrators and Project Managers must be able to assign and unassign users to and from projects. 
+Authenticated users must be able to change their name and password and Recover Lost Password
+If Role=PM, assign to Project on Creation
+Add "Create Ticket" feature in Project Index, Project Detail
+[Register, Login, ExternalLoginConfirmation]ViewModel should sub-class another class that has First,Last,Display Name
+Filter Manage Roles Table - be able to select users w/o Roles and group-assign
+
+* Week 2 *
+Tickets: 
+	Authenticated users can view a list of all tickets
+	Project Managers can view a tickets belonging to the projects to which they are assigned
+	Developers can view a list of all tickets belonging to the projects to which they are assigned
+	Developers can view a list of all tickets to which they are assigned
+	Submitters can view a list of all tickets which they own
+	All ticket lists must be sortable by column heading
+	All ticket lists must be searchable by text fields (full text search)
+	All ticket lists must be paged
+	Project Managers can edit tickets belonging to their Projects and assign them to Developers
+	Developers can edit tickets to which they are assigned (Cannot un-assign themselves.  If Dev is taken off a project, their Tickets revert to Unassigned)
+
+** Test Cases **
+If a user Role is switched (e.g., Submitter => Devloper) "Show My Tickets" no longer shows Tickets owned by user formerly was Submitter
+
+
 ** Blog Site **
 Update Edit Blog page to allow upload of image
 Update image in Edit Blog page to match Details

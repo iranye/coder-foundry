@@ -191,10 +191,21 @@ namespace BugTracker.Controllers
             ViewBag.CanEdit = userCanEditTicket;
             ViewBag.CanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, ticket);
 
-            var developers = _roleHelper.UsersInRole("Developer").ToList();
-            ViewBag.AssignedToId = new SelectList(developers, "Id", "DisplayName", ticket.AssignedToId);
-            //ViewBag.AssignedToId = new SelectList(_db.Users, "Id", "DisplayName", ticket.AssignedToId);
-            //ViewBag.OwnerId = new SelectList(_db.Users, "Id", "DisplayName", ticket.OwnerId);
+            List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
+            List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
+
+            var project = _db.Projects.Find(ticket.ProjectId);
+            if (project != null)
+            {
+                foreach (var dev in developers)
+                {
+                    if (project.Members.Select(m => m.Id).Contains(dev.Id))
+                    {
+                        developersOnProject.Add(dev);
+                    }
+                }
+            }
+            ViewBag.AssignedToId = new SelectList(developersOnProject, "Id", "DisplayName", ticket.AssignedToId);
             ViewBag.ProjectId = new SelectList(_db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
@@ -207,51 +218,76 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Description,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,Created,Title,Description,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket, string assigneeId)
         {
-
             var userId = User.Identity.GetUserId();
+            var oldTicket = _db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
+
+            // When Developer makes an Edit, ticket.AssignedToId doesn't come to the Post method
+            if (ticket.AssignedToId == null && !String.IsNullOrWhiteSpace(assigneeId))
+            {
+                ticket.AssignedToId = assigneeId;
+            }
+
+            var userCanEditTicket = _ticketHelper.CanEdit(userId, oldTicket);
+            var userCanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, oldTicket);
+
+            if (!userCanEditTicket)
+            {
+                return RedirectToAction("Details", "Tickets", new { ticket.Id });
+            }
+
             if (ModelState.IsValid)
             {
-                var oldTicket = _db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
-
-                var userCanEditTicket = _ticketHelper.CanChangeAssignment(userId, ticket);
-                if (!userCanEditTicket && ticket.AssignedToId != oldTicket.AssignedToId)
+                if (ticket.AssignedToId != oldTicket.AssignedToId && !userCanChangeAssignment)
                 {
-                    ModelState.AddModelError("Access Denied", "Insufficient Priviledges to Change Ticket Assignment");
-                    var developers = _roleHelper.UsersInRole("Developer").ToList();
-                    ViewBag.AssignedToId = new SelectList(developers, "Id", "DisplayName", ticket.AssignedToId);
-                    //ViewBag.AssignedToId = new SelectList(_db.Users, "Id", "DisplayName", ticket.AssignedToId);
-                    //ViewBag.OwnerId = new SelectList(_db.Users, "Id", "DisplayName", ticket.OwnerId);
-                    ViewBag.ProjectId = new SelectList(_db.Projects, "Id", "Name", ticket.ProjectId);
-                    ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
-                    ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
-                    ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-
-                    return View(ticket);
+                    // Should never reach this, but just in case...
+                    ModelState.AddModelError("validation-summary-errors", "Insufficient Access to Change Ticket Assignment");
+                    ticket.AssignedToId = oldTicket.AssignedToId;
                 }
 
-                // Restore settings that aren't changeable in the View
-                ticket.Created = oldTicket.Created;
                 ticket.Updated = DateTime.Now;
-                ticket.OwnerId = oldTicket.OwnerId;
-                
-                _db.Entry(ticket).State = EntityState.Modified;
-                _db.SaveChanges();
+                ticket.TicketPriority = _db.TicketPriorities.Find(ticket.TicketPriorityId);
+                ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
+                ticket.TicketType = _db.TicketTypes.Find(ticket.TicketTypeId);
+                var ticketChanges = _ticketHistoryHelper.GetChanges(userId, oldTicket, ticket);
 
-                var newTicket = _db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
-                _ticketHistoryHelper.RecordHistoricalChanges(userId, oldTicket, newTicket);
+                // TODO: If Unassigned=>Assigned, change Status to Assigned & Send Notification
+                // TODO: If Status BECOMES Open (Unassigned), change AssignedToID = null;
 
-                var user = _db.Users.Find(User.Identity.GetUserId());
-                return RedirectToAction("Index");
+                if (ticketChanges.Count > 0)
+                {
+                    _db.Entry(ticket).State = EntityState.Modified;
+                    _db.TicketHistorys.AddRange(ticketChanges);
+                    _db.SaveChanges();
+                }
             }
-            //ViewBag.AssignedToId = new SelectList(db.ApplicationUsers, "Id", "FirstName", ticket.AssignedToId);
-            //ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", ticket.OwnerId);
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            //ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
-            //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Name", ticket.TicketStatusId);
-            //ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-            return RedirectToAction("Details", "Tickets", new {ticket.Id});
+
+            // Re-send Get-Edit-View
+            ViewBag.CanEdit = userCanEditTicket;
+            ViewBag.CanChangeAssignment = userCanChangeAssignment;
+
+            List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
+            List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
+
+            var project = _db.Projects.Find(oldTicket.ProjectId);
+            if (project != null)
+            {
+                foreach (var dev in developers)
+                {
+                    if (project.Members.Select(m => m.Id).Contains(dev.Id))
+                    {
+                        developersOnProject.Add(dev);
+                    }
+                }
+            }
+            ViewBag.AssignedToId = new SelectList(developersOnProject, "Id", "DisplayName", ticket.AssignedToId);
+            ViewBag.ProjectId = new SelectList(_db.Projects, "Id", "Name", ticket.ProjectId);
+            ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
+            ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+
+            return View(ticket);
         }
 
         protected override void Dispose(bool disposing)

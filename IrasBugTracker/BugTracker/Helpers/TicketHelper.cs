@@ -97,7 +97,7 @@ namespace BugTracker.Helpers
             }
             if (!ret)
             {
-                ret = userId == ticket.AssignedToId;
+                ret = userId == ticket.AssignedToId || userId == ticket.OwnerId;
             }
 
             return ret;
