@@ -190,6 +190,7 @@ namespace BugTracker.Controllers
 
             ViewBag.CanEdit = userCanEditTicket;
             ViewBag.CanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, ticket);
+            ViewBag.CanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
@@ -218,7 +219,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Created,Title,Description,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket, string assigneeId)
+        public ActionResult Edit([Bind(Include = "Id,Created,Title,Description,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,OwnerId,AssignedToId")] Ticket ticket, string assigneeId, int statusId)
         {
             var userId = User.Identity.GetUserId();
             var oldTicket = _db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
@@ -228,9 +229,15 @@ namespace BugTracker.Controllers
             {
                 ticket.AssignedToId = assigneeId;
             }
-
+            // When Developer makes an Edit, ticket.TicketStatusId doesn't come to the Post method
+            if (ticket.TicketStatusId == 0 && ticket.TicketStatusId != statusId)
+            {
+                ticket.TicketStatusId = statusId;
+            }
+            
             var userCanEditTicket = _ticketHelper.CanEdit(userId, oldTicket);
             var userCanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, oldTicket);
+            var userCanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
 
             if (!userCanEditTicket)
             {
@@ -250,6 +257,7 @@ namespace BugTracker.Controllers
                 ticket.TicketPriority = _db.TicketPriorities.Find(ticket.TicketPriorityId);
                 ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
                 ticket.TicketType = _db.TicketTypes.Find(ticket.TicketTypeId);
+                ticket.AssignedTo = _db.Users.Find(ticket.AssignedToId);
                 var ticketChanges = _ticketHistoryHelper.GetChanges(userId, oldTicket, ticket);
 
                 // TODO: If Unassigned=>Assigned, change Status to Assigned & Send Notification
@@ -266,11 +274,12 @@ namespace BugTracker.Controllers
             // Re-send Get-Edit-View
             ViewBag.CanEdit = userCanEditTicket;
             ViewBag.CanChangeAssignment = userCanChangeAssignment;
+            ViewBag.CanChangeStatus = userCanChangeStatus;
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
 
-            var project = _db.Projects.Find(oldTicket.ProjectId);
+            var project = _db.Projects.Find(ticket.ProjectId);
             if (project != null)
             {
                 foreach (var dev in developers)

@@ -117,5 +117,10 @@ namespace BugTracker.Helpers
 
             return ret;
         }
+
+        public bool CanChangeStatus(string userId, Ticket ticket)
+        {
+            return CanChangeAssignment(userId, ticket);
+        }
     }
 }

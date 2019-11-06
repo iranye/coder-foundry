@@ -12,7 +12,6 @@ namespace BugTracker.Helpers
     {
         public List<TicketHistory> GetChanges(string userId, Ticket oldTicket, Ticket newTicket)
         {
-            bool changeDetected = false;
             var changes = new List<TicketHistory>();
 
             var updateDateTime = newTicket.Updated.GetValueOrDefault();
@@ -24,56 +23,48 @@ namespace BugTracker.Helpers
 
             if (oldTicket.Title != newTicket.Title)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Title", oldTicket.Title, newTicket.Title, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.Description != newTicket.Description)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Description", oldTicket.Description, newTicket.Description, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.ProjectId != newTicket.ProjectId)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Project", oldTicket.Project.Name, newTicket.Project.Name, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Priority", oldTicket.TicketPriority.Name, newTicket.TicketPriority.Name, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Status", oldTicket.TicketStatus.Name, newTicket.TicketStatus.Name, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.TicketTypeId != newTicket.TicketTypeId)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Type", oldTicket.TicketType.Name, newTicket.TicketType.Name, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.OwnerId != newTicket.OwnerId)
             {
-                changeDetected = true;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Owner", oldTicket.Owner.DisplayName, newTicket.Owner.DisplayName, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 
             if (oldTicket.AssignedToId != newTicket.AssignedToId)
             {
-                changeDetected = true;
                 var oldAssignee = oldTicket.AssignedToId == null ? "Unassigned" : oldTicket.AssignedTo.DisplayName;
                 var changeRecord = GetChangeRecord(newTicket.Id, "Assignee", oldAssignee, newTicket.AssignedTo.DisplayName, updateDateTime, userId);
                 changes.Add(changeRecord);

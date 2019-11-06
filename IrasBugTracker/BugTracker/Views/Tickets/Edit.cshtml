@@ -21,6 +21,7 @@
             @Html.HiddenFor(model => model.ProjectId)
             @Html.HiddenFor(model => model.Created)
             @Html.Hidden("assigneeId", Model.AssignedToId)
+            @Html.Hidden("statusId", Model.TicketStatusId)
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -126,6 +127,14 @@
             if (canChangeAssignment === "False") {
                 console.log("Change Assignemt Controls => DISABLED");
                 $("select[name='AssignedToId']").prop("disabled", true);
+            }
+            
+            var canChangeStatus = "@ViewBag.CanChangeStatus";
+            console.log("canChangeStatus is: " + canChangeStatus);
+
+            if (canChangeStatus === "False") {
+                console.log("Change Status Controls => DISABLED");
+                $("select[name='TicketStatusId']").prop("disabled", true);
             }
         });
     </script>
