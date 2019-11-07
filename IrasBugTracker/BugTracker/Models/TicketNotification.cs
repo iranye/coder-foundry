@@ -13,6 +13,8 @@ namespace BugTracker.Models
 
         public DateTime Created { get; set; }
 
+        public bool IsRead { get; set; }
+
         [StringLength(255)]
         public string Subject { get; set; }
         

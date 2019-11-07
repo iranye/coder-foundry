@@ -24,7 +24,18 @@ Replace Project Modals w/: MyBlog, BugTracker, Financial Portal, Mobile App
 Search & Replace modal fails to clear output box (probably bad jQuery)
 
 *** BugTracker ***
+** Model Updates **
+
+** Error message TODOs **
+Failed to upload file (Redirect)
+
+
 ** Other **
+* EMAIL BROKEN 11/7 *
+Test ForgotPassword w/ janky@mailinator.com
+THEN Log in w/ neo@mailinator.com & submit several tickets to The Quiet American Project
+THEN Log in w/ scoobs@mailinator.com and assign Tickets to Chun King (iranye@gmail.com) to test Notifications
+
 Clean Up ProjectMembersViewModel (don't need separate AllUsers property)
 Refactor (make DRY) code to bring in attachment
 Support non-image attachments

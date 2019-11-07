@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using BugTracker.Helpers;
 using BugTracker.Models;
@@ -20,6 +21,7 @@ namespace BugTracker.Controllers
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
+        private readonly NotificationHelper _notificationHelper = new NotificationHelper();
         private readonly TicketHelper _ticketHelper = new TicketHelper();
         private readonly TicketHistoryHelper _ticketHistoryHelper = new TicketHistoryHelper();
 
@@ -96,6 +98,18 @@ namespace BugTracker.Controllers
             var userId = User.Identity.GetUserId();
             ViewBag.CanAddContent = _ticketHelper.CanAddContent(userId, ticket);
             ViewBag.CanEdit = _ticketHelper.CanEdit(userId, ticket);
+
+            var allowableFileExtensions = WebConfigurationManager.AppSettings["AllowableFileExtensions"];
+            string[] allowableFileExtensionsArr = allowableFileExtensions.Split(',');
+
+            foreach (var ticketAttachment in ticket.Attachments)
+            {
+                var fileExt = Path.GetExtension(ticketAttachment.MediaPath);
+                if (allowableFileExtensionsArr.Contains(fileExt))
+                {
+                    ticketAttachment.MediaPath = $"/Uploads/file.png";
+                }
+            }
 
             return View(ticket);
         }
@@ -225,7 +239,8 @@ namespace BugTracker.Controllers
             var oldTicket = _db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
 
             // When Developer makes an Edit, ticket.AssignedToId doesn't come to the Post method
-            if (ticket.AssignedToId == null && !String.IsNullOrWhiteSpace(assigneeId))
+            var userCanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, oldTicket); // this is false for Role=Developers or lower Access Level
+            if (!userCanChangeAssignment && ticket.AssignedToId == null && !String.IsNullOrWhiteSpace(assigneeId))
             {
                 ticket.AssignedToId = assigneeId;
             }
@@ -236,7 +251,6 @@ namespace BugTracker.Controllers
             }
             
             var userCanEditTicket = _ticketHelper.CanEdit(userId, oldTicket);
-            var userCanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, oldTicket);
             var userCanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
 
             if (!userCanEditTicket)
@@ -254,20 +268,36 @@ namespace BugTracker.Controllers
                 }
 
                 ticket.Updated = DateTime.Now;
+                ticket.Project = _db.Projects.Find(ticket.ProjectId);
                 ticket.TicketPriority = _db.TicketPriorities.Find(ticket.TicketPriorityId);
                 ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
                 ticket.TicketType = _db.TicketTypes.Find(ticket.TicketTypeId);
                 ticket.AssignedTo = _db.Users.Find(ticket.AssignedToId);
                 var ticketChanges = _ticketHistoryHelper.GetChanges(userId, oldTicket, ticket);
-
-                // TODO: If Unassigned=>Assigned, change Status to Assigned & Send Notification
-                // TODO: If Status BECOMES Open (Unassigned), change AssignedToID = null;
-
+                
                 if (ticketChanges.Count > 0)
                 {
                     _db.Entry(ticket).State = EntityState.Modified;
                     _db.TicketHistorys.AddRange(ticketChanges);
                     _db.SaveChanges();
+
+                    var ticketAssignmentNotifications = _notificationHelper.GetAssignmentNotifications(oldTicket, ticket);
+                    if (ticketAssignmentNotifications.Count > 0)
+                    {
+                        // If Unassigned=>Assigned, change Status to Assigned
+                        if (ticket.AssignedToId != null && ticket.TicketStatus.Name == "Open")
+                        {
+                            ticket.TicketStatusId = _db.TicketStatuses.FirstOrDefault(s => s.Name == "Assigned").Id;
+                        }
+                        // If Assigned=>UnAssigned, change Status to Open
+                        if (ticket.AssignedToId == null && ticket.TicketStatus.Name == "Assigned")
+                        {
+                            ticket.TicketStatusId = _db.TicketStatuses.FirstOrDefault(s => s.Name == "Open").Id;
+                        }
+                        ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
+                        _db.TicketNotifications.AddRange(ticketAssignmentNotifications);
+                        _db.SaveChanges();
+                    }
                 }
             }
 

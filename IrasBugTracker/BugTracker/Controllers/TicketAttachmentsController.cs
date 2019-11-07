@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class TicketAttachmentsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
@@ -18,8 +19,16 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(TicketAttachment attachment, int id, HttpPostedFileBase attachmentFile)
+        public ActionResult Create(TicketAttachment attachment, int id, HttpPostedFileBase attachmentFile, string attachmentDescription)
         {
+            if (attachmentFile == null)
+            {
+                // TODO: Need a message in the View telling user to pick a file first...
+                ModelState.AddModelError("validation-summary-errors", "Please select a File First");
+                ModelState.AddModelError(string.Empty, "Foistable");
+                TempData["CustomError"] = "The item is removed from your cart";
+                return RedirectToAction("Details", "Tickets", new { id });
+            }
             var ticket = _db.Tickets.Find(id);
 
             if (ticket == null)
@@ -35,12 +44,16 @@ namespace BugTracker.Controllers
 
                 if (canAddContent)
                 {
-                    attachment.TicketId = id;
-                    attachment.CreatedById = userId;
-                    attachment.CreatedDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-
-                    if (HelperMethods.IsWebFriendlyImage(attachmentFile))
+                    if (HelperMethods.IsWebFriendlyImage(attachmentFile) || HelperMethods.IsWebFriendlyFile(attachmentFile))
                     {
+                        attachment.TicketId = id;
+                        attachment.CreatedById = userId;
+                        attachment.CreatedDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                        if (!String.IsNullOrWhiteSpace(attachmentDescription))
+                        {
+                            var maxDescLen = 250;
+                            attachment.Description = attachmentDescription.Substring(0, maxDescLen);
+                        }
                         // Run filename through URL Friendly method then Apply a timestamp to filename to avoid naming collisions
                         var fileName = attachmentFile.FileName.GenerateSlug();
                         var massagedFileName = fileName.ApplyDateTimeStamp();

@@ -66,7 +66,8 @@ namespace BugTracker.Helpers
             if (oldTicket.AssignedToId != newTicket.AssignedToId)
             {
                 var oldAssignee = oldTicket.AssignedToId == null ? "Unassigned" : oldTicket.AssignedTo.DisplayName;
-                var changeRecord = GetChangeRecord(newTicket.Id, "Assignee", oldAssignee, newTicket.AssignedTo.DisplayName, updateDateTime, userId);
+                var newAssignee = newTicket.AssignedToId == null ? "Unassigned" : newTicket.AssignedTo.DisplayName;
+                var changeRecord = GetChangeRecord(newTicket.Id, "Assignee", oldAssignee, newAssignee, updateDateTime, userId);
                 changes.Add(changeRecord);
             }
 

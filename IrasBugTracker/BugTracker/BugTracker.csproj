@@ -219,6 +219,10 @@
     <Compile Include="Migrations\201911051910341_AddGetUsersByRoleSproc.Designer.cs">
       <DependentUpon>201911051910341_AddGetUsersByRoleSproc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911071731351_TicketAttachmentDescLengthLimitAndOther.cs" />
+    <Compile Include="Migrations\201911071731351_TicketAttachmentDescLengthLimitAndOther.Designer.cs">
+      <DependentUpon>201911071731351_TicketAttachmentDescLengthLimitAndOther.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -264,6 +268,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\file.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -312,7 +317,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -348,6 +352,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911051910341_AddGetUsersByRoleSproc.resx">
       <DependentUpon>201911051910341_AddGetUsersByRoleSproc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911071731351_TicketAttachmentDescLengthLimitAndOther.resx">
+      <DependentUpon>201911071731351_TicketAttachmentDescLengthLimitAndOther.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
