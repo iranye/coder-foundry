@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.IO;
-using Microsoft.AspNet.Identity;
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 
