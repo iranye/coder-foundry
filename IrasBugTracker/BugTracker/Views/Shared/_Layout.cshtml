@@ -10,6 +10,9 @@
     <meta name="author" content="">
 
     <title>SB Admin 2 - Dashboard</title>
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Styles.Render("~/Content/css")
 
     <!-- Custom fonts for this template-->
     <link href="~/Content/all.min.css" rel="stylesheet" />
@@ -17,7 +20,6 @@
 
     <!-- Custom styles for this template-->
     <link href="~/Content/sb-admin-2.min.css" rel="stylesheet" />
-
 </head>
 
 <body id="page-top">
@@ -656,8 +658,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 
+    <!-- Bootstrap core JavaScript-->
     <script src="~/Scripts/jquery.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 
@@ -671,9 +675,9 @@
     <script src="~/Scripts/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="~/Scripts/chart-area-demo.js"></script>
+    <script src="~/Scripts/chart-area-demo.js"></script>    
     <script src="~/Scripts/chart-pie-demo.js"></script>
-
+    @RenderSection("scripts", required: false)
 </body>
 
 </html>
