@@ -248,6 +248,7 @@
     <Content Include="Content\all.min.css" />
     <Content Include="Content\brands.css" />
     <Content Include="Content\brands.min.css" />
+    <Content Include="Content\dataTables.bootstrap4.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
@@ -274,9 +275,11 @@
     <Content Include="Scripts\chart-pie-demo.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\datatables-demo.js" />
+    <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\jquery.easing.min.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\sb-admin-2.min.js" />
+    <Content Include="tables.html" />
     <Content Include="webfonts\fa-brands-400.svg" />
     <Content Include="webfonts\fa-regular-400.svg" />
     <Content Include="webfonts\fa-solid-900.svg" />

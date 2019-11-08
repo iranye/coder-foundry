@@ -2,13 +2,15 @@
     ViewBag.Title = "Home Page";
 }
 
+@if (!User.Identity.IsAuthenticated)
+{
     <div class="jumbotron" style="margin-top: 20px;">
         <h1>Ira's Bug Tracker</h1>
-        <p class="lead">This is Ira's Bug Tracker.  With this software, you can Create Projects and Tickets all while tracking Progress.
-            This program uses ASP.NET MVC, MS-SQL Database, jQUery, Bootstrap, and more.</p>
-        
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <p>@Html.ActionLink("Log in to get started!", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
-        }
+        <p class="lead">
+            This is Ira's Bug Tracker.  With this software, you can Create Projects and Tickets all while tracking Progress.
+            This program uses ASP.NET MVC, MS-SQL Database, jQUery, Bootstrap, and more.
+        </p>
+
+        <p>@Html.ActionLink("Log in to get started!", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
     </div>
+}
