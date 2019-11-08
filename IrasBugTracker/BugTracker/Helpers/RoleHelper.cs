@@ -105,6 +105,10 @@ namespace BugTracker.Helpers
         {
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
             var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                return "";
+            }
             if (String.IsNullOrWhiteSpace(user.DisplayName))
             {
                 return $"{user.FirstName}";
