@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -18,7 +19,7 @@ namespace BugTracker.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Ira's Bug Tracker.";
 
             return View();
         }
