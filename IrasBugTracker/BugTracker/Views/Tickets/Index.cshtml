@@ -10,7 +10,7 @@
 </style>
 
 <p>
-    @if (User.IsInRole("Submitter"))
+    @if (User.IsInRole("Submitter") || User.IsInRole("DemoSubmitter"))
     {
         @Html.ActionLink("Create New", "Create")
     }

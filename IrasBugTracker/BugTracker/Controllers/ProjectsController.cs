@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -23,7 +24,6 @@ namespace BugTracker.Controllers
             return View(_db.Projects.ToList());
         }
 
-        [Authorize]
         public ActionResult AssignedIndex()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -31,7 +31,6 @@ namespace BugTracker.Controllers
             return View(projectsAssigned.ToList());
         }
 
-        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)

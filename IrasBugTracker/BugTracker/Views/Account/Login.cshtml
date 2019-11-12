@@ -68,7 +68,7 @@
                                             @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-input" })
                                         </div>
                                     </div>
-                                    
+
                                     <input type="submit" value="Log in" class="btn btn-primary btn-user btn-block" value="Login" />
                                     <hr>
                                 }
@@ -78,6 +78,42 @@
                                 </div>
                                 <div class="text-center">
                                     <a class="small" href="@Url.Action("Register", "Account")">Create an Account!</a>
+                                </div>
+                                <hr>
+                                <div class="text-center">
+                                    <p class="h6 text-gray-900 mb-4">You can also try out Bug Tracker using one of these Demo Logins!</p>
+                                </div>
+                                <div class="text-center">
+                                    @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post, new { @class = "user", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("DemoEmail", "DemoAdminEmail")
+                                        <input type="submit" class="btn btn-primary" value="Demo Admin" />
+                                    }
+                                </div>
+                                <div class="text-center">
+                                    @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post, new { @class = "user", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("DemoEmail", "DemoProjectManagerEmail")
+                                        <input type="submit" class="btn btn-primary" value="Demo Project Manager" />
+                                    }
+                                </div>
+                                <div class="text-center">
+                                    @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post, new { @class = "user", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("DemoEmail", "DemoDeveloperEmail")
+                                        <input type="submit" class="btn btn-primary" value="Demo Developer" />
+                                    }
+                                </div>
+                                <div class="text-center">
+                                    @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post, new { @class = "user", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("DemoEmail", "DemoSubmitterEmail")
+                                        <input type="submit" class="btn btn-primary" value="Demo Submitter" />
+                                    }
                                 </div>
                             </div>
                         </div>

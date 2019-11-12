@@ -39,30 +39,9 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
-            <!-- Demo -->
-            <div class="sidebar-heading">
-                Demo
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-balance-scale"></i>
-                    <span>Login to Demo</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Choose a Role:</h6>
-                        <a class="collapse-item" href="login.html">Admin</a>
-                        <a class="collapse-item" href="register.html">Developer</a>
-                        <a class="collapse-item" href="forgot-password.html">Submitter</a>
-                    </div>
-                </div>
-            </li>
-
+            
             <!-- Nav Item - User Management -->
-            @if (User.IsInRole("Admin"))
+            @if (User.IsInRole("Admin") || User.IsInRole("DemoAdmin"))
             {
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
@@ -81,18 +60,15 @@
             }
 
             <!-- Nav Item - Projects -->
-            @if (User.Identity.IsAuthenticated)
-            {
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-                <!-- Projects -->
-                <div class="sidebar-heading">
-                    Projects
-                </div>
-            }
+            <!-- Projects -->
+            <div class="sidebar-heading">
+                Projects
+            </div>
 
-            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
             {
                 <li class="nav-item">
                     <a href="@Url.Action("Index", "Projects")" class="nav-link">
@@ -101,37 +77,28 @@
                     </a>
                 </li>
             }
+            
+            <li class="nav-item">
+                <a href="@Url.Action("AssignedIndex", "Projects")" class="nav-link">
+                    <i class="fas fa-fw fa-archway"></i>
+                    <span>My Projects</span>
+                </a>
+            </li>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <li class="nav-item">
-                    <a href="@Url.Action("AssignedIndex", "Projects")" class="nav-link">
-                        <i class="fas fa-fw fa-archway"></i>
-                        <span>My Projects</span>
-                    </a>
-                </li>
-            }
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
-
-                <!-- Projects -->
-                <div class="sidebar-heading">
-                    Tickets
-                </div>
-            }
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Tickets")" class="nav-link">
-                        <i class="fas fa-fw fa-ticket-alt"></i>
-                        <span>Tickets Index</span>
-                    </a>
-                </li>
-            }
+            <!-- Projects -->
+            <div class="sidebar-heading">
+                Tickets
+            </div>
+            
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "Tickets")" class="nav-link">
+                    <i class="fas fa-fw fa-ticket-alt"></i>
+                    <span>Tickets Index</span>
+                </a>
+            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -377,13 +344,11 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                @if (Request.IsAuthenticated)
+                
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm"}))
                 {
-                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm"}))
-                    {
-                        @Html.AntiForgeryToken()
-                        <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
-                    }
+                    @Html.AntiForgeryToken()
+                    <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
                 }
                 </div>
 
