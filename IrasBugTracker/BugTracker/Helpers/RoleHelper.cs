@@ -64,12 +64,11 @@ namespace BugTracker.Helpers
         {
             string message = "";
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
-
             var user = userManager.FindById(userId);
+
             if (user == null)
             {
-                message = $"User '{userId}' NOT FOUND";
-                throw new Exception(message);
+                new List<string> {""};
             }
 
             return userManager.GetRoles(user.Id);

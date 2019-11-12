@@ -114,6 +114,40 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
 
+        public ActionResult Dashboard(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Ticket ticket = _db.Tickets.Find(id);
+            if (ticket == null)
+            {
+                return HttpNotFound();
+            }
+
+            var users = _roleHelper.UsersInRole("Developer").ToList();
+            ViewBag.AssignedToUserId = new SelectList(users, "Id", "DisplayName", ticket.AssignedToId);
+
+            var userId = User.Identity.GetUserId();
+            ViewBag.CanAddContent = _ticketHelper.CanAddContent(userId, ticket);
+            ViewBag.CanEdit = _ticketHelper.CanEdit(userId, ticket);
+
+            var allowableFileExtensions = WebConfigurationManager.AppSettings["AllowableFileExtensions"];
+            string[] allowableFileExtensionsArr = allowableFileExtensions.Split(',');
+
+            foreach (var ticketAttachment in ticket.Attachments)
+            {
+                var fileExt = Path.GetExtension(ticketAttachment.MediaPath);
+                if (allowableFileExtensionsArr.Contains(fileExt))
+                {
+                    ticketAttachment.MediaPath = $"/Uploads/file.png";
+                }
+            }
+
+            return View(ticket);
+        }
+
         [Authorize(Roles = "Submitter,DemoSubmitter")]
         public ActionResult Create()
         {

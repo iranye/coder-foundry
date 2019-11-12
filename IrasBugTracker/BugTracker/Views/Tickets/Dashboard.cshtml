@@ -1,0 +1,128 @@
+﻿@model BugTracker.Models.Ticket
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<style>
+    .detail-label {
+        text-transform: uppercase;
+    }
+</style>
+
+<h2>Ticket Dashboard - @Model.Title</h2>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+
+        <!-- Ticket Details -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-primary">
+                <h6 class="m-0 font-weight-bold text-white">Ticket Details</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Title)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Title)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Description)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Created)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Created)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Updated)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Updated)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.TicketType.Name)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.TicketType.Name)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        Owner
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Owner.DisplayName)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        Assigned To
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.AssignedTo.DisplayName)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Project -->
+    <div class="col-lg-6 mb-4">
+        <!-- Ticket Details -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-success">
+                <h6 class="m-0 font-weight-bold text-white">Project Details</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Project.Name)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Project.Name)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayNameFor(model => model.Project.Description)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Project.Description)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h5 col-sm-6 detail-label">
+                        @Html.DisplayName("Members Count")
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DisplayFor(model => model.Project.Members.Count)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
