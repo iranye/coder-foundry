@@ -55,7 +55,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Updated)
                         </th>
-                        <th></th>
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,10 +93,10 @@
                                 @Html.DisplayFor(modelItem => item.Updated)
                             </td>
                             <td>
-                                <a href="@Url.Action("Edit", "Tickets", new {id = item.Id})" class="nav-link" title="Edit Ticket">
+                                <a href="@Url.Action("Edit", "Tickets", new {id = item.Id})" title="Edit Ticket">
                                     <i class="fas fa-fw fa-edit"></i>
                                 </a>
-                                <a href="@Url.Action("Dashboard", "Tickets", new {id = item.Id})" class="nav-link" title="Ticket Dashboard">
+                                <a href="@Url.Action("Dashboard", "Tickets", new {id = item.Id})" title="Ticket Dashboard">
                                     <i class="fas fa-fw fa-address-card"></i>
                                 </a>
                             </td>
