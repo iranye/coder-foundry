@@ -239,10 +239,15 @@ namespace BugTracker.Controllers
             ViewBag.CanEdit = userCanEditTicket;
             ViewBag.CanChangeAssignment = _ticketHelper.CanChangeAssignment(userId, ticket);
             ViewBag.CanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
+            ViewBag.CanChangeOwner = false;
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
             developers.AddRange(_roleHelper.UsersInRole("DemoDeveloper"));
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
+
+            List<ApplicationUser> submitters = _roleHelper.UsersInRole("Submitter").ToList();
+            submitters.AddRange(_roleHelper.UsersInRole("DemoSubmitter"));
+            List<ApplicationUser> submittersOnProject = new List<ApplicationUser>();
 
             var project = _db.Projects.Find(ticket.ProjectId);
             if (project != null)
@@ -254,12 +259,22 @@ namespace BugTracker.Controllers
                         developersOnProject.Add(dev);
                     }
                 }
+
+                foreach (var submitter in submitters)
+                {
+                    if (project.Members.Select(m => m.Id).Contains(submitter.Id))
+                    {
+                        submittersOnProject.Add(submitter);
+                    }
+                }
             }
+
             ViewBag.AssignedToId = new SelectList(developersOnProject, "Id", "DisplayName", ticket.AssignedToId);
             ViewBag.ProjectId = new SelectList(_db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            ViewBag.OwnerId = new SelectList(submittersOnProject, "Id", "DisplayName", ticket.OwnerId);
             return View(ticket);
         }
 
@@ -340,10 +355,15 @@ namespace BugTracker.Controllers
             ViewBag.CanEdit = userCanEditTicket;
             ViewBag.CanChangeAssignment = userCanChangeAssignment;
             ViewBag.CanChangeStatus = userCanChangeStatus;
+            ViewBag.CanChangeOwner = false;
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
             developers.AddRange(_roleHelper.UsersInRole("DemoDeveloper"));
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
+
+            List<ApplicationUser> submitters = _roleHelper.UsersInRole("Submitter").ToList();
+            submitters.AddRange(_roleHelper.UsersInRole("DemoSubmitter"));
+            List<ApplicationUser> submittersOnProject = new List<ApplicationUser>();
 
             var project = _db.Projects.Find(ticket.ProjectId);
             if (project != null)
@@ -355,12 +375,22 @@ namespace BugTracker.Controllers
                         developersOnProject.Add(dev);
                     }
                 }
+
+                foreach (var submitter in submitters)
+                {
+                    if (project.Members.Select(m => m.Id).Contains(submitter.Id))
+                    {
+                        submittersOnProject.Add(submitter);
+                    }
+                }
             }
+
             ViewBag.AssignedToId = new SelectList(developersOnProject, "Id", "DisplayName", ticket.AssignedToId);
             ViewBag.ProjectId = new SelectList(_db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            ViewBag.OwnerId = new SelectList(submittersOnProject, "Id", "DisplayName", ticket.OwnerId);
 
             return View(ticket);
         }

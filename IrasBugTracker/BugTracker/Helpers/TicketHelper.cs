@@ -69,11 +69,11 @@ namespace BugTracker.Helpers
         {
             bool ret = false;
             ICollection<string> currentRolesByUserId = _roleHelper.ListUserRolesByUserId(userId);
-            ret = currentRolesByUserId.Contains("Admin");
+            ret = currentRolesByUserId.Contains("Admin") || currentRolesByUserId.Contains("DemoAdmin");
 
             if (!ret)
             {
-                ret = currentRolesByUserId.Contains("ProjectManager")
+                ret = (currentRolesByUserId.Contains("ProjectManager") || currentRolesByUserId.Contains("DemoProjectManager"))
                       && _projectHelper.UserIsOnProject(userId, ticket.ProjectId);
             }
             if (!ret)

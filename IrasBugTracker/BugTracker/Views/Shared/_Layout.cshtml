@@ -39,7 +39,7 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-            
+
             <!-- Nav Item - User Management -->
             @if (User.IsInRole("Admin") || User.IsInRole("DemoAdmin"))
             {
@@ -76,15 +76,21 @@
                         <span>All Projects</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Create", "Projects")" class="nav-link">
+                        <i class="fas fa-fw fa-asterisk"></i>
+                        <span>New Project</span>
+                    </a>
+                </li>
             }
-            
+
             <li class="nav-item">
                 <a href="@Url.Action("AssignedIndex", "Projects")" class="nav-link">
                     <i class="fas fa-fw fa-archway"></i>
                     <span>My Projects</span>
                 </a>
             </li>
-            
+
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
@@ -92,17 +98,37 @@
             <div class="sidebar-heading">
                 Tickets
             </div>
-            
+
             <li class="nav-item">
                 <a href="@Url.Action("Index", "Tickets")" class="nav-link">
                     <i class="fas fa-fw fa-ticket-alt"></i>
-                    <span>Tickets Index</span>
+                    <span>Ticket Index</span>
                 </a>
+                @if (User.IsInRole("Submitter") || User.IsInRole("DemoSubmitter"))
+                {
+                    <a href="@Url.Action("Create", "Tickets")" class="nav-link">
+                        <i class="fas fa-fw fa-asterisk"></i>
+                        <span>New Ticket</span>
+                    </a>
+                }
+                <!-- TODO: Add different views of tickets (e.g., for a PM to see all Open Tickets)
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#ticketView" aria-expanded="true" aria-controls="ticketView">
+            <i class="fas fa-fw fa-angle-right"></i>
+            <span>Ticket Views</span>
+        </a>
+
+        <div id="ticketView" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Components:</h6>
+                <a class="collapse-item" href="buttons.html">Buttons</a>
+                <a class="collapse-item" href="cards.html">Cards</a>
+            </div>
+        </div> -->
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-            
+
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
