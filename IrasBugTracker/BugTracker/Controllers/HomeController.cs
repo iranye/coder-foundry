@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using BugTracker.ViewModels;
 
 namespace BugTracker.Controllers
 {
@@ -14,7 +15,8 @@ namespace BugTracker.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            MainDashboardViewModel viewModel = new MainDashboardViewModel();
+            return View(viewModel);
         }
 
         public ActionResult About()
