@@ -178,6 +178,7 @@
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\TicketAttachmentsController.cs" />
     <Compile Include="Controllers\TicketCommentsController.cs" />
+    <Compile Include="Controllers\TicketNotificationsController.cs" />
     <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -352,6 +353,7 @@
     <Content Include="webfonts\fa-solid-900.woff" />
     <Content Include="webfonts\fa-solid-900.woff2" />
     <Content Include="Views\Tickets\Dashboard.cshtml" />
+    <Content Include="Views\TicketNotifications\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

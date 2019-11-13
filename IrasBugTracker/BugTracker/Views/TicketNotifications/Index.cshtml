@@ -1,0 +1,58 @@
+﻿@model IEnumerable<BugTracker.Models.TicketNotification>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Ticket Notifications</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            Recipient
+                        </th>
+                        <th>
+                            Ticket
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Created)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Subject)
+                        </th>
+                        <th>
+                            Notification Body
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Recipient.DisplayName)
+                            </td>
+                            <td>
+                                @Html.ActionLink(item.Ticket.Title, "Dashboard", "Tickets", new { id = item.TicketId }, null)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NotificationBody)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div> <!-- end table div -->
+    </div> <!-- end card-body -->
+</div>

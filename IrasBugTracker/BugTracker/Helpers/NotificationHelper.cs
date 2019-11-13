@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Helpers
 {
@@ -17,7 +19,13 @@ namespace BugTracker.Helpers
 
     public class NotificationHelper
     {
-        private ApplicationDbContext _db = new ApplicationDbContext();
+        private static ApplicationDbContext _db = new ApplicationDbContext();
+
+        public static List<TicketNotification> GetUnreadNotifications()
+        {
+            var currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            return _db.TicketNotifications.Where(n => !n.IsRead && n.RecipientId == currentUserId).ToList();
+        }
 
         private TicketAssignmentChange GetTicketAssignmentChange(string assignedToIdOld, string assignedToIdNew)
         {
@@ -58,11 +66,11 @@ namespace BugTracker.Helpers
                     {
                         TicketId = newTicket.Id,
                         Created = notificationCreationDateTime,
-                        Subject = "Ticket Assignment Notification",
+                        Subject = $"Ticket Assignment Notification - TicketID {newTicket.DisplayableId}",
                         IsRead = false,
                         RecipientId = newTicket.AssignedToId,
                         NotificationBody =
-                            $"A Ticket has been assigned to You: TicketID={newTicket.Id} '{newTicket.Title}' for Project {newTicket.Project.Name}"
+                            $"Ticket {newTicket.DisplayableId} has been assigned to you - '{newTicket.Title}' for Project {newTicket.Project.Name}"
                     };
                     notifications.Add(notificationAssigned);
                     break;

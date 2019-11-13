@@ -18,7 +18,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">All Tickets</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Tickets</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -30,9 +30,6 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Title)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Description)
                         </th>
                         <th>
                             @Html.DisplayName("Assignee")
@@ -72,9 +69,6 @@
                                 @Html.DisplayFor(modelItem => item.Title)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
-                            <td>
                                 @Html.DisplayFor(modelItem => item.AssignedTo.DisplayName)
                             </td>
                             <td>
@@ -99,8 +93,12 @@
                                 @Html.DisplayFor(modelItem => item.Updated)
                             </td>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                @Html.ActionLink("Dashboard", "Dashboard", new { id = item.Id })
+                                <a href="@Url.Action("Edit", "Tickets", new {id = item.Id})" class="nav-link" title="Edit Ticket">
+                                    <i class="fas fa-fw fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Dashboard", "Tickets", new {id = item.Id})" class="nav-link" title="Ticket Dashboard">
+                                    <i class="fas fa-fw fa-address-card"></i>
+                                </a>
                             </td>
                         </tr>
                     }

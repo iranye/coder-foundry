@@ -29,7 +29,6 @@ namespace BugTracker.Models
         public virtual ICollection<TicketAttachment> TicketsAttachments { get; set; }
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
-        public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
 
         public ApplicationUser()
         {
@@ -37,7 +36,6 @@ namespace BugTracker.Models
             TicketsAttachments = new HashSet<TicketAttachment>();
             TicketComments = new HashSet<TicketComment>();
             TicketHistories = new HashSet<TicketHistory>();
-            TicketNotifications = new HashSet<TicketNotification>();
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

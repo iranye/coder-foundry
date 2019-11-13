@@ -241,6 +241,7 @@ namespace BugTracker.Controllers
             ViewBag.CanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
+            developers.AddRange(_roleHelper.UsersInRole("DemoDeveloper"));
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
 
             var project = _db.Projects.Find(ticket.ProjectId);
@@ -341,6 +342,7 @@ namespace BugTracker.Controllers
             ViewBag.CanChangeStatus = userCanChangeStatus;
 
             List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
+            developers.AddRange(_roleHelper.UsersInRole("DemoDeveloper"));
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
 
             var project = _db.Projects.Find(ticket.ProjectId);
