@@ -7,6 +7,7 @@
 
 <style>
     .detail-label {
+        font-size: .8em;
         text-transform: uppercase;
     }
 </style>
@@ -247,18 +248,10 @@
                     {
                         <div class="row">
                             <div class="h5 col-sm-6 detail-label">
-                                @Html.DisplayNameFor(t => ticketEvent.OldValue)
+                                @Html.DisplayFor(t => ticketEvent.Property)
                             </div>
                             <div class="col-sm-6">
-                                @Html.DisplayFor(t => ticketEvent.OldValue)
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="h5 col-sm-6 detail-label">
-                                @Html.DisplayNameFor(t => ticketEvent.NewValue)
-                            </div>
-                            <div class="col-sm-6">
-                                @Html.DisplayFor(t => ticketEvent.NewValue)
+                                @ticketEvent.OldValue => @ticketEvent.NewValue
                             </div>
                         </div>
                         <div class="row">
@@ -267,14 +260,6 @@
                             </div>
                             <div class="col-sm-6">
                                 @Html.DisplayFor(t => ticketEvent.ChangedDateTime)
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="h5 col-sm-6 detail-label">
-                                @Html.DisplayNameFor(t => ticketEvent.NewValue)
-                            </div>
-                            <div class="col-sm-6">
-                                @Html.DisplayFor(t => ticketEvent.NewValue)
                             </div>
                         </div>
                         <div class="row">
