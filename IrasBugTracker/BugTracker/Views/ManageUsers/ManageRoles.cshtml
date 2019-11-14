@@ -16,61 +16,69 @@
     .email {
         font-size: .7em;
     }
+    tbody tr:hover { background-color: gainsboro; }
 </style>
-<h2>Manage Roles</h2>
 
-<div class="row">
-    <div class="col-md-7">
-        <table class="table index-table">
-            <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(m => m.FullName)</th>
-                <th>@Html.DisplayNameFor(m => m.Email)</th>
-                <th>@Html.DisplayNameFor(m => m.Role)</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.OrderBy(m => m.Email))
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FullName)
-                    </td>
-                    <td>
-                        <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Role)
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Roles</h6>
     </div>
-    <div class="col-md-5">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-7">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.FullName)</th>
+                        <th>@Html.DisplayNameFor(m => m.Email)</th>
+                        <th>@Html.DisplayNameFor(m => m.Role)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.OrderBy(m => m.Email))
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-5">
 
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
 
-            <div class="row">
-                <div class="col-md-12">
-                    @Html.ListBox("UserIds", null, new { @class = "controlWide", style = "height: 180px; width: 100%;" })
-                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ListBox("UserIds", null, new { @class = "controlWide", style = "height: 180px; width: 100%;" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 5px;">
+                            @Html.DropDownList("Role", null, "-- Select Role --", new { @class = "controlWide" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top: 5px;">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary controlWide">Save</button>
+                        </div>
+                    </div>
+                }
             </div>
-            <div class="row">
-                <div class="col-md-12" style="margin-top: 5px;">
-                    @Html.DropDownList("Role", null, "-- Select Role --", new { @class = "controlWide" })
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6" style="margin-top: 5px;">
-                    <button id="btnSubmit" type="submit" class="btn btn-primary controlWide">Save</button>
-                </div>
-            </div>
-        }
-    </div>
+        </div>
+    </div> <!-- end card-body -->
 </div>
+
 
 @section scripts
 {

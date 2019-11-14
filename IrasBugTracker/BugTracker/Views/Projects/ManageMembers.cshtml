@@ -29,77 +29,86 @@
     tbody tr:hover { background-color: gainsboro; }
 </style>
 
-<div class="container">
-    <h2>@Model.Project.Name Project Members</h2>
-
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>
-                        Full Name
-                    </th>
-                    <th>
-                        Email
-                    </th>
-                    <th>
-                        Role
-                    </th>
-                    <th>
-                        IsMember
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.AllUsers)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FullName)
-                            </td>
-                            <td>
-                                <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Role)
-                            </td>
-                            <td>
-                                @Html.CheckBoxFor(modelItem => item.IsMember)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Project Members - @Model.Project.Name</h6>
     </div>
+    <div class="card-body">
+        <div class="container">
+            <h2>@Model.Project.Name Project Members</h2>
 
-    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
-    {
-        <div class="row">
-            <div class="col-md-3" style="margin-left: 16px;">
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("ProjectId", Model.Project.Id)
-
-                    <div class="row">
-                        <div class="col-md-12 hidden-list">
-                            <label>membersToAdd: </label>
-                            @Html.ListBox("MembersToAdd")
-                        </div>
-                        <div class="col-md-12 hidden-list">
-                            <label>membersToRemove: </label>
-                            @Html.ListBox("MembersToRemove")
-                        </div>
-
-                        <button id="btnSubmitAddRemove" type="submit" class="btn btn-primary controlWide">Save</button>
-                    </div>
-                }
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Full Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Role
+                                </th>
+                                <th>
+                                    IsMember
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.AllUsers)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FullName)
+                                    </td>
+                                    <td>
+                                        <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Role)
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxFor(modelItem => item.IsMember)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
+            {
+                <div class="row">
+                    <div class="col-md-3" style="margin-left: 16px;">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("ProjectId", Model.Project.Id)
+
+                            <div class="row">
+                                <div class="col-md-12 hidden-list">
+                                    <label>membersToAdd: </label>
+                                    @Html.ListBox("MembersToAdd")
+                                </div>
+                                <div class="col-md-12 hidden-list">
+                                    <label>membersToRemove: </label>
+                                    @Html.ListBox("MembersToRemove")
+                                </div>
+
+                                <button id="btnSubmitAddRemove" type="submit" class="btn btn-primary controlWide">Save</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
-    }
+
+    </div> <!-- end card-body -->
 </div>
+
 
 @section scripts
 {
