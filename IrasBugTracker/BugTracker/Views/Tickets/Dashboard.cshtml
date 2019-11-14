@@ -1,4 +1,5 @@
-﻿@model BugTracker.Models.Ticket
+﻿@using BugTracker.Models
+@model BugTracker.Models.Ticket
 
 @{
     ViewBag.Title = "Dashboard";
@@ -20,88 +21,10 @@
 
         <!-- Ticket Details -->
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-primary">
-                <h6 class="m-0 font-weight-bold text-white">Ticket Details</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.Title)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Title)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.Description)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Description)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.Created)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Created)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.Updated)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Updated)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.TicketType.Name)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.TicketType.Name)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        Owner
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Owner.DisplayName)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        Assigned To
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.AssignedTo.DisplayName)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Collapsable Card Example -->
-        <div class="card shadow mb-4">
-            <!-- Card Header - Accordion -->
-            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6>
+            <a href="#ticketDetails" class="d-block card-header py-3 detail-label" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="ticketDetails">
+                <h6 class="m-0 font-weight-bold text-primary">Ticket Details</h6>
             </a>
-            <!-- Card Content - Collapse -->
-            <div class="collapse show" id="collapseCardExample">
-                <div class="card-body">
-                    This is a collapsable card example using Bootstrap's built in collapse functionality. <strong>Click on the card header</strong> to see the card body collapse and expand!
-                </div>
-            </div>
-        </div>
-
-        <div class="card shadow mb-4">
-            <a href="#collapseComments" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseComments">
-                <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
-            </a>
-            <div class="collapse show" id="collapseComments">
+            <div class="collapse show" id="ticketDetails">
                 <div class="card-body">
                     <div class="row">
                         <div class="h5 col-sm-6 detail-label">
@@ -111,26 +34,169 @@
                             @Html.DisplayFor(model => model.Title)
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.Description)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Description)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.Created)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Created)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.Updated)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Updated)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.TicketType.Name)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.TicketType.Name)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            Owner
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Owner.DisplayName)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            Assigned To
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.AssignedTo.DisplayName)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-primary">
-                <h6 class="m-0 font-weight-bold text-white">Attachments</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="h5 col-sm-6 detail-label">
-                        @Html.DisplayNameFor(model => model.Title)
-                    </div>
-                    <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Title)
-                    </div>
-                </div>
+            <a href="#ticketComments" class="d-block card-header py-3 detail-label" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="ticketComments">
+                <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+            </a>
+            <div class="collapse show" id="ticketComments">
+                <div class="card-body">
+                    @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
+                    {
+                        <div class="row">
+                            <div class="col-sm-3 comment-metadata">
+                                @comment.Author.DisplayName @comment.Created.ToString("M/d/yy")
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    @comment.CommentBody
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                    @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
+                    {
+                        using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
+                        {
+                            <div class="row">
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id)
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.TextArea("CommentBody", new { row = 5, cols = 30, placeholder = "Add Comment...", id = "txtComment", @class = "text-area-wide" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-primary" type="submit" id="btnSubmitComment">Comment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div> <!-- end card-body -->
             </div>
         </div>
 
+        <!-- Collapsable Card Example -->
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#ticketAttachments" class="d-block card-header py-3 detail-label" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="ticketAttachments">
+                <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="ticketAttachments">
+                <div class="card-body">
+                    @foreach (var attachment in Model.Attachments.OrderBy(a => a.CreatedDateTime))
+                    {
+                        <div class="row">
+                            <div class="col-sm-3 comment-metadata">
+                                @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
+                                <br />
+                                <div class="attach-desc">
+                                    @attachment.Description
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <img src="@attachment.MediaPath" alt="@attachment.MediaPath" title="@attachment.MediaPath" height="250" />
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                    @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
+                    {
+                        using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id)
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.ValidationMessage("CustomError", new { @class = "text-danger" })
+
+                            <div class="row" style="margin-left: 1px;">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            @Html.Label("Attachment")
+                                            <input name="attachmentFile" type="file" class="form-control" id="fileUpload" style="height: 45px;" />
+                                        </div>
+                                        <div class="row">
+                                            @Html.Label("Description")
+                                            @Html.Editor("attachmentDescription", new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-primary" type="submit" id="btnSubmit">Attach</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div> <!-- end card-body -->
+            </div>
+        </div>
     </div>
 
     <!-- Project -->
@@ -167,9 +233,67 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Collapsable Card Example -->
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#ticketHistories" class="d-block card-header py-3 detail-label" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="ticketHistories">
+                <h6 class="m-0 font-weight-bold text-primary">Ticket History</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="ticketHistories">
+                <div class="card-body">
+                    @foreach (TicketHistory ticketEvent in Model.Events.OrderByDescending(a => a.ChangedDateTime))
+                    {
+                        <div class="row">
+                            <div class="h5 col-sm-6 detail-label">
+                                @Html.DisplayNameFor(t => ticketEvent.OldValue)
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(t => ticketEvent.OldValue)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="h5 col-sm-6 detail-label">
+                                @Html.DisplayNameFor(t => ticketEvent.NewValue)
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(t => ticketEvent.NewValue)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="h5 col-sm-6 detail-label">
+                                @Html.DisplayNameFor(t => ticketEvent.ChangedDateTime)
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(t => ticketEvent.ChangedDateTime)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="h5 col-sm-6 detail-label">
+                                @Html.DisplayNameFor(t => ticketEvent.NewValue)
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(t => ticketEvent.NewValue)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="h5 col-sm-6 detail-label">
+                                @Html.DisplayNameFor(t => ticketEvent.ChangedBy)
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DisplayFor(t => ticketEvent.ChangedBy.DisplayName)
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                </div> <!-- end card-body -->
+            </div>
+        </div>
     </div>
 
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

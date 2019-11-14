@@ -26,7 +26,7 @@ namespace BugTracker.Controllers
                 // TODO: Need a message in the View telling user to pick a file first...
                 ModelState.AddModelError("validation-summary-errors", "Please select a File First");
                 TempData["CustomError"] = "The item is removed from your cart";
-                return RedirectToAction("Details", "Tickets", new { id });
+                return RedirectToAction("Dashboard", "Tickets", new { id });
             }
             var ticket = _db.Tickets.Find(id);
 
@@ -78,7 +78,7 @@ namespace BugTracker.Controllers
                 }
             }
 
-            return RedirectToAction("Details", "Tickets", new { id });
+            return RedirectToAction("Dashboard", "Tickets", new { id });
         }
     }
 }

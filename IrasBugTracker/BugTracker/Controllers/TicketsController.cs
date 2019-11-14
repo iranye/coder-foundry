@@ -31,20 +31,6 @@ namespace BugTracker.Controllers
             return View(_ticketHelper.ListMyTickets());
         }
 
-        public ActionResult AssignToUser(int? id)
-        {
-            // DO NOT USE: ASSIGN USERS IN Ticket Details Page
-            var ticket = _db.Tickets.Find(id);
-            if (ticket == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            var users = _roleHelper.UsersInRole("Developer").ToList();
-            ViewBag.AssignedToUserId = new SelectList(users, "Id", "FullName", ticket.AssignedToId);
-            return RedirectToAction("Details", "Tickets", new { ticket.Id});
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AssignTicket(Ticket model) // TODO: Fix this to take "Selected UserId from DropDown" & TicketID
@@ -58,7 +44,7 @@ namespace BugTracker.Controllers
             ticket.AssignedToId = model.AssignedToId;
             _db.SaveChanges();
 
-            var callbackUrl = Url.Action("Details", "Tickets", new {id = ticket.Id}, protocol: Request.Url.Scheme);
+            var callbackUrl = Url.Action("Dashboard", "Tickets", new {id = ticket.Id}, protocol: Request.Url.Scheme);
 
             try
             {
@@ -86,12 +72,13 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Ticket ticket = _db.Tickets.Find(id);
             if (ticket == null)
             {
                 return HttpNotFound();
             }
-
+            
             var users = _roleHelper.UsersInRole("Developer").ToList();
             ViewBag.AssignedToUserId = new SelectList(users, "Id", "DisplayName", ticket.AssignedToId);
 
@@ -233,7 +220,7 @@ namespace BugTracker.Controllers
 
             if (!userCanEditTicket)
             {
-                return RedirectToAction("Details", "Tickets", new { ticket.Id });
+                return RedirectToAction("Dashboard", "Tickets", new { ticket.Id });
             }
 
             ViewBag.CanEdit = userCanEditTicket;
@@ -305,7 +292,7 @@ namespace BugTracker.Controllers
 
             if (!userCanEditTicket)
             {
-                return RedirectToAction("Details", "Tickets", new { ticket.Id });
+                return RedirectToAction("Dashboard", "Tickets", new { ticket.Id });
             }
 
             if (ModelState.IsValid)

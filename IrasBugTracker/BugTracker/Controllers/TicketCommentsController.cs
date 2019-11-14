@@ -42,7 +42,7 @@ namespace BugTracker.Controllers
                 }
             }
 
-            return RedirectToAction("Details", "Tickets", new { id });
+            return RedirectToAction("Dashboard", "Tickets", new { id });
         }
     }
 }
