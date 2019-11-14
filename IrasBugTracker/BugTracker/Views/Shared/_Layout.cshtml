@@ -54,7 +54,7 @@
                 <li class="nav-item">
                     <a href="@Url.Action("ManageRoles", "ManageUsers")" class="nav-link">
                         <i class="fas fa-fw fa-user"></i>
-                        <span>User Roles</span>
+                        <span>Manage User Roles</span>
                     </a>
                 </li>
             }
@@ -71,15 +71,15 @@
             @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
             {
                 <li class="nav-item">
-                    <a href="@Url.Action("Index", "Projects")" class="nav-link">
-                        <i class="fas fa-fw fa-industry"></i>
-                        <span>All Projects</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="@Url.Action("Create", "Projects")" class="nav-link">
                         <i class="fas fa-fw fa-asterisk"></i>
                         <span>New Project</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Index", "Projects")" class="nav-link">
+                        <i class="fas fa-fw fa-industry"></i>
+                        <span>All Projects</span>
                     </a>
                 </li>
             }
@@ -100,10 +100,6 @@
             </div>
 
             <li class="nav-item">
-                <a href="@Url.Action("Index", "Tickets")" class="nav-link">
-                    <i class="fas fa-fw fa-ticket-alt"></i>
-                    <span>Ticket Index</span>
-                </a>
                 @if (User.IsInRole("Submitter") || User.IsInRole("DemoSubmitter"))
                 {
                     <a href="@Url.Action("Create", "Tickets")" class="nav-link">
@@ -111,6 +107,10 @@
                         <span>New Ticket</span>
                     </a>
                 }
+                <a href="@Url.Action("Index", "Tickets")" class="nav-link">
+                    <i class="fas fa-fw fa-ticket-alt"></i>
+                    <span>Ticket Index</span>
+                </a>
                 <!-- TODO: Add different views of tickets (e.g., for a PM to see all Open Tickets)
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#ticketView" aria-expanded="true" aria-controls="ticketView">
             <i class="fas fa-fw fa-angle-right"></i>

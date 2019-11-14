@@ -25,9 +25,16 @@ namespace BugTracker.Helpers
             str = Regex.Replace(str, @"\s+", " ").Trim();
 
             // cut and trim 
-            str = str.Substring(0, str.Length <= 45 ? str.Length : 45).Trim();
-            str = Regex.Replace(str, @"\s", "-"); // hyphens   
-            return str;
+            var extension = Path.GetExtension(str);
+            var baseName = str;
+            if (!String.IsNullOrWhiteSpace(extension))
+            {
+                baseName = str.Substring(0, str.IndexOf(extension));
+            }
+            
+            baseName = baseName.Substring(0, baseName.Length <= 45 ? baseName.Length : 45).Trim();
+            str = Regex.Replace(baseName, @"\s", "-"); // hyphens   
+            return str + extension;
         }
 
         public static string ApplyDateTimeStamp(this string fileName)

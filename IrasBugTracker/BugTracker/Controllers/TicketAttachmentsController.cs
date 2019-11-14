@@ -25,7 +25,6 @@ namespace BugTracker.Controllers
             {
                 // TODO: Need a message in the View telling user to pick a file first...
                 ModelState.AddModelError("validation-summary-errors", "Please select a File First");
-                ModelState.AddModelError(string.Empty, "Foistable");
                 TempData["CustomError"] = "The item is removed from your cart";
                 return RedirectToAction("Details", "Tickets", new { id });
             }
@@ -51,8 +50,16 @@ namespace BugTracker.Controllers
                         attachment.CreatedDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                         if (!String.IsNullOrWhiteSpace(attachmentDescription))
                         {
-                            var maxDescLen = 250;
-                            attachment.Description = attachmentDescription.Substring(0, maxDescLen);
+                            int maxDescLen = 250;
+                            if (attachmentDescription.Length > maxDescLen)
+                            {
+                                attachment.Description = attachmentDescription.Substring(0, maxDescLen);
+                            }
+                            else
+                            {
+                                attachment.Description = attachmentDescription;
+                            }
+
                         }
                         // Run filename through URL Friendly method then Apply a timestamp to filename to avoid naming collisions
                         var fileName = attachmentFile.FileName.GenerateSlug();

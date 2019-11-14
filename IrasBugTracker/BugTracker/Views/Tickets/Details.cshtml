@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 <style>
-    
+
     .comment-metadata {
         font-size: 1em;
         font-style: italic;
@@ -22,209 +22,195 @@
         min-width: 380px;
     }
 </style>
-<h2>Ticket - @Model.Title</h2>
 
-<!-- Ticket Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <div>
-                <hr />
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Description)
-                    </dt>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Ticket Details - @Model.Title</h6>
+    </div>
+    <div class="card-body">
+        <div>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Description)
-                    </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
 
-                    <dt>
-                        @Html.DisplayName("Assignee")
-                    </dt>
+                <dt>
+                    @Html.DisplayName("Assignee")
+                </dt>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.AssignedTo.DisplayName)
-                    </dd>
-                    
-                    <dt>
-                        @Html.DisplayName("Owner")
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AssignedTo.DisplayName)
+                </dd>
 
-                    <dd>
-                        <span>@Html.DisplayFor(model => model.Owner.DisplayName)&nbsp;&lt;@Html.DisplayFor(model => model.Owner.Email)&gt;</span>
-                    </dd>
+                <dt>
+                    @Html.DisplayName("Owner")
+                </dt>
 
-                    <dt>
-                        @Html.DisplayName("Project")
-                    </dt>
+                <dd>
+                    <span>@Html.DisplayFor(model => model.Owner.DisplayName)&nbsp;&lt;@Html.DisplayFor(model => model.Owner.Email)&gt;</span>
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Project.Name)
-                    </dd>
+                <dt>
+                    @Html.DisplayName("Project")
+                </dt>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TicketPriority.Name)
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Project.Name)
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.TicketPriority.Name)
-                    </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.TicketPriority.Name)
+                </dt>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TicketStatus.Name)
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.TicketPriority.Name)
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.TicketStatus.Name)
-                    </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.TicketStatus.Name)
+                </dt>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TicketType.Name)
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.TicketStatus.Name)
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.TicketType.Name)
-                    </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.TicketType.Name)
+                </dt>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Created)
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.TicketType.Name)
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Created)
-                    </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Created)
+                </dt>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Updated)
-                    </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Created)
+                </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Updated)
-                    </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Updated)
+                </dt>
 
-                </dl>
-            </div>
+                <dd>
+                    @Html.DisplayFor(model => model.Updated)
+                </dd>
+
+            </dl>
+        </div>
+    </div> <!-- end card-body -->
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+    </div>
+    <div class="card-body">
+        @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
+        {
             <div class="row">
-                <div class="col-lg-8 col-md-12">
-                    <hr />
-                    <h1>Attachments</h1>
-                    <hr />
-                    @foreach (var attachment in Model.Attachments.OrderBy(a => a.CreatedDateTime))
-                    {
-                        <div class="row">
-                            <div class="col-sm-3 comment-metadata">
-                                <div class="row">
-                                    @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
-                                    <br />
-                                    <div class="attach-desc">
-                                        @attachment.Description
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-9">
-                                <img class="uploaded-file" src="@attachment.MediaPath" alt="@attachment.MediaPath" title="@attachment.MediaPath" height="250" />
-                            </div>
-                        </div>
-                        <hr />
-                    }
+                <div class="col-sm-3 comment-metadata">
+                    @comment.Author.DisplayName @comment.Created.ToString("M/d/yy")
                 </div>
-            </div>
-
-            <div class="row">
-                @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
-                {
-                    using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(model => model.Id)
-
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        @Html.ValidationMessage("CustomError", new { @class = "text-danger" })
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                @Html.Label("Attachment", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    <input name="attachmentFile" type="file" class="form-control" id="fileUpload" style="height: 45px;" />
-                                </div>
-                            </div>
-                            
-                            <div class="form-group" style="margin-top: 55px;" >
-                                @Html.Label("Description", htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    @Html.Editor("attachmentDescription", new { htmlAttributes = new { @class = "form-control" } })
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="col-md-10">
-                                    <button class="btn btn-primary" type="submit" id="btnSubmit">Attach</button>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-            <div class="row">
-                <div class="col-lg-8 col-md-12">
-                    <hr />
-                    <h1>Comments</h1>
-                    <hr />
-                    @foreach (var comment in Model.Comments.OrderBy(c => c.Created))
-                    {
-                        <div class="row">
-                            <div class="col-sm-3 comment-metadata">
-                                @comment.Author.DisplayName @comment.Created.ToString("M/d/yy")
-                            </div>
-                            <div class="col-sm-6">
-                                <div>
-                                    @comment.CommentBody
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                    }
-                    @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
-                    {
-                        using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                        {
-                            <div class="row">
-                                @Html.AntiForgeryToken()
-                                @Html.HiddenFor(model => model.Id)
-
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.TextArea("CommentBody", new { row = 5, cols = 1000, placeholder = "Add Comment...", id = "txtComment", @class = "text-area-wide" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group" style="margin-top: 10px;">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-primary" type="submit" id="btnSubmitComment">Comment</button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    <hr />
-                    <div class="row">
-                        <span class="col-md-3">
-                            @if (User.Identity.IsAuthenticated && ViewBag.CanEdit)
-                            {
-                                <strong>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</strong>
-                            }
-                            <strong>@Html.ActionLink("Back to List", "Index")</strong>
-                        </span>
+                <div class="col-sm-6">
+                    <div>
+                        @comment.CommentBody
                     </div>
                 </div>
             </div>
-        </div>
+            <hr />
+        }
+        @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
+        {
+            using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
+            {
+                <div class="row">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+
+                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.TextArea("CommentBody", new {row = 5, placeholder = "Add Comment...", id = "txtComment", @class = "text-area-wide"})
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group" style="margin-top: 10px;">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" type="submit" id="btnSubmitComment">Comment</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div> <!-- end card-body -->
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
     </div>
-</article>
+    <div class="card-body">
+        @foreach (var attachment in Model.Attachments.OrderBy(a => a.CreatedDateTime))
+        {
+            <div class="row">
+                <div class="col-sm-3 comment-metadata">
+                    @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
+                    <br />
+                    <div class="attach-desc">
+                        @attachment.Description
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <img src="@attachment.MediaPath" alt="@attachment.MediaPath" title="@attachment.MediaPath" height="250" />
+                </div>
+            </div>
+            <hr />
+        }
+        @if (User.Identity.IsAuthenticated && ViewBag.CanAddContent)
+        {
+            using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationMessage("CustomError", new { @class = "text-danger" })
+
+                <div class="row" style="margin-left: 1px;">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="row">
+                                @Html.Label("Attachment")
+                                <input name="attachmentFile" type="file" class="form-control" id="fileUpload" style="height: 45px;"/>
+                            </div>
+                            <div class="row">
+                                @Html.Label("Description")
+                                @Html.Editor("attachmentDescription", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary" type="submit" id="btnSubmit">Attach</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div> <!-- end card-body -->
+</div>
 
 @section scripts
 {
@@ -233,21 +219,21 @@
         $('#btnSubmitComment').prop("disabled", true);
         var initVal = $('#txtComment').val();
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             var commentLimit = 1500;
 
             $('#txtComment').keyup(function () {
 
                 // Enable Submit only when a Comment is entered.
-                if($('#txtComment').val().length > 0 && $('#txtComment').val() !== initVal) {
+                if ($('#txtComment').val().length > 0 && $('#txtComment').val() !== initVal) {
                     $('#btnSubmitComment').prop("disabled", false);
-                }else {
+                } else {
                     $('#btnSubmitComment').prop("disabled", true);
                 }
 
                 $(this).val($(this).val().substring(0, commentLimit));
             });
-            
+
             var attachmentDescriptionLimit = 200;
 
             $('#attachmentDescription').keyup(function () {
@@ -257,3 +243,4 @@
         });
     </script>
 }
+
