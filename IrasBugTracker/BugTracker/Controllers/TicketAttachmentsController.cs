@@ -29,16 +29,19 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Dashboard", "Tickets", new { id });
             }
             var ticket = _db.Tickets.Find(id);
+            var userId = User.Identity.GetUserId();
 
             if (ticket == null)
             {
-                ModelState.AddModelError("Ticket", @"Failed to find associated Ticket");
+                return RedirectToAction("Index", "Tickets");
+            }
+            if (userId == null)
+            {
                 return RedirectToAction("Index", "Tickets");
             }
 
             if (ModelState.IsValid)
             {
-                var userId = User.Identity.GetUserId();
                 var canAddContent = _ticketHelper.CanAddContent(userId, ticket);
 
                 if (canAddContent)
@@ -73,6 +76,25 @@ namespace BugTracker.Controllers
                             attachment.MediaPath = $"/Uploads/{massagedFileName}";
                             ticket.Attachments.Add(attachment);
                             var res = _db.SaveChanges();
+                        }
+
+                        if (ticket.AssignedToId != null)
+                        {
+                            attachment.CreatedBy = _db.Users.Find(attachment.CreatedById);
+                            var attachmentCreatedByName = attachment.CreatedBy.DisplayName == null ? "UNKNOWN" : attachment.CreatedBy.DisplayName;
+                            var notificationCreationDateTime = DateTime.Now;
+                            var notification = new TicketNotification
+                            {
+                                TicketId = ticket.Id,
+                                Created = notificationCreationDateTime,
+                                Subject = $"A ticket you're Assigned to '{ticket.Title}' has a new Attachment!",
+                                IsRead = false,
+                                RecipientId = ticket.AssignedToId,
+                                NotificationBody =
+                                    $"Ticket '{ticket.Title}' ({ticket.DisplayableId}) has a new Attachment from {attachmentCreatedByName}"
+                            };
+                            _db.TicketNotifications.Add(notification);
+                            _db.SaveChanges();
                         }
                     }
                 }

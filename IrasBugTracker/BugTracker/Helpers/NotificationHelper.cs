@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using BugTracker.Models;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Helpers
@@ -120,5 +121,34 @@ namespace BugTracker.Helpers
             }
             return notifications;
         }
+
+         public List<TicketNotification> GetTicketChangeNotifications(List<TicketHistory> ticketChanges, Ticket ticket)
+         {
+             var notifications = new List<TicketNotification>();
+
+             var notificationCreationDateTime = ticket.Updated.GetValueOrDefault();
+
+             if (notificationCreationDateTime == DateTime.MinValue)
+             {
+                 notificationCreationDateTime = DateTime.Now;
+             }
+
+             foreach (var change in ticketChanges)
+             {
+                 var notification = new TicketNotification
+                 {
+                     TicketId = ticket.Id,
+                     Created = notificationCreationDateTime,
+                     Subject =
+                         $"A ticket you're Assigned to has been updated - {ticket.Title}",
+                     IsRead = false,
+                     RecipientId = ticket.AssignedToId,
+                     NotificationBody =
+                         $"Ticket '{ticket.Title}' ({ticket.DisplayableId}): {change.Property} has been updated from {change.OldValue} to {change.NewValue} by {change.ChangedBy.DisplayName}"
+                 };
+                 notifications.Add(notification);
+             }
+             return notifications;
+         }
     }
 }

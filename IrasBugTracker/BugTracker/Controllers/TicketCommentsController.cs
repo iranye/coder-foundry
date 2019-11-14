@@ -39,6 +39,25 @@ namespace BugTracker.Controllers
                     comment.Created = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                     _db.TicketComments.Add(comment);
                     var res = _db.SaveChanges();
+
+                    if (ticket.AssignedToId != null)
+                    {
+                        comment.Author = _db.Users.Find(userId);
+                        var commentAuthorName = comment.Author == null ? "UNKNOWN" : comment.Author.DisplayName;
+                        var notificationCreationDateTime = DateTime.Now;
+                        var notification = new TicketNotification
+                        {
+                            TicketId = ticket.Id,
+                            Created = notificationCreationDateTime,
+                            Subject = $"A ticket you're Assigned to '{ticket.Title}' has a new Comment!",
+                            IsRead = false,
+                            RecipientId = ticket.AssignedToId,
+                            NotificationBody =
+                                $"Ticket '{ticket.Title}' ({ticket.DisplayableId}) has a new Comment from {commentAuthorName}"
+                        };
+                        _db.TicketNotifications.Add(notification);
+                        _db.SaveChanges();
+                    }
                 }
             }
 

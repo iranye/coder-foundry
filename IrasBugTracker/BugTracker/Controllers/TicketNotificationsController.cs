@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,6 +34,7 @@ namespace BugTracker.Controllers
             if (notification != null)
             {
                 notification.IsRead = true;
+                _db.Entry(notification).State = EntityState.Modified;
                 _db.SaveChanges();
             }
             return RedirectToAction("Index", "Home");

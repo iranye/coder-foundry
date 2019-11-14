@@ -335,6 +335,14 @@ namespace BugTracker.Controllers
                         _db.TicketNotifications.AddRange(ticketAssignmentNotifications);
                         _db.SaveChanges();
                     }
+
+                    if (ticket.AssignedToId != null)
+                    {
+                        var ticketChangeNotifications = _notificationHelper.GetTicketChangeNotifications(ticketChanges, ticket);
+                        _db.TicketNotifications.AddRange(ticketChangeNotifications);
+                        _db.SaveChanges();
+                    }
+
                 }
             }
 
