@@ -1,0 +1,155 @@
+﻿@model BugTracker.ViewModels.ProjectMembersViewModel
+
+@{
+    ViewBag.Title = "MembersEdit";
+}
+
+<style>
+    .controlWide {
+        width: 100%;
+    }
+
+    #UserIds {
+        height: 180px;
+    }
+
+    .marginTop {
+        margin-top: 5px;
+    }
+
+    .email {
+        font-size: .7em;
+    }
+
+    .hidden-list {
+        display: none;
+        /*display: contents;*/ /*toggle to debug*/
+    }
+
+    tbody tr:hover { background-color: gainsboro; }
+</style>
+
+<div class="container">
+    <h2>@Model.Project.Name Project Members</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        Full Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Role
+                    </th>
+                    <th>
+                        IsMember
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AllUsers)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                <span class="email">&lt;@Html.DisplayFor(modelItem => item.Email)&gt;</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            <td>
+                                @Html.CheckBoxFor(modelItem => item.IsMember)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
+    {
+        <div class="row">
+            <div class="col-md-3" style="margin-left: 16px;">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("ProjectId", Model.Project.Id)
+
+                    <div class="row">
+                        <div class="col-md-12 hidden-list">
+                            <label>membersToAdd: </label>
+                            @Html.ListBox("MembersToAdd")
+                        </div>
+                        <div class="col-md-12 hidden-list">
+                            <label>membersToRemove: </label>
+                            @Html.ListBox("MembersToRemove")
+                        </div>
+
+                        <button id="btnSubmitAddRemove" type="submit" class="btn btn-primary controlWide">Save</button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts
+{
+    <script>
+
+        $('#btnSubmitAdd').prop("disabled", true);
+        $('#btnSubmitRemove').prop("disabled", true);
+
+        $(document).ready(function() {
+            $(":checkbox").change(function () {
+                var alreadyInList = false;
+                var parent = $(this).parent();
+                var email = parent.prev().prev().find("span").text();
+                var emailMassaged = email.replace('<', '').replace('>', '');
+                console.log(emailMassaged);
+                if (this.checked) {
+                    $("#MembersToAdd option").each(function () {
+                        if ($(this).val() === emailMassaged) {
+                            $(this).remove();
+                            alreadyInList = true;
+                        }
+                    });
+                    $("#MembersToRemove option").each(function () {
+                        if ($(this).val() === emailMassaged) {
+                            $(this).remove();
+                            alreadyInList = true;
+                        }
+                    });
+                    if (!alreadyInList) {
+                        $("#MembersToAdd").append("<option value='" + emailMassaged + "' selected='true'>" + emailMassaged + "</option>");
+                    }
+                } else {
+                    $("#MembersToAdd option").each(function () {
+                        if ($(this).val() === emailMassaged) {
+                            $(this).remove();
+                            alreadyInList = true;
+                        }
+                    });
+                    $("#MembersToRemove option").each(function () {
+                        if ($(this).val() === emailMassaged) {
+                            $(this).remove();
+                            alreadyInList = true;
+                        }
+                    });
+                    if (!alreadyInList) {
+                        $("#MembersToRemove").append("<option value='" + emailMassaged + "' selected='true'>" + emailMassaged + "</option>");
+                    }
+                }
+            });
+        });
+        
+    </script>
+}
