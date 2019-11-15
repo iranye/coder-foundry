@@ -21,6 +21,7 @@ namespace BugTracker.Controllers
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
         private readonly RoleHelper _roleHelper = new RoleHelper();
         private readonly NotificationHelper _notificationHelper = new NotificationHelper();
+        private readonly ProjectHelper _projectHelper = new ProjectHelper();
         private readonly TicketHelper _ticketHelper = new TicketHelper();
         private readonly TicketHistoryHelper _ticketHistoryHelper = new TicketHistoryHelper();
 
@@ -227,32 +228,17 @@ namespace BugTracker.Controllers
             ViewBag.CanChangeStatus = _ticketHelper.CanChangeStatus(userId, ticket);
             ViewBag.CanChangeOwner = false;
 
-            List<ApplicationUser> developers = _roleHelper.UsersInRole("Developer").ToList();
-            developers.AddRange(_roleHelper.UsersInRole("DemoDeveloper"));
             List<ApplicationUser> developersOnProject = new List<ApplicationUser>();
 
-            List<ApplicationUser> submitters = _roleHelper.UsersInRole("Submitter").ToList();
-            submitters.AddRange(_roleHelper.UsersInRole("DemoSubmitter"));
             List<ApplicationUser> submittersOnProject = new List<ApplicationUser>();
 
             var project = _db.Projects.Find(ticket.ProjectId);
             if (project != null)
             {
-                foreach (var dev in developers)
-                {
-                    if (project.Members.Select(m => m.Id).Contains(dev.Id))
-                    {
-                        developersOnProject.Add(dev);
-                    }
-                }
-
-                foreach (var submitter in submitters)
-                {
-                    if (project.Members.Select(m => m.Id).Contains(submitter.Id))
-                    {
-                        submittersOnProject.Add(submitter);
-                    }
-                }
+                developersOnProject = _projectHelper.ListUsersOnProjectInRole(project.Id, "Developer");
+                developersOnProject.AddRange(_projectHelper.ListUsersOnProjectInRole(project.Id, "DemoDeveloper"));
+                submittersOnProject = _projectHelper.ListUsersOnProjectInRole(project.Id, "Submitter");
+                submittersOnProject.AddRange(_projectHelper.ListUsersOnProjectInRole(project.Id, "DemoSubmitter"));
             }
 
             ViewBag.AssignedToId = new SelectList(developersOnProject, "Id", "DisplayName", ticket.AssignedToId);
@@ -338,10 +324,12 @@ namespace BugTracker.Controllers
                     if (ticket.AssignedToId != null)
                     {
                         var ticketChangeNotifications = _notificationHelper.GetTicketChangeNotifications(ticketChanges, ticket);
-                        _db.TicketNotifications.AddRange(ticketChangeNotifications);
-                        _db.SaveChanges();
+                        if (ticketChangeNotifications.Count > 0)
+                        {
+                            _db.TicketNotifications.AddRange(ticketChangeNotifications);
+                            _db.SaveChanges();
+                        }
                     }
-
                 }
             }
 

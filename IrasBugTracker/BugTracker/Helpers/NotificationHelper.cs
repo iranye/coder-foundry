@@ -136,7 +136,7 @@ namespace BugTracker.Helpers
                  notificationCreationDateTime = DateTime.Now;
              }
 
-             foreach (var change in ticketChanges)
+             foreach (var change in ticketChanges.Where(tc => tc.Property != "Assignee"))
              {
                  var notification = new TicketNotification
                  {

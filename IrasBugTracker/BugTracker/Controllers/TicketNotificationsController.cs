@@ -35,6 +35,7 @@ namespace BugTracker.Controllers
             {
                 notification.IsRead = true;
                 var ret = _db.SaveChanges();
+                return RedirectToAction("Dashboard", "Tickets", new { id = notification.TicketId });
             }
             return RedirectToAction("Index", "Home");
         }

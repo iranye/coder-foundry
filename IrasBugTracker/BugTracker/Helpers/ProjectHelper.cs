@@ -133,14 +133,28 @@ namespace BugTracker.Helpers
             return project.Members.Where(m => m.Projects.All(p => p.Id != projectId)).ToList();
         }
 
-        public List<string> ListUsersOnProjectInRole(int projectId, string roleName)
+        public List<string> ListUsersIdsOnProjectInRole(int projectId, string roleName)
         {
-            var userInSpecifiedRole = new List<string>();
+            var userIdsInSpecifiedRole = new List<string>();
             foreach (var user in AllUsersOnProject(projectId))
             {
-                if(_roleHelper.UserIsInRole(user.Id, roleName))
+                if (_roleHelper.UserIsInRole(user.Id, roleName))
                 {
-                    userInSpecifiedRole.Add(user.Id);
+                    userIdsInSpecifiedRole.Add(user.Id);
+                }
+            }
+
+            return userIdsInSpecifiedRole;
+        }
+
+        public List<ApplicationUser> ListUsersOnProjectInRole(int projectId, string roleName)
+        {
+            var userInSpecifiedRole = new List<ApplicationUser>();
+            foreach (var user in AllUsersOnProject(projectId))
+            {
+                if (_roleHelper.UserIsInRole(user.Id, roleName))
+                {
+                    userInSpecifiedRole.Add(user);
                 }
             }
 
