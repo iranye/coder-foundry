@@ -1,8 +1,10 @@
-﻿using System;
+﻿using BugTracker.Helpers;
+using BugTracker.Models;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,9 +12,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using BugTracker.Helpers;
-using BugTracker.Models;
-using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -300,7 +299,6 @@ namespace BugTracker.Controllers
                 if (ticket.AssignedToId != oldTicket.AssignedToId && !userCanChangeAssignment)
                 {
                     // Should never reach this, but just in case...
-                    ModelState.AddModelError("validation-summary-errors", "Insufficient Access to Change Ticket Assignment");
                     ticket.AssignedToId = oldTicket.AssignedToId;
                 }
 
@@ -310,7 +308,8 @@ namespace BugTracker.Controllers
                 ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
                 ticket.TicketType = _db.TicketTypes.Find(ticket.TicketTypeId);
                 ticket.AssignedTo = _db.Users.Find(ticket.AssignedToId);
-                var ticketChanges = _ticketHistoryHelper.GetChanges(userId, oldTicket, ticket);
+                ApplicationUser changedByUser = _db.Users.Find(userId);
+                var ticketChanges = _ticketHistoryHelper.GetChanges(changedByUser, oldTicket, ticket);
                 
                 if (ticketChanges.Count > 0)
                 {

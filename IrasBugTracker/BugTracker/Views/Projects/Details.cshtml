@@ -46,3 +46,80 @@
     </div> <!-- end card-body -->
 </div>
 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@Model.Name - Tickets</ h6 >
+</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Id")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Title")
+                        </th>
+                        <th>
+                            @Html.DisplayName("TicketType")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Assignee")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Owner")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Ticket Priority")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Ticket Status")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Ticket Creation Date")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Ticket Update Date")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tickets.OrderByDescending(t => t.Updated).ThenByDescending(t => t.Created))
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.DisplayableId, "Dashboard", "Tickets", new { id = item.Id }, null)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedTo.DisplayName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Owner.DisplayName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Updated)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div> <!-- end table div -->
+    </div> <!-- end card-body -->
+</div>
+

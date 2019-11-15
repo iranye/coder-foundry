@@ -28,14 +28,13 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Dismiss(int id)
+        public ActionResult Dismiss(int unreadNotificationId)
         {
-            var notification = _db.TicketNotifications.Find(id);
+            var notification = _db.TicketNotifications.Find(unreadNotificationId);
             if (notification != null)
             {
                 notification.IsRead = true;
-                _db.Entry(notification).State = EntityState.Modified;
-                _db.SaveChanges();
+                var ret = _db.SaveChanges();
             }
             return RedirectToAction("Index", "Home");
         }

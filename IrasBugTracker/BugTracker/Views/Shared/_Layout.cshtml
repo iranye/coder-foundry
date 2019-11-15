@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@using BugTracker.Helpers
+﻿@using BugTracker.Helpers
 <!DOCTYPE html>
 <html lang="en">
 
@@ -204,11 +203,11 @@
                                     using (Html.BeginForm("Dismiss", "TicketNotifications", FormMethod.Post))
                                     {
                                         @Html.AntiForgeryToken()
-                                        @Html.Hidden("Id", unreadNotification.Id)
+                                        @Html.Hidden("unreadNotificationId", unreadNotification.Id)
                                         <button class="dropdown-item d-flex align-items-center" type="submit">
                                             <div class="mr-3">
                                                 <div class="icon-circle bg-primary">
-                                                    <i class="fas fa-ticket-alt text-white"></i>
+                                                    <i class="fas fa-dollar-sign text-white"></i>
                                                 </div>
                                             </div>
                                             <div>

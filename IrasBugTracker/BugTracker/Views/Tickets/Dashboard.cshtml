@@ -10,6 +10,14 @@
         font-size: .8em;
         text-transform: uppercase;
     }
+    
+    .comment-metadata {
+        font-size: .7em;
+        font-style: italic;
+        display: block;
+        margin: 0;
+        text-align: left;
+    }
 </style>
 
 <h2>Ticket Dashboard - @Model.Title</h2>
@@ -149,9 +157,11 @@
                     @foreach (var attachment in Model.Attachments.OrderBy(a => a.CreatedDateTime))
                     {
                         <div class="row">
-                            <div class="col-sm-3 comment-metadata">
-                                @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
-                                <br />
+                            <div class="col-sm-3">
+                                <div class=" comment-metadata">
+                                    @attachment.CreatedBy.DisplayName @attachment.CreatedDateTime.ToString("M/d/yy")
+                                </div>
+                                <br/>
                                 <div class="attach-desc">
                                     @attachment.Description
                                 </div>
@@ -213,7 +223,7 @@
                         @Html.DisplayNameFor(model => model.Project.Name)
                     </div>
                     <div class="col-sm-6">
-                        @Html.DisplayFor(model => model.Project.Name)
+                        @Html.ActionLink(Model.Project.Name, "Details", "Projects", new { id = Model.ProjectId }, null)
                     </div>
                 </div>
                 <div class="row">
@@ -234,7 +244,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Collapsable Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
@@ -280,6 +290,9 @@
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @if (User.Identity.IsAuthenticated && ViewBag.CanEdit)
+    {
+        <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
+    }
     @Html.ActionLink("Back to List", "Index")
 </p>
