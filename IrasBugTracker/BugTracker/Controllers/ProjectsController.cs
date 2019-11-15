@@ -96,7 +96,7 @@ namespace BugTracker.Controllers
                             Id = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
                             Email = user.Email,
-                            Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault(),
+                            Role = _roleHelper.GetRoleByUserId(user.Id),
                             IsMember = true
                         });
                 }
@@ -108,7 +108,7 @@ namespace BugTracker.Controllers
                             Id = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
                             Email = user.Email,
-                            Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault(),
+                            Role = _roleHelper.GetRoleByUserId(user.Id),
                             IsMember = false
                         });
                 }

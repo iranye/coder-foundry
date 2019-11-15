@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BugTracker.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -41,6 +42,13 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ManageRoles(List<string> userIds, string role)
         {
+            var currentUserId = User.Identity.GetUserId();
+            var currentUserRoles = _roleHelper.ListUserRolesByUserId(currentUserId);
+            
+            if (!currentUserRoles.Contains("Admin"))
+            {
+                return RedirectToAction("ManageRoles", "ManageUsers");
+            }
             foreach (var userId in userIds)
             {
                 foreach (var currentlyAssignedRole in _roleHelper.ListUserRolesByUserId(userId))
