@@ -21,7 +21,7 @@ namespace BugTracker.Controllers
             List<TicketNotification> ticketNotifications = new List<TicketNotification>();
             if (!String.IsNullOrWhiteSpace(userId))
             {
-                ticketNotifications = _db.TicketNotifications.Where(tn => tn.RecipientId == userId).ToList();
+                ticketNotifications = _db.TicketNotifications.Where(tn => tn.RecipientId == userId).OrderByDescending(tn => tn.Created).ToList();
             }
             return View(ticketNotifications);
         }

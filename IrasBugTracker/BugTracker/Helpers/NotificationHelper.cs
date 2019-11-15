@@ -25,6 +25,12 @@ namespace BugTracker.Helpers
             return _db.TicketNotifications.Where(n => !n.IsRead && n.RecipientId == currentUserId).ToList();
         }
 
+        public static int GetUnreadNotificationsCount()
+        {
+            var currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            return _db.TicketNotifications.Count(n => !n.IsRead && n.RecipientId == currentUserId);
+        }
+
         private TicketAssignmentChange GetTicketAssignmentChange(string assignedToIdOld, string assignedToIdNew)
         {
             TicketAssignmentChange ticketAssignmentChange = TicketAssignmentChange.Unknown;

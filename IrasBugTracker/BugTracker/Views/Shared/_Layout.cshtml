@@ -111,18 +111,18 @@
                     <span>Ticket Index</span>
                 </a>
                 <!-- TODO: Add different views of tickets (e.g., for a PM to see all Open Tickets)
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#ticketView" aria-expanded="true" aria-controls="ticketView">
-            <i class="fas fa-fw fa-angle-right"></i>
-            <span>Ticket Views</span>
-        </a>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#ticketView" aria-expanded="true" aria-controls="ticketView">
+                    <i class="fas fa-fw fa-angle-right"></i>
+                    <span>Ticket Views</span>
+                </a>
 
-        <div id="ticketView" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="buttons.html">Buttons</a>
-                <a class="collapse-item" href="cards.html">Cards</a>
-            </div>
-        </div> -->
+                <div id="ticketView" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
+                    </div>
+                </div> -->
             </li>
 
             <!-- Divider -->
@@ -150,7 +150,7 @@
 
 
                     <!-- Topbar Search -->
-                    <!-- 
+                    <!--
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
@@ -162,7 +162,6 @@
                         </div>
                     </form>
                     -->
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -191,7 +190,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">@NotificationHelper.GetUnreadNotifications().Count()</span>
+                                <span class="badge badge-danger badge-counter" id="unread-notify-count"></span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -302,12 +301,12 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                
-                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm"}))
-                {
-                    @Html.AntiForgeryToken()
-                    <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
-                }
+
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+                    }
                 </div>
 
             </div>
@@ -327,6 +326,32 @@
     <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
     <script src="~/Scripts/datatables-demo.js"></script>
     
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getUnreadNotifyCount();
+            $(".copyright").click(function () {
+                console.log("GetUnreadNotificationData");
+                getUnreadNotifyCount();
+            });
+            
+            function getUnreadNotifyCount() {
+                var urlGetUnreadNotificationData = "@Url.Action("GetUnreadNotificationCount", "Ajax")";
+                console.log(urlGetUnreadNotificationData);
+                var ctx = document.getElementById("demoNotifyCount");
+                $.ajax({
+                    url: urlGetUnreadNotificationData,
+                    type: "GET",
+                    dataType: "json",
+                    success: function() {
+                        console.log("Success!");
+                    }
+                }).done(function(response) {
+                    $("#unread-notify-count").html(response);
+                });
+            }
+        });
+
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 
