@@ -3,12 +3,14 @@ using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
@@ -310,6 +312,32 @@ namespace BugTracker.Controllers
                         ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
                         _db.TicketNotifications.AddRange(ticketAssignmentNotifications);
                         _db.SaveChanges();
+
+                        try
+                        {
+                            var emailFrom = WebConfigurationManager.AppSettings["emailFrom"];
+                            var callbackUrl = Url.Action("Dashboard", "Tickets", new { ticket.Id }, protocol: Request.Url.Scheme);
+                            var bodyExtend = $"<p>Click <a href='{callbackUrl}'>here</a> to View the Ticket</p>";
+                            var svc = new PersonalEmail();
+                            foreach (var ticketAssignmentNotification in ticketAssignmentNotifications)
+                            {
+                                ticketAssignmentNotification.Recipient =
+                                    _db.Users.Find(ticketAssignmentNotification.RecipientId);
+                                var emailTo = ticketAssignmentNotification.Recipient.Email;
+                                if (!String.IsNullOrWhiteSpace(emailTo))
+                                {
+                                    MailMessage mailMessage = new MailMessage(emailFrom, emailTo);
+                                    mailMessage.Subject = ticketAssignmentNotification.Subject;
+                                    mailMessage.Body = ticketAssignmentNotification.NotificationBody + bodyExtend;
+                                    mailMessage.IsBodyHtml = true;
+                                    svc.Send(mailMessage);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
                     }
 
                     if (ticket.AssignedToId != null)

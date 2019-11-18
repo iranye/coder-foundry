@@ -113,11 +113,11 @@
                 </div>
             }
         }
-    <div class="form-group">
-        <span>@Html.ActionLink("Dashboard", "Dashboard", "Tickets", new { id = Model.Id }, null)&nbsp;|</span>
-        <span>@Html.ActionLink("Project Details", "Details", "Projects", new { id = Model.ProjectId }, null)&nbsp;|</span>
-        <span>@Html.ActionLink("Back to List", "Index")</span>
-    </div>
+        <div class="form-group">
+            <span>@Html.ActionLink("Dashboard", "Dashboard", "Tickets", new { id = Model.Id }, null)&nbsp;|</span>
+            <span>@Html.ActionLink("Project Details", "Details", "Projects", new { id = Model.ProjectId }, null)&nbsp;|</span>
+            <span>@Html.ActionLink("Back to List", "Index")</span>
+        </div>
     </div> <!-- end card-body -->
 </div>
 
@@ -133,11 +133,11 @@
             if (canChangeAssignment === "False") {
                 $("select[name='AssignedToId']").prop("disabled", true);
             }
-            
+
             if (canChangeOwner === "False") {
                 $("select[name='OwnerId']").prop("disabled", true);
             }
-            
+
             var canChangeStatus = "@ViewBag.CanChangeStatus";
             console.log("canChangeStatus is: " + canChangeStatus);
 
@@ -145,5 +145,13 @@
                 $("select[name='TicketStatusId']").prop("disabled", true);
             }
         });
+        var charLimit = 254;
+
+        $('#Description').keyup(function () {
+            $(this).val($(this).val().substring(0, charLimit));
+        });
     </script>
 }
+
+
+

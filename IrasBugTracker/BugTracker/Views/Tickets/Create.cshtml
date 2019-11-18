@@ -69,4 +69,18 @@
     </div> <!-- end card-body -->
 </div>
 
+@section scripts
+{
+    <script>
+        
+        $(document).ready(function () {
+            var charLimit = 254;
+
+            $('#Description').keyup(function () {
+                $(this).val($(this).val().substring(0, charLimit));
+            });
+        });
+    </script>
+}
+
 
