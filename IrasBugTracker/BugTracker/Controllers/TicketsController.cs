@@ -306,16 +306,6 @@ namespace BugTracker.Controllers
                     var ticketAssignmentNotifications = _notificationHelper.GetAssignmentNotifications(oldTicket, ticket);
                     if (ticketAssignmentNotifications.Count > 0)
                     {
-                        // If Unassigned=>Assigned, change Status to Assigned
-                        if (ticket.AssignedToId != null && ticket.TicketStatus.Name == "Open")
-                        {
-                            ticket.TicketStatusId = _db.TicketStatuses.FirstOrDefault(s => s.Name == "Assigned").Id;
-                        }
-                        // If Assigned=>UnAssigned, change Status to Open
-                        if (ticket.AssignedToId == null && ticket.TicketStatus.Name == "Assigned")
-                        {
-                            ticket.TicketStatusId = _db.TicketStatuses.FirstOrDefault(s => s.Name == "Open").Id;
-                        }
                         ticket.TicketStatus = _db.TicketStatuses.Find(ticket.TicketStatusId);
                         _db.TicketNotifications.AddRange(ticketAssignmentNotifications);
                         _db.SaveChanges();
