@@ -93,6 +93,7 @@ namespace BugTracker.Helpers
                     MailMessage mailMessage = new MailMessage(sender, message.Destination);
                     mailMessage.Subject = message.Subject;
                     mailMessage.Body = message.Body;
+                    mailMessage.IsBodyHtml = true;
                     await smtp.SendMailAsync(mailMessage);
                 }
                 catch (Exception ex)
