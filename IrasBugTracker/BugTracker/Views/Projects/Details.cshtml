@@ -35,9 +35,6 @@
             {
                 <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
                 <span>@Html.ActionLink("Add/Remove Members", "ManageMembers", new { id = Model.Id })&nbsp;|</span>
-            }
-            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
-            {
                 <span>@Html.ActionLink("All Projects", "Index")&nbsp;|</span>
             }
             @Html.ActionLink("My Projects", "AssignedIndex")
@@ -82,6 +79,12 @@
                         <th>
                             @Html.DisplayName("Ticket Update Date")
                         </th>
+                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
+                        {
+                            <th>
+                                @Html.DisplayName("Options")
+                            </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -115,6 +118,17 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Updated)
                             </td>
+                            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("DemoAdmin") || User.IsInRole("DemoProjectManager"))
+                            {
+                                <td>
+                                    <a href="@Url.Action("Edit", "Tickets", new {id = item.Id})" title="Edit Ticket">
+                                        <i class="fas fa-fw fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("Dashboard", "Tickets", new {id = item.Id})" title="Ticket Dashboard">
+                                        <i class="fas fa-fw fa-address-card"></i>
+                                    </a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

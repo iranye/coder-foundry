@@ -115,7 +115,8 @@
         }
     <div class="form-group">
         <span>@Html.ActionLink("Dashboard", "Dashboard", "Tickets", new { id = Model.Id }, null)&nbsp;|</span>
-        @Html.ActionLink("Back to List", "Index")
+        <span>@Html.ActionLink("Project Details", "Details", "Projects", new { id = Model.ProjectId }, null)&nbsp;|</span>
+        <span>@Html.ActionLink("Back to List", "Index")</span>
     </div>
     </div> <!-- end card-body -->
 </div>

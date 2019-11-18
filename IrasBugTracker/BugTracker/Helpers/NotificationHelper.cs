@@ -22,7 +22,7 @@ namespace BugTracker.Helpers
         public static List<TicketNotification> GetUnreadNotifications()
         {
             var currentUserId = HttpContext.Current.User.Identity.GetUserId();
-            return _db.TicketNotifications.Where(n => !n.IsRead && n.RecipientId == currentUserId).ToList();
+            return _db.TicketNotifications.Where(n => !n.IsRead && n.RecipientId == currentUserId).OrderByDescending(n => n.Created).ToList();
         }
 
         public static int GetUnreadNotificationsCount()
@@ -70,11 +70,11 @@ namespace BugTracker.Helpers
                     {
                         TicketId = newTicket.Id,
                         Created = notificationCreationDateTime,
-                        Subject = $"Ticket Assignment Notification - TicketID {newTicket.DisplayableId}",
+                        Subject = $"[{newTicket.DisplayableId}] Ticket Assignment Notification",
                         IsRead = false,
                         RecipientId = newTicket.AssignedToId,
                         NotificationBody =
-                            $"Ticket {newTicket.DisplayableId} has been assigned to you - '{newTicket.Title}' for Project {newTicket.Project.Name}"
+                            $"A Ticket has been assigned to you - '{newTicket.Title}' for Project '{newTicket.Project.Name}'"
                     };
                     notifications.Add(notificationAssigned);
                     break;
@@ -84,11 +84,11 @@ namespace BugTracker.Helpers
                     {
                         TicketId = newTicket.Id,
                         Created = notificationCreationDateTime,
-                        Subject = "Ticket Assignment Notification",
+                        Subject = $"[{newTicket.DisplayableId}] Ticket Assignment Notification",
                         IsRead = false,
                         RecipientId = oldTicket.AssignedToId,
                         NotificationBody =
-                            $"A Ticket has been un-assigned from You: TicketID={newTicket.Id} '{newTicket.Title}' for Project {newTicket.Project.Name}"
+                            $"A Ticket has been un-assigned from You: '{newTicket.Title}' for Project '{newTicket.Project.Name}'"
                     };
                     notifications.Add(notificationUnAssigned);
                     break;
@@ -98,11 +98,11 @@ namespace BugTracker.Helpers
                     {
                         TicketId = newTicket.Id,
                         Created = notificationCreationDateTime,
-                        Subject= "Ticket Assignment Notification",
+                        Subject= $"[{newTicket.DisplayableId}] Ticket Assignment Notification",
                         IsRead = false,
                         RecipientId = oldTicket.AssignedToId,
                         NotificationBody =
-                            $"A Ticket has been un-assigned from You: TicketID={newTicket.Id} '{newTicket.Title}' for Project {newTicket.Project.Name}"
+                            $"A Ticket has been un-assigned from You: '{newTicket.Title}' for Project '{newTicket.Project.Name}'"
                     };
                     notifications.Add(notificationUnAssgnd);
 
@@ -110,11 +110,11 @@ namespace BugTracker.Helpers
                     {
                         TicketId = newTicket.Id,
                         Created = notificationCreationDateTime,
-                        Subject = "Ticket Assignment Notification",
+                        Subject = $"[{newTicket.DisplayableId}] Ticket Assignment Notification",
                         IsRead = false,
                         RecipientId = newTicket.AssignedToId,
                         NotificationBody =
-                            $"A Ticket has been assigned to You: TicketID={newTicket.Id} '{newTicket.Title}' for Project {newTicket.Project.Name}"
+                            $"A Ticket has been assigned to You: '{newTicket.Title}' for Project '{newTicket.Project.Name}'"
                     };
                     notifications.Add(notificationAssgned);
 
@@ -138,17 +138,23 @@ namespace BugTracker.Helpers
 
              foreach (var change in ticketChanges.Where(tc => tc.Property != "Assignee"))
              {
-                 var notification = new TicketNotification
+                 var notificationBody =
+                     $"Ticket '{ticket.Title}': {change.Property} has been updated from {change.OldValue} to {change.NewValue} by {change.ChangedBy.DisplayName}";
+                 if (change.Property == "Title" || change.Property == "Description")
+                {
+                    notificationBody = $"Ticket '{ticket.Title}': {change.Property} has been updated by {change.ChangedBy.DisplayName}";
+                }
+
+                var notification = new TicketNotification
                  {
                      TicketId = ticket.Id,
                      Created = notificationCreationDateTime,
                      Subject =
-                         $"A ticket you're Assigned to has been updated - {ticket.Title}",
+                         $"[{ticket.DisplayableId}] A ticket you're Assigned to has been updated - {ticket.Title}",
                      IsRead = false,
                      RecipientId = ticket.AssignedToId,
-                     NotificationBody =
-                         $"Ticket '{ticket.Title}' ({ticket.DisplayableId}): {change.Property} has been updated from {change.OldValue} to {change.NewValue} by {change.ChangedBy.DisplayName}"
-                 };
+                     NotificationBody = notificationBody
+                };
                  notifications.Add(notification);
              }
              return notifications;

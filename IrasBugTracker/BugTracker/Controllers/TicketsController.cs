@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -313,11 +314,28 @@ namespace BugTracker.Controllers
 
                     if (ticket.AssignedToId != null)
                     {
-                        var ticketChangeNotifications = _notificationHelper.GetTicketChangeNotifications(ticketChanges, ticket);
-                        if (ticketChangeNotifications.Count > 0)
+                        try
                         {
-                            _db.TicketNotifications.AddRange(ticketChangeNotifications);
-                            _db.SaveChanges();
+                            var ticketChangeNotifications = _notificationHelper.GetTicketChangeNotifications(ticketChanges, ticket);
+                            if (ticketChangeNotifications.Count > 0)
+                            {
+                                _db.TicketNotifications.AddRange(ticketChangeNotifications);
+                                _db.SaveChanges();
+                            }
+                        }
+                        catch (DbEntityValidationException e)
+                        {
+                            foreach (var eve in e.EntityValidationErrors)
+                            {
+                                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                                    eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                                foreach (var ve in eve.ValidationErrors)
+                                {
+                                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                        ve.PropertyName, ve.ErrorMessage);
+                                }
+                            }
+                            throw;
                         }
                     }
                 }

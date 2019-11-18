@@ -53,18 +53,18 @@
                     </div>
                     <div class="row">
                         <div class="h5 col-sm-6 detail-label">
-                            @Html.DisplayNameFor(model => model.Created)
+                            @Html.DisplayName("Status")
                         </div>
                         <div class="col-sm-6">
-                            @Html.DisplayFor(model => model.Created)
+                            @Html.DisplayFor(model => model.TicketStatus.Name)
                         </div>
                     </div>
                     <div class="row">
                         <div class="h5 col-sm-6 detail-label">
-                            @Html.DisplayNameFor(model => model.Updated)
+                            @Html.DisplayName("Priority")
                         </div>
                         <div class="col-sm-6">
-                            @Html.DisplayFor(model => model.Updated)
+                            @Html.DisplayFor(model => model.TicketPriority.Name)
                         </div>
                     </div>
                     <div class="row">
@@ -89,6 +89,22 @@
                         </div>
                         <div class="col-sm-6">
                             @Html.DisplayFor(model => model.AssignedTo.DisplayName)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.Created)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Created)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
+                            @Html.DisplayNameFor(model => model.Updated)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.DisplayFor(model => model.Updated)
                         </div>
                     </div>
                 </div>
