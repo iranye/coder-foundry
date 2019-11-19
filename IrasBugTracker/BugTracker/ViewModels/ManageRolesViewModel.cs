@@ -9,8 +9,11 @@ namespace BugTracker.ViewModels
 {
     public class ManageRolesViewModel
     {
+        public string UserId { get; set; }
+
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
+
         public string Email { get; set; }
         public string Role { get; set; }
     }

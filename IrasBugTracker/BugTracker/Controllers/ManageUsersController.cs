@@ -17,7 +17,6 @@ namespace BugTracker.Controllers
 
         public ActionResult ManageRoles()
         {
-            ViewBag.UserIds = new MultiSelectList(_db.Users.OrderBy(u => u.Email), "Id", "Email");
             ViewBag.Role = new SelectList(_db.Roles, "Name", "Name");
 
             var users = new List<ManageRolesViewModel>();
@@ -26,11 +25,13 @@ namespace BugTracker.Controllers
                 users.Add(
                     new ManageRolesViewModel
                     {
+                        UserId = user.Id,
                         FullName = $"{user.FirstName} {user.LastName}",
                         Email = user.Email,
                         Role = _roleHelper.ListUserRolesByUserId(user.Id).FirstOrDefault()
                     });
             }
+            ViewBag.UserIds = new MultiSelectList(users.OrderBy(u => u.FullName), "UserId", "FullName");
             return View(users);
         }
 
