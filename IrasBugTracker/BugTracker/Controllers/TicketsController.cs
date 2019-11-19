@@ -249,6 +249,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketPriorityId = new SelectList(_db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            ViewBag.Message = "";
             ViewBag.OwnerId = new SelectList(submittersOnProject, "Id", "DisplayName", ticket.OwnerId);
             return View(ticket);
         }
@@ -283,6 +284,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Dashboard", "Tickets", new { ticket.Id });
             }
 
+            bool changesMade = false;
             if (ModelState.IsValid)
             {
                 if (ticket.AssignedToId != oldTicket.AssignedToId && !userCanChangeAssignment)
@@ -299,9 +301,10 @@ namespace BugTracker.Controllers
                 ticket.AssignedTo = _db.Users.Find(ticket.AssignedToId);
                 ApplicationUser changedByUser = _db.Users.Find(userId);
                 var ticketChanges = _ticketHistoryHelper.GetChanges(changedByUser, oldTicket, ticket);
-                
+
                 if (ticketChanges.Count > 0)
                 {
+                    changesMade = true;
                     _db.Entry(ticket).State = EntityState.Modified;
                     _db.TicketHistorys.AddRange(ticketChanges);
                     _db.SaveChanges();
@@ -363,7 +366,6 @@ namespace BugTracker.Controllers
                                         ve.PropertyName, ve.ErrorMessage);
                                 }
                             }
-                            throw;
                         }
                     }
                 }
@@ -409,6 +411,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(_db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(_db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             ViewBag.OwnerId = new SelectList(submittersOnProject, "Id", "DisplayName", ticket.OwnerId);
+            ViewBag.Message = changesMade ? "* Update Successful" : "";
 
             return View(ticket);
         }

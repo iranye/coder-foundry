@@ -10,7 +10,9 @@
         font-size: .8em;
         text-transform: uppercase;
     }
-    
+    div.detail-label {
+        margin-top: 4px;
+    }
     .comment-metadata {
         font-size: .7em;
         font-style: italic;
@@ -161,7 +163,7 @@
             </div>
         </div>
 
-        <!-- Collapsable Card Example -->
+        <!-- Collapsible Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#ticketAttachments" class="d-block card-header py-3 detail-label" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="ticketAttachments">
@@ -274,7 +276,7 @@
                     {
                         <div class="row">
                             <div class="h5 col-sm-6 detail-label">
-                                @Html.DisplayFor(t => ticketEvent.Property)
+                                <span class="font-weight-bold">@Html.DisplayFor(t => ticketEvent.Property)</span> modified
                             </div>
                             <div class="col-sm-6">
                                 @ticketEvent.OldValue => @ticketEvent.NewValue

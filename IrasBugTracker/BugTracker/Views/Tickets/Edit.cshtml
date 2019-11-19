@@ -4,8 +4,16 @@
     ViewBag.Title = "Edit";
 }
 
+<style>
+    #message {
+        color: green;
+        font-size: .6em;
+        margin-bottom: 5px;
+    }
+</style>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
+        <div id="message">@ViewBag.Message</div>
         <h6 class="m-0 font-weight-bold text-primary">Edit Ticket - @Model.Title</h6>
     </div>
     <div class="card-body">
@@ -150,6 +158,10 @@
         $('#Description').keyup(function () {
             $(this).val($(this).val().substring(0, charLimit));
         });
+        if ($('#message').text().length === 0) {
+            console.log("message length: " + $('#message').val().length);
+            $('#message').css('visibility', 'collapse');
+        }
     </script>
 }
 
