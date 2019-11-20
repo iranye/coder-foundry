@@ -5,6 +5,13 @@ namespace FinancialPortal.Web.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Household> Households { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
+        public DbSet<BudgetItem> BudgetItems { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransactionType> TransactionTypes { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

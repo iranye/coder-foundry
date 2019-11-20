@@ -21,6 +21,9 @@ namespace FinancialPortal.Web.Models
         [Display(Name = "Display Name")]
         [StringLength(90, ErrorMessage = "Display Name must be no longer than {1} characters long.")]
         public string DisplayName { get; set; }
+        
+        [StringLength(255)]
+        public string AvatarPath { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

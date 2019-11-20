@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinancialPortal.Web.Models
 {
-    public class HouseHold
+    public class Household
     {
         public int Id { get; set; }
 
