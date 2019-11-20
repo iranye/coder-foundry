@@ -11,10 +11,13 @@ namespace FinancialPortal.Web.Helpers
 {
     public static class HelperMethods
     {
-        public static ApplicationDbContext _db = new ApplicationDbContext();
+        private static ApplicationDbContext _dbContext = null;
+
+        internal static ApplicationDbContext DbContext => _dbContext ?? (_dbContext = new ApplicationDbContext());
+
         public static ApplicationUser GetApplicationUserByUserId(string userId)
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
             return userManager.FindById(userId);
         }
     }
