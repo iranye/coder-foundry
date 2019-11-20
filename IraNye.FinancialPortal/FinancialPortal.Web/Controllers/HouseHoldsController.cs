@@ -4,12 +4,17 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using FinancialPortal.Web.Helpers;
 using FinancialPortal.Web.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FinancialPortal.Web.Controllers
 {
+    [Authorize]
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext _dbContext = new ApplicationDbContext();
@@ -35,21 +40,44 @@ namespace FinancialPortal.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var household = new Household {Greeting = "Welcome to our Household!"};
+            return View(household);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Greeting,Created")] Household houseHold)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Greeting")] Household household)
         {
             if (ModelState.IsValid)
             {
-                _dbContext.Households.Add(houseHold);
+                household.Name = household.Name.Trim();
+                if (_dbContext.Households.Any(h => h.Name.ToLower() == household.Name.ToLower()))
+                {
+                    ModelState.AddModelError("", "Household with that Name already exists.  Please enter another Name.");
+                    return View(household);
+                }
+                household.Created = DateTime.Now;
+                _dbContext.Households.Add(household);
                 _dbContext.SaveChanges();
+
+                //Update my User record to include the newly created Household Id
+                var userId = User.Identity.GetUserId();
+                var user = _dbContext.Users.Find(userId);
+                user.HouseholdId = household.Id;
+                _dbContext.SaveChanges();
+
+                //Assign this person the role of HOH
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+                userManager.RemoveFromRole(userId, "Lobbyist");
+                userManager.AddToRole(userId, "HeadOfHousehold");
+
+                //Need to 'Reauthorize' so role will take effect
+                await HelperMethods.ReauthorizeAsync();
+
                 return RedirectToAction("Index");
             }
 
-            return View(houseHold);
+            return View(household);
         }
 
         public ActionResult Edit(int? id)

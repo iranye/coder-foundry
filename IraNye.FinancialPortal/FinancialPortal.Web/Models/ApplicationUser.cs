@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FinancialPortal.Web.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public int? HouseholdId { get; set; }
+
         [Required]
         [Display(Name = "First Name")]
         [StringLength(50, ErrorMessage = "First Name must be between {2} and {1} characters long.", MinimumLength = 1)]
@@ -24,6 +26,9 @@ namespace FinancialPortal.Web.Models
         
         [StringLength(255)]
         public string AvatarPath { get; set; }
+
+        // Navs
+        public virtual Household Household { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

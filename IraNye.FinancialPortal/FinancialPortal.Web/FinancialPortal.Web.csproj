@@ -172,7 +172,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HouseHoldsController.cs" />
+    <Compile Include="Controllers\HouseholdsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -187,6 +187,10 @@
     <Compile Include="Migrations\201911201717247_AddModels.cs" />
     <Compile Include="Migrations\201911201717247_AddModels.Designer.cs">
       <DependentUpon>201911201717247_AddModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911201915249_AddHouseholdIdToAppUser.cs" />
+    <Compile Include="Migrations\201911201915249_AddHouseholdIdToAppUser.Designer.cs">
+      <DependentUpon>201911201915249_AddHouseholdIdToAppUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
@@ -237,9 +241,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -265,6 +266,7 @@
     <Content Include="Views\HouseHolds\Details.cshtml" />
     <Content Include="Views\HouseHolds\Edit.cshtml" />
     <Content Include="Views\HouseHolds\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -288,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911201717247_AddModels.resx">
       <DependentUpon>201911201717247_AddModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911201915249_AddHouseholdIdToAppUser.resx">
+      <DependentUpon>201911201915249_AddHouseholdIdToAppUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

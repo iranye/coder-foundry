@@ -1,4 +1,4 @@
-﻿@model FinancialPortal.Web.Models.HouseHold
+﻿@model FinancialPortal.Web.Models.Household
 
 @{
     ViewBag.Title = "Create";
@@ -18,7 +18,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Household Name" }})
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -26,16 +26,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Greeting, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Greeting, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Greeting, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Greeting" } })
                 @Html.ValidationMessageFor(model => model.Greeting, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
             </div>
         </div>
 

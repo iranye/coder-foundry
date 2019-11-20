@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using FinancialPortal.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
 
 namespace FinancialPortal.Web.Helpers
 {
@@ -19,6 +21,18 @@ namespace FinancialPortal.Web.Helpers
         {
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
             return userManager.FindById(userId);
+        }
+        
+        public static async Task ReauthorizeAsync()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var user = _dbContext.Users.Find(userId);
+            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            var identity = await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
         }
     }
 }
