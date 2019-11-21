@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -7,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FinancialPortal.Web.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FinancialPortal.Web.Controllers
 {
@@ -15,9 +17,11 @@ namespace FinancialPortal.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        ApplicationDbContext _db;
 
         public ManageController()
         {
+            _db = new ApplicationDbContext();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -251,8 +255,6 @@ namespace FinancialPortal.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Manage/SetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
@@ -270,6 +272,52 @@ namespace FinancialPortal.Web.Controllers
                     return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
                 }
                 AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public async Task<ActionResult> UpdateInfo()
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return View("Error");
+            }
+            UpdateUserInfoViewModel updateUserInfoViewModel = new UpdateUserInfoViewModel
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DisplayName = user.DisplayName,
+                Email = user.Email
+            };
+            return View(updateUserInfoViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateInfo(UpdateUserInfoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var displayName = String.IsNullOrWhiteSpace(model.DisplayName) 
+                    ? $"{model.FirstName} {model.LastName}"
+                    : model.DisplayName;
+            
+                user.FirstName = model.FirstName.Trim();
+                user.LastName = model.LastName.Trim();
+                user.DisplayName = displayName.Trim();
+                user.UserName = model.Email.Trim();
+                user.Email = model.Email.Trim();
+
+                var updateResult = UserManager.Update(user);
+                if (updateResult.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             // If we got this far, something failed, redisplay form

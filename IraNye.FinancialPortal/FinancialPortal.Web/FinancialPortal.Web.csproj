@@ -267,6 +267,7 @@
     <Content Include="Views\HouseHolds\Edit.cshtml" />
     <Content Include="Views\HouseHolds\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Manage\UpdateInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
