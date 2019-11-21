@@ -40,22 +40,24 @@ namespace FinancialPortal.Web.Controllers
             return View(houseHold);
         }
 
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(int? id)
         {
+            if (id == null)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+            Household houseHold = _dbContext.Households.Find(id);
+            if (houseHold == null)
+            {
+                return HttpNotFound();
+            }
+
             var userId = User.Identity.GetUserId();
             var user = _dbContext.Users.Find(userId);
 
-            // If user is a member of a household, go to Dashboard (Home Dash or Household Dash)
-            if (user.HouseholdId != null)
-            {
-                Household houseHold = _dbContext.Households.Find(user.HouseholdId);
-                if (houseHold == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(houseHold);
-            }
-            return RedirectToAction("Index", "Households");
+            ViewBag.IsMember = (user.HouseholdId != null && user.HouseholdId == id);
+
+            return View(houseHold);
         }
 
         public ActionResult Create()

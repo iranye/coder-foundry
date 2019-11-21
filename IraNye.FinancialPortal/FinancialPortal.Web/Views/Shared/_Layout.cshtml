@@ -84,7 +84,7 @@
             }
 
             <li class="nav-item">
-                <a href="@Url.Action("Dashboard", "Households")" class="nav-link">
+                <a href="@Url.Action("Dashboard", "Households")/@HelperMethods.GetCurrentUserHouseholdId()" class="nav-link">
                     <i class="fas fa-fw fa-archway"></i>
                     <span>My Household</span>
                 </a>

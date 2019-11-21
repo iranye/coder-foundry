@@ -9,21 +9,29 @@ namespace FinancialPortal.Web.Controllers
 {
     public class InvitationsController : Controller
     {
-
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
-        // GET: Invitations
-        public ActionResult Index()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "HouseholdId,RecipientEmail")] Invitation invitation, int id)
         {
-            return View();
-        }
+            Household houseHold = _db.Households.Find(id);
 
-        public ActionResult Create()
-        {
-            ViewBag.HouseholdId = new SelectList(_db.Households, "Id", "Name");
+            if (houseHold == null)
+            {
+                ModelState.AddModelError("Ticket", @"Failed to find associated Ticket");
+                return RedirectToAction("Index", "Households");
+            }
 
-            var myGuid = Guid.NewGuid();
-            return View();
+            invitation.HouseholdId = id;
+            invitation.RecipientEmail = invitation.RecipientEmail;
+            invitation.IsValid = true;
+            invitation.Code = Guid.NewGuid();
+            invitation.TTL = 22;
+            invitation.Created = DateTime.Now;
+            _db.Invitations.Add(invitation);
+
+            return RedirectToAction("Dashboard", "Households", new { id });
         }
     }
 }

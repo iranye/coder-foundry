@@ -34,5 +34,21 @@ namespace FinancialPortal.Web.Helpers
             var identity = await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
         }
+
+        public static int? GetCurrentUserHouseholdId()
+        {
+            var currentUserId = HttpContext.Current.User.Identity.GetUserId();
+
+            int? ret = null;
+            if (!String.IsNullOrWhiteSpace(currentUserId))
+            {
+                var user = DbContext.Users.Find(currentUserId);
+                if (user != null)
+                {
+                    ret = user.HouseholdId;
+                }
+            }
+            return ret;
+        }
     }
 }
