@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FinancialPortal.Web.ViewModels;
 
 namespace FinancialPortal.Web.Controllers
 {
@@ -11,7 +12,8 @@ namespace FinancialPortal.Web.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            MainDashboardViewModel viewModel = new MainDashboardViewModel();
+            return View(viewModel);
         }
     }
 }
