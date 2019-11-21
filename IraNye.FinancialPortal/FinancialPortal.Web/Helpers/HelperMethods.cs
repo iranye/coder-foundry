@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,12 +43,11 @@ namespace FinancialPortal.Web.Helpers
             int? ret = null;
             if (!String.IsNullOrWhiteSpace(currentUserId))
             {
-                var user = DbContext.Users.Find(currentUserId);
-                if (user != null)
-                {
-                    ret = user.HouseholdId;
-                }
+                SqlParameter param1 = new SqlParameter("@UserId", currentUserId);
+
+                ret = DbContext.Database.SqlQuery<int?>("GetCurrentUserHouseholdId @UserId", param1).FirstOrDefault();
             }
+
             return ret;
         }
     }

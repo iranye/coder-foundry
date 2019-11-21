@@ -129,7 +129,16 @@ namespace FinancialPortal.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var rand = new Random();
+            var randomPaddedStr = rand.Next(1, 999).ToString("000");
+            RegisterViewModel registerViewModel = new RegisterViewModel
+            {
+                FirstName = "Joey",
+                LastName = "Ramone",
+                DisplayName = "JR-" + randomPaddedStr,
+                Email = $"jr-{randomPaddedStr}@mailinator.com"
+            };
+            return View(registerViewModel);
         }
 
         [HttpPost]

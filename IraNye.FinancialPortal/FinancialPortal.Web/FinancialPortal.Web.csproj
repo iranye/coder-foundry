@@ -198,6 +198,10 @@
     <Compile Include="Migrations\201911211523227_AddNotification.Designer.cs">
       <DependentUpon>201911211523227_AddNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911212006292_AddGetUsersHouseholdIdSproc.cs" />
+    <Compile Include="Migrations\201911212006292_AddGetUsersHouseholdIdSproc.Designer.cs">
+      <DependentUpon>201911212006292_AddGetUsersHouseholdIdSproc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -339,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911211523227_AddNotification.resx">
       <DependentUpon>201911211523227_AddNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911212006292_AddGetUsersHouseholdIdSproc.resx">
+      <DependentUpon>201911212006292_AddGetUsersHouseholdIdSproc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
