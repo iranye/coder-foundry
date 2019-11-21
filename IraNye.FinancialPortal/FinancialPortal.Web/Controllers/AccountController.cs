@@ -152,7 +152,7 @@ namespace FinancialPortal.Web.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Households");
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }

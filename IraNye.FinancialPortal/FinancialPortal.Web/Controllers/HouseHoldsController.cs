@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using FinancialPortal.Web.Helpers;
+using FinancialPortal.Web.Models;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using FinancialPortal.Web.Helpers;
-using FinancialPortal.Web.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FinancialPortal.Web.Controllers
 {
@@ -18,9 +14,15 @@ namespace FinancialPortal.Web.Controllers
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext _dbContext = new ApplicationDbContext();
+        private RoleHelper _roleHelper = new RoleHelper();
 
         public ActionResult Index()
         {
+            var userId = User.Identity.GetUserId();
+            var user = _dbContext.Users.Find(userId);
+
+            // If user is a member of a household, go to Dashboard (Home Dash or Household Dash)
+            ViewBag.UserIsHouseholdMember = user.HouseholdId != null;
             return View(_dbContext.Households.ToList());
         }
 
@@ -38,8 +40,35 @@ namespace FinancialPortal.Web.Controllers
             return View(houseHold);
         }
 
+        public ActionResult Dashboard()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = _dbContext.Users.Find(userId);
+
+            // If user is a member of a household, go to Dashboard (Home Dash or Household Dash)
+            if (user.HouseholdId != null)
+            {
+                Household houseHold = _dbContext.Households.Find(user.HouseholdId);
+                if (houseHold == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(houseHold);
+            }
+            return RedirectToAction("Index", "Households");
+        }
+
         public ActionResult Create()
         {
+            var userId = User.Identity.GetUserId();
+            var user = _dbContext.Users.Find(userId);
+
+            // If user is a member of a household, go to Dashboard (Home Dash or Household Dash)
+            if (user.HouseholdId != null)
+            {
+                return RedirectToAction("Dashboard", "Households");
+            }
+
             var household = new Household {Greeting = "Welcome to our Household!"};
             return View(household);
         }
@@ -50,6 +79,14 @@ namespace FinancialPortal.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                var user = _dbContext.Users.Find(userId);
+
+                // If user is already a member of a household, go to Dashboard
+                if (user.HouseholdId != null)
+                {
+                    return RedirectToAction("Dashboard", "Households");
+                }
                 household.Name = household.Name.Trim();
                 if (_dbContext.Households.Any(h => h.Name.ToLower() == household.Name.ToLower()))
                 {
@@ -61,20 +98,16 @@ namespace FinancialPortal.Web.Controllers
                 _dbContext.SaveChanges();
 
                 //Update my User record to include the newly created Household Id
-                var userId = User.Identity.GetUserId();
-                var user = _dbContext.Users.Find(userId);
                 user.HouseholdId = household.Id;
                 _dbContext.SaveChanges();
 
                 //Assign this person the role of HOH
-                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
-                userManager.RemoveFromRole(userId, "Lobbyist");
-                userManager.AddToRole(userId, "HeadOfHousehold");
+                _roleHelper.AddUserToRole(userId, "HeadOfHousehold");
 
                 //Need to 'Reauthorize' so role will take effect
                 await HelperMethods.ReauthorizeAsync();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Households");
             }
 
             return View(household);
