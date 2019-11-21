@@ -42,12 +42,12 @@ namespace FinancialPortal.Web.ViewModels
 
         public int TotalInvitations
         {
-            get { return MyHousehold.Invitations.Count(); }
+            get { return MyHousehold?.Invitations.Count() ?? 0; }
         }
 
         public int TotalBudgets
         {
-            get { return MyHousehold.Budgets.Count(); }
+            get { return MyHousehold?.Budgets.Count() ?? 0; }
         }
     }
 }

@@ -18,5 +18,10 @@ namespace FinancialPortal.Web.Helpers
 
             return displayName;
         }
+
+        public static string Massaged(this string str)
+        {
+            return str.Trim().ToLower();
+        }
     }
 }

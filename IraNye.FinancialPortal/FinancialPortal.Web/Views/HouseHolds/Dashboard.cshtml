@@ -64,6 +64,7 @@
         </div>
             <hr />
         }
+        
         @if (User.Identity.IsAuthenticated && ViewBag.IsMember)
         {
             using (Html.BeginForm("Create", "Invitations", FormMethod.Post))
@@ -76,12 +77,12 @@
 
                     <div class="form-group">
                         <div class="col-md-12">
-                            @Html.TextBox("RecipientEmail", new
+                            @Html.TextBox("RecipientEmail", null, new 
                             {
                                 @class = "form-control form-control-user",
                                 placeholder = "Enter Email Address...",
                                 type = "email",
-                                id = "txtEmail"
+                                id = "recipientEmail"
                             })
                             @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
                         </div>

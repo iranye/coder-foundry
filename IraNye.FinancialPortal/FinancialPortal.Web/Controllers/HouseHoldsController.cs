@@ -92,7 +92,7 @@ namespace FinancialPortal.Web.Controllers
                 household.Name = household.Name.Trim();
                 if (_dbContext.Households.Any(h => h.Name.ToLower() == household.Name.ToLower()))
                 {
-                    ModelState.AddModelError("", "Household with that Name already exists.  Please enter another Name.");
+                    ModelState.AddModelError("Name", "Household with that Name already exists.  Please enter another Name.");
                     return View(household);
                 }
                 household.Created = DateTime.Now;
