@@ -135,7 +135,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 FirstName = "Joey",
                 LastName = "Ramone",
-                DisplayName = "JR-" + randomPaddedStr,
+                DisplayName = "Joey-" + randomPaddedStr,
                 Email = $"jr-{randomPaddedStr}@mailinator.com"
             };
             return View(registerViewModel);

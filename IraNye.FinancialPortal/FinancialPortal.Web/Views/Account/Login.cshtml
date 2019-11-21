@@ -1,4 +1,6 @@
-﻿@model FinancialPortal.Web.Models.LoginViewModel
+﻿@using FinancialPortal.Web.Models
+@using Microsoft.Owin.Security
+@model FinancialPortal.Web.Models.LoginViewModel
 @{
     ViewBag.Title = "Log in";
 }
@@ -74,9 +76,25 @@
                                     </div>
 
                                     <input type="submit" value="Log in" class="btn btn-primary btn-user btn-block" value="Login" />
-                                    <hr>
                                 }
 
+                                <hr>
+                                @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "user", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button id="Google" type="submit" class="btn btn-google btn-user btn-block" name="provider" value="Google" >
+                                        <i class="fab fa-google fa-fw"></i> Login with Google
+                                    </button>
+                                }
+
+                                @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "user", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button id="Facebook" type="submit" class="btn btn-facebook btn-user btn-block" name="provider" value="Facebook">
+                                        <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                    </button>
+                                }
+                                
                                 <div class="text-center">
                                     <a class="small" href="@Url.Action("ForgotPassword", "Account")">Forgot Password?</a>
                                 </div>
