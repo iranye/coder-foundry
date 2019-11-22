@@ -223,6 +223,40 @@ namespace FinancialPortal.Web.Controllers
         }
 
         [AllowAnonymous]
+        public async Task<ActionResult> RegisterInvitee(string invitationCode)
+        {
+            return RedirectToAction("Register", "Account");
+            //if (ModelState.IsValid)
+            //{
+            //    var user = await UserManager.FindByNameAsync(model.Email);
+            //    if (user == null)
+            //    {
+            //        // Don't reveal that the user does not exist or is not confirmed
+            //        return View("ForgotPasswordConfirmation");
+            //    }
+
+            //    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+            //    // Send an email with this link
+            //    var appName = "IraNye FinancialPortal";
+            //    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            //    var callbackUrl = Url.Action("RegisterInvitee", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            //    try
+            //    {
+            //        UserManager.SendEmail(user.Id, "Reset Password", $"Please reset your password at {appName} by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine(ex.Message);
+            //        await Task.FromResult(0);
+            //    }
+            //    return RedirectToAction("Register", "Account");
+            //}
+
+            //// If we got this far, something failed, redisplay form
+            //return View(model);
+        }
+
+        [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
