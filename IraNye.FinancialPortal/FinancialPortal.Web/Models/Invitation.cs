@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinancialPortal.Web.Models
 {
@@ -20,6 +21,23 @@ namespace FinancialPortal.Web.Models
 
         public Guid Code { get; set; }
         public int TTL { get; set; }  //TimeToLive
+
+        [NotMapped]
+        public string ExpirationStatus
+        {
+            get
+            {
+                string status = "Expired";
+                var expirationDateTime = Created.AddDays(TTL);
+                if (expirationDateTime > DateTime.Now)
+                {
+                    var daysUntilExpiration = expirationDateTime.Subtract(DateTime.Now).Days;
+                    status = $"Expires in {daysUntilExpiration} days";
+                }
+                return status;
+            }
+        }
+
         public bool IsValid { get; set; } // Sets to false once TTL expires
 
         // Navs

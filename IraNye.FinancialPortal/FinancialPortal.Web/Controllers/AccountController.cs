@@ -172,7 +172,7 @@ namespace FinancialPortal.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> RegisterInvitee(string code)
+        public ActionResult RegisterInvitee(string code)
         {
             if (String.IsNullOrWhiteSpace(code) || !HelperMethods.InvitationRegistrationIsValid(code, out var email, out int? householdId))
             {

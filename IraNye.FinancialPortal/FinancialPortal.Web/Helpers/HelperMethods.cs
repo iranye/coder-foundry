@@ -82,7 +82,7 @@ namespace FinancialPortal.Web.Helpers
                 return ret;
             }
 
-            var invitation = DbContext.Invitations.FirstOrDefault(i => i.RecipientEmail == emailFromCode);
+            var invitation = DbContext.Invitations.FirstOrDefault(i => i.IsValid && i.RecipientEmail == emailFromCode);
 
             if (invitation == null || !invitation.IsValid)
             {
@@ -94,8 +94,7 @@ namespace FinancialPortal.Web.Helpers
                 return ret;
             }
 
-            var expirationDateTime = invitation.Created.AddDays(0 - invitation.TTL);
-            if (expirationDateTime > DateTime.Now)
+            if (invitation.ExpirationStatus == "Expired")
             {
                 invitation.IsValid = false;
                 DbContext.SaveChangesAsync();

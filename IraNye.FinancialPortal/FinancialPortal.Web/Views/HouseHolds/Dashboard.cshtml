@@ -4,104 +4,113 @@
     ViewBag.Title = "Household Dashboard";
 }
 
+<!-- Content Row -->
+<div class="row">
+<!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <a href="#household-info" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-info">
+                <h6 class="m-0 font-weight-bold text-primary">Our House</h6>
+            </a>
+            <div class="collapse show" id="household-info">
+                <div class="card-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
 
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">My Household</h6>
-    </div>
-    <div class="card-body">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Greeting)
+                        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
+                        <dd>
+                            @Html.DisplayFor(model => model.Greeting)
+                        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Greeting)
-            </dt>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Created)
+                        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Greeting)
-            </dd>
+                        <dd>
+                            @Html.DisplayFor(model => model.Created)
+                        </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Created)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Created)
-            </dd>
-
-        </dl>
-    </div> <!-- end card-body -->
-</div>
-
-<div class="card shadow mb-4">
-    <a href="#invitations" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="invitations">
-        <h6 class="m-0 font-weight-bold text-primary">Invitations</h6>
-    </a>
-    <div class="collapse show" id="invitations">
-        <div class="card-body">
-            @foreach (var invitation in Model.Invitations.OrderBy(c => c.Created))
-            {
-                <div class="row">
-                    <div class="col-sm-3">
-                        @invitation.RecipientEmail
-                    </div>
-                    <div class="col-sm-3">
-                        <div>
-                            @invitation.Created.ToString("M/d/yy")
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div>
-                            @invitation.IsValid
-                        </div>
-                    </div>
-                </div>
-                <hr />
-            }
-
-            @if (User.Identity.IsAuthenticated && ViewBag.IsMember)
-            {
-                using (Html.BeginForm("Create", "Invitations", FormMethod.Post))
-                {
-                    <div class="row">
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(model => model.Id)
-
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.TextBox("RecipientEmail", null, new
-                                {
-                                    @class = "form-control form-control-user",
-                                    placeholder = "Enter Email Address...",
-                                    type = "email",
-                                    id = "recipientEmail"
-                                })
-                                @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+                    </dl>
+                </div> <!-- end card-body -->
+            </div>
+        </div>
+        <div class="card shadow mb-4">
+            <a href="#invitations" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="invitations">
+                <h6 class="m-0 font-weight-bold text-primary">Invitations</h6>
+            </a>
+            <div class="collapse show" id="invitations">
+                <div class="card-body">
+                    @foreach (var invitation in Model.Invitations.OrderBy(c => c.Created))
+                    {
+                        <div class="row" style="font-size: .8em;">
+                            <div class="col-sm-5">
+                                @invitation.RecipientEmail
+                            </div>
+                            <div class="col-sm-3">
+                                <div>
+                                    @invitation.Created.ToString("M/d/yy")
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div>
+                                    @invitation.ExpirationStatus
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group" style="margin-top: 10px;">
-                            <div class="col-md-12">
-                                <button class="btn btn-primary" type="submit" id="btnSubmitInvitation">Send Invitation</button>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
+                        <hr />
+                    }
 
-        </div> <!-- end card-body -->
+                    @if (User.Identity.IsAuthenticated && ViewBag.IsMember)
+                    {
+                        using (Html.BeginForm("Create", "Invitations", FormMethod.Post))
+                        {
+                            <div class="row">
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id)
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.TextBox("RecipientEmail", null, new
+                                        {
+                                            @class = "form-control form-control-user",
+                                            placeholder = "Enter Email Address...",
+                                            type = "email",
+                                            id = "recipientEmail"
+                                        })
+                                        @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-primary" type="submit" id="btnSubmitInvitation">Send Invitation</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div> <!-- end card-body -->
+            </div>
+        </div>
+
+
     </div>
 </div>
+
+
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
