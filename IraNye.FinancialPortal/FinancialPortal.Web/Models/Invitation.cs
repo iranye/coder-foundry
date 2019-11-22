@@ -31,8 +31,9 @@ namespace FinancialPortal.Web.Models
                 var expirationDateTime = Created.AddDays(TTL);
                 if (expirationDateTime > DateTime.Now)
                 {
-                    var daysUntilExpiration = expirationDateTime.Subtract(DateTime.Now).Days;
-                    status = $"Expires in {daysUntilExpiration} days";
+                    var expirationDateTimeEod = new DateTime(expirationDateTime.Year, expirationDateTime.Month, expirationDateTime.Day, 23, 59, 59);
+                    var daysUntilExpiration = expirationDateTimeEod.Subtract(DateTime.Now).Days;
+                    status = $"Expires in {daysUntilExpiration} day(s)";
                 }
                 return status;
             }
