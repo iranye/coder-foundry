@@ -133,6 +133,11 @@ namespace FinancialPortal.Web.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class RegisterInviteeViewModel : RegisterViewModel
+    {
+        public int? HouseholdId { get; set; }
+    }
+
     public class ResetPasswordViewModel
     {
         [Required]

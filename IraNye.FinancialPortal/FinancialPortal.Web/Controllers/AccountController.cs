@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using FinancialPortal.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -171,6 +172,63 @@ namespace FinancialPortal.Web.Controllers
         }
 
         [AllowAnonymous]
+        public async Task<ActionResult> RegisterInvitee(string code)
+        {
+            if (String.IsNullOrWhiteSpace(code) || !HelperMethods.InvitationRegistrationIsValid(code, out var email, out int? householdId))
+            {
+                return RedirectToAction("Register", "Account");
+            }
+
+            if (HelperMethods.InviteeAlreadyRegistered(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            RegisterInviteeViewModel registerInviteeViewModel = new RegisterInviteeViewModel
+            {
+                Email = email,
+                HouseholdId = householdId
+            };
+            
+            return View(registerInviteeViewModel);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterInvitee(RegisterInviteeViewModel model, string originalEmail)
+        {
+            if (ModelState.IsValid)
+            {
+                if (originalEmail.Trim().ToLower() != model.Email.Trim().ToLower())
+                {
+                    ModelState.AddModelError("Email", "Please use the Email you were invited with.");
+                    model.Email = originalEmail;
+                    return View(model);
+                }
+                var displayName = String.IsNullOrWhiteSpace(model.DisplayName) ? $"{model.FirstName} {model.LastName}" : model.DisplayName;
+                var user = new ApplicationUser
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    DisplayName = displayName,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    HouseholdId = model.HouseholdId
+                };
+                var result = await UserManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
@@ -220,40 +278,6 @@ namespace FinancialPortal.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        [AllowAnonymous]
-        public async Task<ActionResult> RegisterInvitee(string invitationCode)
-        {
-            return RedirectToAction("Register", "Account");
-            //if (ModelState.IsValid)
-            //{
-            //    var user = await UserManager.FindByNameAsync(model.Email);
-            //    if (user == null)
-            //    {
-            //        // Don't reveal that the user does not exist or is not confirmed
-            //        return View("ForgotPasswordConfirmation");
-            //    }
-
-            //    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-            //    // Send an email with this link
-            //    var appName = "IraNye FinancialPortal";
-            //    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-            //    var callbackUrl = Url.Action("RegisterInvitee", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            //    try
-            //    {
-            //        UserManager.SendEmail(user.Id, "Reset Password", $"Please reset your password at {appName} by clicking <a href=\"" + callbackUrl + "\">here</a>");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine(ex.Message);
-            //        await Task.FromResult(0);
-            //    }
-            //    return RedirectToAction("Register", "Account");
-            //}
-
-            //// If we got this far, something failed, redisplay form
-            //return View(model);
         }
 
         [AllowAnonymous]
