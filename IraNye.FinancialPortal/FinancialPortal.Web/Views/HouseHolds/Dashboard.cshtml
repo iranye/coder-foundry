@@ -6,7 +6,8 @@
 
 <!-- Content Row -->
 <div class="row">
-<!-- Content Column -->
+
+    <!-- Content Column -->
     <div class="col-lg-6 mb-4">
         <div class="card shadow mb-4">
             <a href="#household-info" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-info">
@@ -105,9 +106,47 @@
                 </div> <!-- end card-body -->
             </div>
         </div>
-
-
     </div>
+    
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <a href="#household-members" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-members">
+                <h6 class="m-0 font-weight-bold text-primary">Members</h6>
+            </a>
+            <div class="collapse show" id="household-members">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Email")
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Members)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DisplayName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
