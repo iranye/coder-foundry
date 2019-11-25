@@ -56,6 +56,25 @@ namespace FinancialPortal.Web.Helpers
             return ret;
         }
 
+        public static string GetCurrentUserAvatarPath(string userId)
+        {
+            var ret = "https://source.unsplash.com/QAB-WJcbgJk/60x60";
+
+            if (!String.IsNullOrWhiteSpace(userId))
+            {
+                SqlParameter param1 = new SqlParameter("@UserId", userId);
+
+                string dbEntry = DbContext.Database.SqlQuery<String>("GetAvatarPathByUserID @UserId", param1)
+                    .FirstOrDefault();
+                if (!String.IsNullOrWhiteSpace(dbEntry))
+                {
+                    ret = dbEntry;
+                }
+            }
+
+            return ret;
+        }
+
         public static bool InviteeAlreadyRegistered(string email)
         {
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));

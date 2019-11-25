@@ -24,8 +24,7 @@ namespace FinancialPortal.Web.Helpers
         public static string GetAvatarPath(this IPrincipal principal)
         {
             var userId = principal.Identity.GetUserId();
-            var currentUser = HelperMethods.GetApplicationUserByUserId(userId);
-            return currentUser == null ? "~/Avatars/default_user.png" : currentUser.AvatarPath;
+            return HelperMethods.GetCurrentUserAvatarPath(userId);
         }
 
         public static string Massaged(this string str)

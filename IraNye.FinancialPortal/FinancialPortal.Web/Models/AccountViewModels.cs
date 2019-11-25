@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FinancialPortal.Web.Models
 {
-    public class ExternalLoginConfirmationViewModel
+    public class UserInfoBase
     {
         [Required]
         [Display(Name = "First Name")]
@@ -22,7 +22,13 @@ namespace FinancialPortal.Web.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [StringLength(255)]
+        public string AvatarPath { get; set; }
     }
+
+    public class ExternalLoginConfirmationViewModel : UserInfoBase
+    {}
 
     public class ExternalLoginListViewModel
     {
@@ -76,54 +82,13 @@ namespace FinancialPortal.Web.Models
         public bool RememberMe { get; set; }
     }
 
-    public class UpdateUserInfoViewModel
+    public class UpdateUserInfoViewModel : UserInfoBase
     {
         public string UserId { get; set; }
-
-        [Required]
-        [Display(Name = "First Name")]
-        [StringLength(50, ErrorMessage = "First Name must be between {2} and {1} characters long.", MinimumLength = 1)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [Display(Name = "Last Name")]
-        [StringLength(50, ErrorMessage = "Last Name must be between {2} and {1} characters long.", MinimumLength = 1)]
-        public string LastName { get; set; }
-
-        [Display(Name = "Display Name")]
-        [StringLength(90)]
-        public string DisplayName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        [StringLength(255)]
-        public string AvatarPath { get; set; }
     }
 
-    public class RegisterViewModel
+    public class RegisterViewModel : UserInfoBase
     {
-        [Required]
-        [Display(Name = "First Name")]
-        [StringLength(50, ErrorMessage = "First Name must be between {2} and {1} characters long.", MinimumLength = 1)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [Display(Name = "Last Name")]
-        [StringLength(50, ErrorMessage = "Last Name must be between {2} and {1} characters long.", MinimumLength = 1)]
-        public string LastName { get; set; }
-
-        [Display(Name = "Display Name")]
-        [StringLength(90)]
-        public string DisplayName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
@@ -134,9 +99,6 @@ namespace FinancialPortal.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        
-        [StringLength(255)]
-        public string AvatarPath { get; set; }
     }
 
     public class RegisterInviteeViewModel : RegisterViewModel

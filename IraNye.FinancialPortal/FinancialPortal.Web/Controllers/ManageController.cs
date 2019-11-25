@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using FinancialPortal.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -299,7 +302,7 @@ namespace FinancialPortal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateInfo(UpdateUserInfoViewModel model)
+        public async Task<ActionResult> UpdateInfo(UpdateUserInfoViewModel model, HttpPostedFileBase avatarPath)
         {
             if (ModelState.IsValid)
             {
@@ -313,11 +316,41 @@ namespace FinancialPortal.Web.Controllers
                 user.DisplayName = displayName.Trim();
                 user.UserName = model.Email.Trim();
                 user.Email = model.Email.Trim();
-                user.AvatarPath = model.AvatarPath.Trim();
+
+                string pathToOldAvatar = "";
+
+                if (avatarPath != null && HelperMethods.IsWebFriendlyImage(avatarPath))
+                {
+                    var avatarsDir = "Avatars";
+                    if (!String.IsNullOrWhiteSpace(WebConfigurationManager.AppSettings["AvatarsDirectoryName"]))
+                    {
+                        avatarsDir = WebConfigurationManager.AppSettings["AvatarsDirectoryName"].Trim();
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(user.AvatarPath) && user.AvatarPath != Path.Combine($"{avatarsDir}", "default_user.png"))
+                    {
+                        pathToOldAvatar = user.AvatarPath;
+                    }
+                    var fileName = avatarPath.FileName.GenerateSlug();
+                    var massagedFileName = fileName.ApplyDateTimeStamp();
+                    var dirPath = Server.MapPath($"~/{avatarsDir}/");
+
+                    if (HelperMethods.EnsureDirectoryExists(dirPath))
+                    {
+                        var filePath = Path.Combine(dirPath, massagedFileName);
+                        avatarPath.SaveAs(filePath);
+                        user.AvatarPath = $"/{avatarsDir}/{massagedFileName}";
+                    }
+                }
 
                 var updateResult = UserManager.Update(user);
                 if (updateResult.Succeeded)
                 {
+                    if (!String.IsNullOrWhiteSpace(pathToOldAvatar))
+                    {
+                        pathToOldAvatar = Server.MapPath($"~/{pathToOldAvatar}");
+                        System.IO.File.Delete(pathToOldAvatar);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
             }

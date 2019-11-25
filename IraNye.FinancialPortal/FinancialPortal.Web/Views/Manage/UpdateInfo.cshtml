@@ -3,10 +3,6 @@
     ViewBag.Title = "Update Your Info";
 }
 
-@{
-    Layout = "";
-}
-
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,8 +23,8 @@
 
             <!-- Nested Row within Card Body -->
             <div class="row">
-                <div class="col-lg-5 d-none d-lg-block">
-                    <img class="img-profile" src="@Model.AvatarPath">
+                <div class="col-lg-5 d-inline-flex" style="padding: 50px;">
+                    <img class="img-profile" src="@Model.AvatarPath" height="160">
                 </div>
                 <div class="col-lg-7">
                     <div class="p-5">
