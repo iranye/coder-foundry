@@ -27,13 +27,21 @@
 
             <!-- Nested Row within Card Body -->
             <div class="row">
-                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <img class="img-profile" src="@Model.AvatarPath">
+                </div>
                 <div class="col-lg-7">
                     <div class="p-5">
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Edit Profile</h1>
                         </div>
-                        @using (Html.BeginForm("UpdateInfo", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("UpdateInfo", "Manage", FormMethod.Post,
+                            new
+                            {
+                                @class = "user",
+                                role = "form",
+                                enctype = "multipart/form-data"
+                            }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary("", new { @class = "text-danger" })
@@ -81,7 +89,7 @@
                                 {
                                     @class = "form-control form-control-user",
                                     placeholder = "Avatar Path",
-                                    type = "text",
+                                    type = "file",
                                     id = "inputAvatarPath"
                                 })
                             </div>

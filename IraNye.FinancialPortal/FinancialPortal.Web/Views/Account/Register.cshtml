@@ -33,7 +33,11 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "user", role = "form" }))
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, 
+                            new
+                            {
+                                @class = "user", role = "form", enctype = "multipart/form-data"
+                            }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary("", new { @class = "text-danger" })
@@ -94,6 +98,15 @@
                                         id = "exampleInputConfirmPassword"
                                     })
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.AvatarPath, new
+                                {
+                                    @class = "form-control form-control-user",
+                                    placeholder = "Avatar Path",
+                                    type = "file",
+                                    id = "inputAvatarPath"
+                                })
                             </div>
 
                             <input type="submit" class="btn btn-primary btn-user btn-block" value="Register Account" />

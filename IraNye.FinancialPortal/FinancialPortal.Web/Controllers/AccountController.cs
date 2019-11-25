@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using FinancialPortal.Web.Helpers;
 using Microsoft.AspNet.Identity;
@@ -145,19 +147,41 @@ namespace FinancialPortal.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase avatarPath)
         {
             if (ModelState.IsValid)
             {
+                var avatarsDir = "Avatars";
+                if (!String.IsNullOrWhiteSpace(WebConfigurationManager.AppSettings["AvatarsDirectoryName"]))
+                {
+                    avatarsDir = WebConfigurationManager.AppSettings["AvatarsDirectoryName"].Trim();
+                }
+
                 var displayName = String.IsNullOrWhiteSpace(model.DisplayName) ? $"{model.FirstName} {model.LastName}" : model.DisplayName;
                 var user = new ApplicationUser
                 {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    DisplayName = displayName,
-                    UserName = model.Email,
-                    Email = model.Email
+                    FirstName = model.FirstName.Trim(),
+                    LastName = model.LastName.Trim(),
+                    DisplayName = displayName.Trim(),
+                    UserName = model.Email.Trim(),
+                    Email = model.Email.Trim(),
+                    AvatarPath = $"/{avatarsDir}/default_user.png"
                 };
+
+                if (avatarPath != null && HelperMethods.IsWebFriendlyImage(avatarPath))
+                {
+                    var fileName = avatarPath.FileName.GenerateSlug();
+                    var massagedFileName = fileName.ApplyDateTimeStamp();
+                    var dirPath = Server.MapPath($"~/{avatarsDir}/");
+
+                    if (HelperMethods.EnsureDirectoryExists(dirPath))
+                    {
+                        var filePath = Path.Combine(dirPath, massagedFileName);
+                        avatarPath.SaveAs(filePath);
+                        user.AvatarPath = $"/{avatarsDir}/{massagedFileName}";
+                    }
+                }
+
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

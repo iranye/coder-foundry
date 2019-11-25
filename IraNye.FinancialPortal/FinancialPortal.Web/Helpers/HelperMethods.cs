@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using FinancialPortal.Web.Models;
+﻿using FinancialPortal.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using System;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Configuration;
 
 namespace FinancialPortal.Web.Helpers
 {
@@ -105,6 +110,109 @@ namespace FinancialPortal.Web.Helpers
             householdId = invitation.HouseholdId;
             ret = true;
             return ret;
+        }
+
+        public static bool EnsureDirectoryExists(string dirPath)
+        {
+            bool ret = false;
+            if (!String.IsNullOrWhiteSpace(dirPath))
+            {
+                if (Directory.Exists(dirPath))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e);
+                    }
+
+                    Thread.Sleep(1000);
+                    ret = Directory.Exists(dirPath);
+                }
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Check if image is within configured size and image format
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static bool IsWebFriendlyImage(HttpPostedFileBase file)
+        {
+            if (file == null)
+            {
+                return false;
+            }
+
+            bool ret = true;
+
+            // Set a default of 3145728
+            int maxSizeBytes = 3 * 1024 * 1024;
+            if (Int32.TryParse(WebConfigurationManager.AppSettings["MaxImageUploadSize"], out var maxSize))
+            {
+                maxSizeBytes = maxSize;
+            }
+
+            if (file.ContentLength > maxSizeBytes || file.ContentLength < 1024)
+            {
+                ret = false;
+            }
+            try
+            {
+                using (var img = Image.FromStream(file.InputStream))
+                {
+                    ret = ImageFormat.Jpeg.Equals(img.RawFormat) ||
+                          ImageFormat.Png.Equals(img.RawFormat) ||
+                          ImageFormat.Gif.Equals(img.RawFormat);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        public static string GenerateSlug(this string phrase)
+        {
+            string str = RemoveAccent(phrase).ToLower();
+            // invalid chars           
+            str = Regex.Replace(str, @"[^.a-z0-9\s-]", "");
+
+            // convert multiple spaces into one space   
+            str = Regex.Replace(str, @"\s+", " ").Trim();
+
+            // cut and trim 
+            var extension = Path.GetExtension(str);
+            var baseName = str;
+            if (!String.IsNullOrWhiteSpace(extension))
+            {
+                baseName = str.Substring(0, str.IndexOf(extension));
+            }
+
+            baseName = baseName.Substring(0, baseName.Length <= 45 ? baseName.Length : 45).Trim();
+            str = Regex.Replace(baseName, @"\s", "-"); // hyphens   
+            return str + extension;
+        }
+
+        public static string ApplyDateTimeStamp(this string fileName)
+        {
+            return $"{Path.GetFileNameWithoutExtension(fileName)}_{DateTime.Now.Ticks}{Path.GetExtension(fileName)}";
+        }
+
+        public static string RemoveAccent(string txt)
+        {
+            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            return System.Text.Encoding.ASCII.GetString(bytes);
         }
     }
 }

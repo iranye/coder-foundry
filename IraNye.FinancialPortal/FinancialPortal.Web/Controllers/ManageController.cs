@@ -291,7 +291,8 @@ namespace FinancialPortal.Web.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DisplayName = user.DisplayName,
-                Email = user.Email
+                Email = user.Email,
+                AvatarPath = user.AvatarPath
             };
             return View(updateUserInfoViewModel);
         }
@@ -312,6 +313,7 @@ namespace FinancialPortal.Web.Controllers
                 user.DisplayName = displayName.Trim();
                 user.UserName = model.Email.Trim();
                 user.Email = model.Email.Trim();
+                user.AvatarPath = model.AvatarPath.Trim();
 
                 var updateResult = UserManager.Update(user);
                 if (updateResult.Succeeded)
