@@ -98,6 +98,9 @@ namespace FinancialPortal.Web.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [StringLength(255)]
+        public string AvatarPath { get; set; }
     }
 
     public class RegisterViewModel
