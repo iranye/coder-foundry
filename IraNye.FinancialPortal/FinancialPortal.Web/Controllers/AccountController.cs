@@ -219,7 +219,7 @@ namespace FinancialPortal.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterInvitee(RegisterInviteeViewModel model, string originalEmail)
+        public async Task<ActionResult> RegisterInvitee(RegisterInviteeViewModel model, string originalEmail, HttpPostedFileBase avatarPath)
         {
             if (ModelState.IsValid)
             {
@@ -229,6 +229,13 @@ namespace FinancialPortal.Web.Controllers
                     model.Email = originalEmail;
                     return View(model);
                 }
+
+                var avatarsDir = "Avatars";
+                if (!String.IsNullOrWhiteSpace(WebConfigurationManager.AppSettings["AvatarsDirectoryName"]))
+                {
+                    avatarsDir = WebConfigurationManager.AppSettings["AvatarsDirectoryName"].Trim();
+                }
+
                 var displayName = String.IsNullOrWhiteSpace(model.DisplayName) ? $"{model.FirstName} {model.LastName}" : model.DisplayName;
                 var user = new ApplicationUser
                 {
@@ -237,8 +244,24 @@ namespace FinancialPortal.Web.Controllers
                     DisplayName = displayName,
                     UserName = model.Email,
                     Email = model.Email,
+                    AvatarPath = $"/{avatarsDir}/default_user.png",
                     HouseholdId = model.HouseholdId
                 };
+
+                if (avatarPath != null && HelperMethods.IsWebFriendlyImage(avatarPath))
+                {
+                    var fileName = avatarPath.FileName.GenerateSlug();
+                    var massagedFileName = fileName.ApplyDateTimeStamp();
+                    var dirPath = Server.MapPath($"~/{avatarsDir}/");
+
+                    if (HelperMethods.EnsureDirectoryExists(dirPath))
+                    {
+                        var filePath = Path.Combine(dirPath, massagedFileName);
+                        avatarPath.SaveAs(filePath);
+                        user.AvatarPath = $"/{avatarsDir}/{massagedFileName}";
+                    }
+                }
+
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
