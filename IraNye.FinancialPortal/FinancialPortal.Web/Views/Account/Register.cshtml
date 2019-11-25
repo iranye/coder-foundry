@@ -21,7 +21,20 @@
 
 <!-- Custom styles for this template-->
 <link href="~/Content/sb-admin-2.min.css" rel="stylesheet" />
+<style>
+    #inputAvatarPath {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
 
+    #inputAvatarPath + label {
+            cursor: pointer; /* "hand" cursor */
+    }
+</style>
 <div class="container">
     <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-body p-0">
@@ -33,10 +46,12 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, 
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post,
                             new
                             {
-                                @class = "user", role = "form", enctype = "multipart/form-data"
+                                @class = "user",
+                                role = "form",
+                                enctype = "multipart/form-data"
                             }))
                         {
                             @Html.AntiForgeryToken()
@@ -107,8 +122,8 @@
                                     type = "file",
                                     id = "inputAvatarPath"
                                 })
+                                <label for="inputAvatarPath" class="btn btn-info btn-user btn-block">Profile Picture</label>
                             </div>
-
                             <input type="submit" class="btn btn-primary btn-user btn-block" value="Register Account" />
                         }
 
@@ -128,3 +143,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
