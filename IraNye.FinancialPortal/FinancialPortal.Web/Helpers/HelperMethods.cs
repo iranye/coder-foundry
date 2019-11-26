@@ -28,15 +28,22 @@ namespace FinancialPortal.Web.Helpers
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
             return userManager.FindById(userId);
         }
-        
+
+        //public static async Task RefreshAuthentication(this HttpContextBase context, ApplicationUser user)
+        //{
+        //    context.GetOwinContext().Authentication.SignOut();
+        //    await context.GetOwinContext().Get<ApplicationSignInManager>()
+        //        .SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //}
+
         public static async Task ReauthorizeAsync()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var user = _dbContext.Users.Find(userId);
+            var user = DbContext.Users.Find(userId);
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
             var identity = await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
         }

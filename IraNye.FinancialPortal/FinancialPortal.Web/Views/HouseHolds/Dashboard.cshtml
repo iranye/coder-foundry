@@ -1,4 +1,5 @@
-﻿@model FinancialPortal.Web.Models.Household
+﻿@using System.Web.UI.WebControls
+@model FinancialPortal.Web.Models.Household
 
 @{
     ViewBag.Title = "Household Dashboard";
@@ -11,7 +12,7 @@
     <div class="col-lg-6 mb-4">
         <div class="card shadow mb-4">
             <a href="#household-info" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-info">
-                <h6 class="m-0 font-weight-bold text-primary">Our House</h6>
+                <h6 class="m-0 font-weight-bold text-primary">@Model.Name Household</h6>
             </a>
             <div class="collapse show" id="household-info">
                 <div class="card-body">
@@ -44,35 +45,36 @@
                 </div> <!-- end card-body -->
             </div>
         </div>
-        <div class="card shadow mb-4">
-            <a href="#invitations" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="invitations">
-                <h6 class="m-0 font-weight-bold text-primary">Invitations</h6>
-            </a>
-            <div class="collapse show" id="invitations">
-                <div class="card-body">
-                    @foreach (var invitation in Model.Invitations.OrderBy(c => c.Created))
-                    {
-                        <div class="row" style="font-size: .8em;">
-                            <div class="col-sm-5">
-                                @invitation.RecipientEmail
-                            </div>
-                            <div class="col-sm-3">
-                                <div>
-                                    @invitation.Created.ToString("M/d/yy")
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div>
-                                    @invitation.ExpirationStatus
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                    }
 
-                    @if (User.Identity.IsAuthenticated && ViewBag.IsMember)
-                    {
-                        using (Html.BeginForm("Create", "Invitations", FormMethod.Post))
+        @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
+        {
+            <div class="card shadow mb-4">
+                <a href="#invitations" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="invitations">
+                    <h6 class="m-0 font-weight-bold text-primary">Invitations</h6>
+                </a>
+                <div class="collapse show" id="invitations">
+                    <div class="card-body">
+                        @foreach (var invitation in Model.Invitations.OrderBy(c => c.Created))
+                        {
+                            <div class="row" style="font-size: .8em;">
+                                <div class="col-sm-5">
+                                    @invitation.RecipientEmail
+                                </div>
+                                <div class="col-sm-3">
+                                    <div>
+                                        @invitation.Created.ToString("M/d/yy")
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        @invitation.ExpirationStatus
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        }
+
+                        @using (Html.BeginForm("Create", "Invitations", FormMethod.Post))
                         {
                             <div class="row">
                                 @Html.AntiForgeryToken()
@@ -101,57 +103,128 @@
                                 </div>
                             </div>
                         }
-                    }
 
-                </div> <!-- end card-body -->
+                    </div> <!-- end card-body -->
+                </div>
             </div>
-        </div>
+        }
     </div>
-    
-    <!-- Content Column -->
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow mb-4">
-            <a href="#household-members" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-members">
-                <h6 class="m-0 font-weight-bold text-primary">Members</h6>
-            </a>
-            <div class="collapse show" id="household-members">
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayName("Name")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Email")
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var item in Model.Members)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DisplayName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
 
+    @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
+    {
+        <!-- Content Column -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <a href="#household-members" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-members">
+                    <h6 class="m-0 font-weight-bold text-primary">Members</h6>
+                </a>
+                <div class="collapse show" id="household-members">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Name")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Email")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Members)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DisplayName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 
+    @if (User.IsInRole("Member"))
+    {
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <a href="#leave-household" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="leave-household">
+                    <h6 class="m-0 font-weight-bold text-primary">Leave Household</h6>
+                </a>
+                <div class="collapse show" id="leave-household">
+                    <div class="card-body">
+                        @using (Html.BeginForm("Leave", "Households", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id)
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="custom-control custom-checkbox small", name="Leave">
+                                            <input type="checkbox" class="custom-control-input" name="chk-leave-household" id="chk-leave-household">
+                                            <label class="custom-control-label" for="chk-leave-household">I understand I will no longer have access to my current household's accounts or information.</label>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 20px;">
+                                            <button class="btn btn-warning" type="submit" id="btn-leave-household">Leave</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div> <!-- end card-body -->
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
+@if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
 
 
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#btn-leave-household").prop("disabled", true);
+            $("#chk-leave-household").click(function() {
+                if (this.checked) {
+                    $("#btn-leave-household").prop("disabled", false);
+                } else {
+                    $("#btn-leave-household").prop("disabled", true);
+                }
+            });
+            
+            $('#btnSubmitInvitation').prop("disabled", true);
+            var initVal = "Enter Email Address...";
+            var strLimit = 100;
+            $('#recipientEmail').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+
+                // Enable only when data is entered.
+                if ($('#recipientEmail').val().length > 0 && $('#recipientEmail').val() !== initVal) {
+                    $('#btnSubmitInvitation').prop("disabled", false);
+                } else {
+                    $('#btnSubmitInvitation').prop("disabled", true);
+                }
+
+            });
+        });
+
+    </script>
+}

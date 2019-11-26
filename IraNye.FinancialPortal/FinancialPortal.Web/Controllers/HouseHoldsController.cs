@@ -55,7 +55,11 @@ namespace FinancialPortal.Web.Controllers
             var userId = User.Identity.GetUserId();
             var user = _dbContext.Users.Find(userId);
 
-            ViewBag.IsMember = (user.HouseholdId != null && user.HouseholdId == id);
+            // If user has no household or is not a member of this one, direct them to the Index
+            if (user.HouseholdId == null || user.HouseholdId != id)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             return View(houseHold);
         }
@@ -113,6 +117,48 @@ namespace FinancialPortal.Web.Controllers
             }
 
             return View(household);
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> SwitchFromHeadOfHouseholdToMember()
+        //{
+        //    // Allow HeadOfHousehold to set another Member as HeadOfHousehold then original HeadOfHousehold become Member
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Leave(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            int househouseId = id.GetValueOrDefault();
+            var userId = User.Identity.GetUserId();
+            var user = _dbContext.Users.Find(userId);
+            if (user == null || user.HouseholdId == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var myRole = _roleHelper.GetRoleByUserId(userId);
+            if (myRole != "Member")
+            {
+                ModelState.AddModelError("Leave", "Only users with Role=Member can Leave a Household.");
+                var household = _dbContext.Households.Find(househouseId);
+                return View("Dashboard", household);
+            }
+
+            _roleHelper.RemoveUserFromRole(userId, "Member");
+            user.HouseholdId = null;
+
+            var ret = _dbContext.SaveChanges();
+
+            //Need to 'Reauthorize' so role will take effect
+            await HelperMethods.ReauthorizeAsync();
+            
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int? id)

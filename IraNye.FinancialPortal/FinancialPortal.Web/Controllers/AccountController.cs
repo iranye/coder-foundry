@@ -1,17 +1,17 @@
-﻿using System;
-using System.Globalization;
+﻿using FinancialPortal.Web.Helpers;
+using FinancialPortal.Web.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using FinancialPortal.Web.Helpers;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using FinancialPortal.Web.Models;
 
 namespace FinancialPortal.Web.Controllers
 {
@@ -196,6 +196,36 @@ namespace FinancialPortal.Web.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult LoginInvitee(string code)
+        {
+            if (String.IsNullOrWhiteSpace(code) || code.Length > 291 || !HelperMethods.InvitationRegistrationIsValid(code, out var email, out int? householdId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int hId = householdId.GetValueOrDefault();
+            if (hId == 0)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            DbContext dbContext = new ApplicationDbContext();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
+            ApplicationUser user = userManager.FindByEmail(email);
+            if (user != null)
+            {
+                user.HouseholdId = hId;
+                var roles = userManager.GetRoles(user.Id);
+                if (!roles.Contains("Member"))
+                {
+                    userManager.AddToRole(user.Id, "Member");
+                }
+                dbContext.SaveChanges();
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
+
+        [AllowAnonymous]
         public ActionResult RegisterInvitee(string code)
         {
             if (String.IsNullOrWhiteSpace(code) || !HelperMethods.InvitationRegistrationIsValid(code, out var email, out int? householdId))
@@ -205,7 +235,7 @@ namespace FinancialPortal.Web.Controllers
 
             if (HelperMethods.InviteeAlreadyRegistered(email))
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("LoginInvitee", "Account", new {code});
             }
             RegisterInviteeViewModel registerInviteeViewModel = new RegisterInviteeViewModel
             {

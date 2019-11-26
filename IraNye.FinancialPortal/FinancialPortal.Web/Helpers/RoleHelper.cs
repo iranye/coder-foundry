@@ -55,6 +55,7 @@ namespace FinancialPortal.Web.Helpers
             }
 
             userManager.RemoveFromRole(user.Id, roleToRemove);
+            _db.SaveChanges();
         }
 
         /// <summary>

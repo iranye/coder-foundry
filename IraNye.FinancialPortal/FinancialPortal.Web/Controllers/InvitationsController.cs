@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ using FinancialPortal.Web.Models;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FinancialPortal.Web.Controllers
 {
@@ -28,64 +30,107 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Index", "Households");
             }
 
-            invitation.RecipientEmail = invitation.RecipientEmail.Trim();
-
-            // TODO: Check this in the client
-            if (houseHold.Invitations.Any(i => i.RecipientEmail.ToLower() == invitation.RecipientEmail.ToLower()))
+            if (String.IsNullOrWhiteSpace(invitation.RecipientEmail))
             {
-                ViewBag.Message = "The Email entered already exists";
                 return RedirectToAction("Dashboard", "Households", new { id });
             }
 
-            int ttlDays = 22;
+            string recipientEmail = "";
+            string invitationCode = "";
+            string callbackUrl = "";
+
+            int ttlDays = 21;
             var invitationTtl = ConfigurationManager.AppSettings["InvitationTtlDays"];
             if (Int32.TryParse(invitationTtl, out var ttl))
             {
                 ttlDays = ttl;
             }
-            invitation.HouseholdId = id;
-            invitation.IsValid = true;
-            invitation.Code = Guid.NewGuid();
-            invitation.TTL = ttlDays;
-            invitation.Created = DateTime.Now;
 
-            _db.Invitations.Add(invitation);
+            invitation.RecipientEmail = invitation.RecipientEmail.Trim();
 
-            houseHold.Invitations.Add(invitation);
-            _db.SaveChanges();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
+            ApplicationUser existingUser = userManager.FindByEmail(invitation.RecipientEmail);
+            if (existingUser == null)
+            {
+                Invitation existingInvitation = _db.Invitations.FirstOrDefault(i => i.RecipientEmail.ToLower() == invitation.RecipientEmail.ToLower());
 
-            var appName = "IraNye Financial Portal";
-            string invitationCode = $"{invitation.RecipientEmail}≡{invitation.Code}";
-            var callbackUrl = Url.Action("RegisterInvitee", "Account", new { code = invitationCode }, protocol: Request.Url.Scheme);
+                if (existingInvitation != null)
+                {
+                    existingInvitation.TTL = ttlDays;
+                    var ret = _db.SaveChanges();
+                    recipientEmail = existingInvitation.RecipientEmail;
+                    invitationCode = $"{existingInvitation.RecipientEmail}≡{existingInvitation.Code}";
+                }
+                else
+                {
+                    invitation.HouseholdId = id;
+                    invitation.IsValid = true;
+                    invitation.Code = Guid.NewGuid();
+                    invitation.TTL = ttlDays;
+                    invitation.Created = DateTime.Now;
 
-            var emailFrom = ConfigurationManager.AppSettings["emailFrom"];
+                    _db.Invitations.Add(invitation);
 
-            var emailTo = invitation.RecipientEmail;
+                    houseHold.Invitations.Add(invitation);
+                    var ret = _db.SaveChanges();
+                    recipientEmail = invitation.RecipientEmail;
+                    invitationCode = $"{invitation.RecipientEmail}≡{invitation.Code}";
+                }
+                callbackUrl = Url.Action("RegisterInvitee", "Account", new { code = invitationCode }, protocol: Request.Url.Scheme);
+            }
+            else
+            {
+                invitation.HouseholdId = id;
+                invitation.IsValid = true;
+                invitation.Code = Guid.NewGuid();
+                invitation.TTL = ttlDays;
+                invitation.Created = DateTime.Now;
 
+                _db.Invitations.Add(invitation);
+
+                houseHold.Invitations.Add(invitation);
+                var ret = _db.SaveChanges();
+                recipientEmail = invitation.RecipientEmail;
+                invitationCode = $"{invitation.RecipientEmail}≡{invitation.Code}";
+                callbackUrl = Url.Action("LoginInvitee", "Account", new { code = invitationCode }, protocol: Request.Url.Scheme);
+            }
+            
             var userId = User.Identity.GetUserId();
-            var sender = "";
+            var senderName = "UNKNOWN";
             if (!String.IsNullOrWhiteSpace(userId))
             {
                 var user = _db.Users.Find(userId);
-                sender = user.DisplayName;
+                senderName = user.DisplayName;
             }
+
+            await SendInvitationEmail(recipientEmail, senderName, houseHold.Name, callbackUrl);
+
+            return RedirectToAction("Dashboard", "Households", new { id });
+        }
+
+        private async Task<bool> SendInvitationEmail(string emailTo, string senderName, string householdName, string callbackUrl)
+        {
+            var appName = "IraNye Financial Portal";
+            var emailFrom = ConfigurationManager.AppSettings["emailFrom"];
+
             MailMessage mailMessage = new MailMessage(emailFrom, emailTo);
-            mailMessage.Subject = $"{sender} has sent you an invitation to join a great Financial Portal Site!";
-            mailMessage.Body = $"Please register in {appName} and join the {houseHold.Name} Household by clicking <a href=\"" + callbackUrl + "\">here</a>";
+            mailMessage.Subject = $"{senderName} has sent you an invitation to join a great Financial Portal Site!";
+            mailMessage.Body = $"Please register in {appName} and join the {householdName} Household by clicking <a href=\"" + callbackUrl + "\">here</a>";
             mailMessage.IsBodyHtml = true;
 
             try
             {
                 var svc = new PersonalEmail();
                 await svc.SendAsync(mailMessage);
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 await Task.FromResult(0);
+                return false;
             }
-
-            return RedirectToAction("Dashboard", "Households", new { id });
+            return true;
         }
     }
 }
