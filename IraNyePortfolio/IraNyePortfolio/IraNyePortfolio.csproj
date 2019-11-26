@@ -94,7 +94,9 @@
     <Content Include="images\demo\portfolio-5.jpg" />
     <Content Include="images\demo\portfolio-6.jpg" />
     <Content Include="images\demo\slider-1.jpg" />
+    <Content Include="images\finport.png" />
     <Content Include="images\logo.png" />
+    <Content Include="images\mobile-bi.jpg" />
     <Content Include="index.html" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\cbpAnimatedHeader.js" />
