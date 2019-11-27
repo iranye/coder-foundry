@@ -39,7 +39,7 @@
             <!-- Nested Row within Card Body -->
             <div class="row">
                 <div class="col-lg-5 d-inline-flex" style="padding: 50px;">
-                    <img class="img-profile" src="@Model.AvatarPath" height="160">
+                    <img class="img-profile" src="@Model.AvatarPath" id="avatarImage" height="160">
                 </div>
                 <div class="col-lg-7">
                     <div class="p-5">
@@ -116,4 +116,24 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+            
+                    reader.onload = function (e) {
+                        $('#avatarImage').attr('src', e.target.result);
+                    }
+            
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+    
+            $("#inputAvatarPath").change(function(){
+                readURL(this);
+            });
+        });
+
+    </script>
 }
