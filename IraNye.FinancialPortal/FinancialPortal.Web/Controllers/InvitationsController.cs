@@ -80,6 +80,10 @@ namespace FinancialPortal.Web.Controllers
             }
             else
             {
+                if (existingUser.HouseholdId == id)
+                {
+                    return RedirectToAction("Dashboard", "Households", new { id });
+                }
                 invitation.HouseholdId = id;
                 invitation.IsValid = true;
                 invitation.Code = Guid.NewGuid();

@@ -5,6 +5,11 @@
     ViewBag.Title = "Household Dashboard";
 }
 
+<style>
+    .selectable {
+        cursor: pointer; /* "hand" cursor */
+    }
+</style>
 <!-- Content Row -->
 <div class="row">
 
@@ -56,7 +61,7 @@
                     <div class="card-body">
                         @foreach (var invitation in Model.Invitations.OrderBy(c => c.Created))
                         {
-                            <div class="row" style="font-size: .8em;">
+                            <div class="row selectable" style="font-size: .8em;">
                                 <div class="col-sm-5">
                                     @invitation.RecipientEmail
                                 </div>
@@ -223,6 +228,14 @@
                     $('#btnSubmitInvitation').prop("disabled", true);
                 }
 
+            });
+
+            $(".selectable").click(function () {
+                //var email = $(this).childNodes[0].val();
+                var email = $(this).find(">:first-child").text();
+                console.log("you selected " + email);
+                $("#recipientEmail").val(email);
+                $('#btnSubmitInvitation').prop("disabled", false);
             });
         });
 

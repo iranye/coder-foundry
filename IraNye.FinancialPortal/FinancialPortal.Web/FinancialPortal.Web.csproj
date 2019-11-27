@@ -206,6 +206,10 @@
     <Compile Include="Migrations\201911251932253_AddGetAvatarPathSproc.Designer.cs">
       <DependentUpon>201911251932253_AddGetAvatarPathSproc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911271717522_AddSprocToAddUserToHouseholdByInvitation.cs" />
+    <Compile Include="Migrations\201911271717522_AddSprocToAddUserToHouseholdByInvitation.Designer.cs">
+      <DependentUpon>201911271717522_AddSprocToAddUserToHouseholdByInvitation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -354,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911251932253_AddGetAvatarPathSproc.resx">
       <DependentUpon>201911251932253_AddGetAvatarPathSproc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911271717522_AddSprocToAddUserToHouseholdByInvitation.resx">
+      <DependentUpon>201911271717522_AddSprocToAddUserToHouseholdByInvitation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

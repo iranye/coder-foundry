@@ -89,6 +89,27 @@ namespace FinancialPortal.Web.Helpers
             return user != null;
         }
 
+        public static int AddUserToHousehold(string email, int householdId)
+        {
+            int ret = 0;
+            if (!String.IsNullOrWhiteSpace(email) && householdId > 0)
+            {
+                SqlParameter param1 = new SqlParameter("@Email", email);
+                SqlParameter param2 = new SqlParameter("@HouseholdId", householdId);
+
+                try
+                {
+                    DbContext.Database.ExecuteSqlCommand("AddUserToHouseholdByEmail @Email, @HouseholdId", param1, param2);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+
+            return ret;
+        }
+
         public static bool InvitationRegistrationIsValid(string invitationCode, out string email, out int? householdId)
         {
             bool ret = false;

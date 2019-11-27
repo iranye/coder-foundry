@@ -208,20 +208,8 @@ namespace FinancialPortal.Web.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            DbContext dbContext = new ApplicationDbContext();
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(dbContext));
-            ApplicationUser user = userManager.FindByEmail(email);
-            if (user != null)
-            {
-                user.HouseholdId = hId;
-                var roles = userManager.GetRoles(user.Id);
-                if (!roles.Contains("Member"))
-                {
-                    userManager.AddToRole(user.Id, "Member");
-                }
-                dbContext.SaveChanges();
-            }
 
+            HelperMethods.AddUserToHousehold(email, hId);
             return RedirectToAction("Login", "Account");
         }
 
@@ -295,7 +283,8 @@ namespace FinancialPortal.Web.Controllers
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, "Member");
+                    int hId = model.HouseholdId.GetValueOrDefault();
+                    HelperMethods.AddUserToHousehold(model.Email, hId);
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
