@@ -71,31 +71,27 @@
                 <li class="nav-item">
                     <a href="@Url.Action("Create", "Households")" class="nav-link">
                         <i class="fas fa-fw fa-asterisk"></i>
-                        <span>New Project</span>
+                        <span>New Household</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="@Url.Action("Index", "Households")" class="nav-link">
                         <i class="fas fa-fw fa-industry"></i>
-                        <span>All Projects</span>
+                        <span>All Households</span>
                     </a>
                 </li>
             }
 
-            <li class="nav-item">
-                <a href="@Url.Action("Dashboard", "Households")/@HelperMethods.GetCurrentUserHouseholdId()" class="nav-link">
-                    <i class="fas fa-fw fa-home"></i>
-                    <span>My Household</span>
-                </a>
-            </li>
+        <li class="nav-item">           
+            <a class="nav-link" href="@Url.Action("Dashboard", "Households", new { id = @HelperMethods.GetCurrentUserHouseholdId() })">
+                <i class="fas fa-fw fa-home"></i>
+                <span>My Household</span>
+            </a>
+
+        </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
-            <!-- Projects -->
-            <div class="sidebar-heading">
-                Budgets
-            </div>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

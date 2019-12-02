@@ -47,12 +47,112 @@
                         </dd>
 
                     </dl>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
+                    {
+                        <p>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+                        </p>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <p>
+                            <span>&nbsp;|</span>
+                            @Html.ActionLink("Back to List", "Index")
+                        </p>
+                    }
                 </div> <!-- end card-body -->
             </div>
         </div>
 
+        <div class="card shadow mb-4">
+            <a href="#household-accounts" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-accounts">
+                <h6 class="m-0 font-weight-bold text-primary">Budgets</h6>
+            </a>
+            <div class="collapse show" id="household-accounts">
+                <div class="card-body">
+                    <p>
+                        @Html.ActionLink("Create New", "Create", "Budgets")
+                    </p>
+
+                    <ul>
+                        @foreach (var item in Model.Budgets)
+                        {
+                            <li>
+                                <a href="@Url.Action("Details", "Budgets", new {id = item.Id})">@item.Name</a>
+                            </li>
+                        }
+                    </ul>
+
+                </div> <!-- end card-body -->
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <a href="#household-budgets" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-budgets">
+                <h6 class="m-0 font-weight-bold text-primary">Budgets</h6>
+            </a>
+            <div class="collapse show" id="household-budgets">
+                <div class="card-body">
+                    <p>
+                        @Html.ActionLink("Create New", "Create", "Budgets")
+                    </p>
+
+                    <ul>
+                        @foreach (var item in Model.Budgets)
+                        {
+                            <li>
+                                <a href="@Url.Action("Details", "Budgets", new {id = item.Id})">@item.Name</a>
+                            </li>
+                        }
+                    </ul>
+
+                </div> <!-- end card-body -->
+            </div>
+        </div>
+
+    </div> <!-- End Column Content div -->
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
         @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
         {
+            <div class="card shadow mb-4">
+                <a href="#household-members" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-members">
+                    <h6 class="m-0 font-weight-bold text-primary">Members</h6>
+                </a>
+                <div class="collapse show" id="household-members">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Name")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Email")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Members)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DisplayName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
             <div class="card shadow mb-4">
                 <a href="#invitations" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="invitations">
                     <h6 class="m-0 font-weight-bold text-primary">Invitations</h6>
@@ -91,10 +191,10 @@
                                     <div class="col-md-12">
                                         @Html.TextBox("RecipientEmail", null, new
                                         {
-                                            @class = "form-control form-control-user",
-                                            placeholder = "Enter Email Address...",
-                                            type = "email",
-                                            id = "recipientEmail"
+                                        @class = "form-control form-control-user",
+                                        placeholder = "Enter Email Address...",
+                                        type = "email",
+                                        id = "recipientEmail"
                                         })
                                         @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
                                     </div>
@@ -113,53 +213,9 @@
                 </div>
             </div>
         }
-    </div>
 
-    @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
-    {
-        <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow mb-4">
-                <a href="#household-members" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-members">
-                    <h6 class="m-0 font-weight-bold text-primary">Members</h6>
-                </a>
-                <div class="collapse show" id="household-members">
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayName("Name")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Email")
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Members)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DisplayName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Email)
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (User.IsInRole("Member"))
-    {
-        <div class="col-lg-6 mb-4">
+        @if (User.IsInRole("Member"))
+        {
             <div class="card shadow mb-4">
                 <a href="#leave-household" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="leave-household">
                     <h6 class="m-0 font-weight-bold text-primary">Leave Household</h6>
@@ -174,7 +230,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="custom-control custom-checkbox small", name="Leave">
+                                        <div class="custom-control custom-checkbox small" , name="Leave">
                                             <input type="checkbox" class="custom-control-input" name="chk-leave-household" id="chk-leave-household">
                                             <label class="custom-control-label" for="chk-leave-household">I understand I will no longer have access to my current household's accounts or information.</label>
                                         </div>
@@ -189,17 +245,9 @@
                     </div> <!-- end card-body -->
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div> <!-- End Column Content div -->
 </div>
-
-@if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
-{
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-}
 
 
 @section Scripts {

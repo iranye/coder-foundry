@@ -1,0 +1,78 @@
+﻿@using FinancialPortal.Web.Helpers
+@model FinancialPortal.Web.Models.Budget
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+
+<div class="col-lg-6 mb-4">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">@Model.Name</h6>
+        </div>
+        <div class="card-body">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayName("Household")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Household.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Budget")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt>
+                    @Html.DisplayName("Owner")
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Owner.DisplayName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Created)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Created)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.TargetAmount)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.TargetAmount)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CurrentAmount)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CurrentAmount)
+                </dd>
+            </dl>
+            <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
+            <a href="@Url.Action("Dashboard", "Households", new { id = Model.HouseholdId })">Back to Dashboard</a>
+        </div> <!-- end card-body -->
+    </div>
+</div>
