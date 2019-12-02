@@ -6,22 +6,17 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FinancialPortal.Web.Helpers;
 using FinancialPortal.Web.Models;
+using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.Controllers
 {
+    [Authorize]
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: BankAccounts
-        public ActionResult Index()
-        {
-            var bankAccounts = db.BankAccounts.Include(b => b.Household);
-            return View(bankAccounts.ToList());
-        }
-
-        // GET: BankAccounts/Details/5
+        
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -33,35 +28,52 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(bankAccount);
-        }
 
-        // GET: BankAccounts/Create
-        public ActionResult Create()
-        {
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
-            return View();
-        }
-
-        // POST: BankAccounts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,AccountType,Created,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
-        {
-            if (ModelState.IsValid)
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
             {
-                db.BankAccounts.Add(bankAccount);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Households");
             }
 
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
             return View(bankAccount);
         }
 
-        // GET: BankAccounts/Edit/5
+        public ActionResult Create()
+        {
+            int householdId = HelperMethods.GetCurrentUserHouseholdId().GetValueOrDefault();
+            if (householdId == 0)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+            return View(new BankAccount { HouseholdId = householdId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
+        {
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+            if (ModelState.IsValid)
+            {
+                bankAccount.Created = DateTime.Now;
+                db.BankAccounts.Add(bankAccount);
+                db.SaveChanges();
+                return RedirectToAction("Dashboard", "Households");
+            }
+
+            return View(bankAccount);
+        }
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,24 +85,29 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
             return View(bankAccount);
         }
 
-        // POST: BankAccounts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,AccountType,Created,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
+        public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
                 db.Entry(bankAccount).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Households");
             }
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
             return View(bankAccount);
         }
 
@@ -117,7 +134,7 @@ namespace FinancialPortal.Web.Controllers
             BankAccount bankAccount = db.BankAccounts.Find(id);
             db.BankAccounts.Remove(bankAccount);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Dashboard", "Households");
         }
 
         protected override void Dispose(bool disposing)

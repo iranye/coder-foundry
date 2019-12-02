@@ -330,12 +330,10 @@
     <Content Include="Views\Budgets\Create.cshtml" />
     <Content Include="Views\Budgets\Details.cshtml" />
     <Content Include="Views\Budgets\Edit.cshtml" />
-    <Content Include="Views\Budgets\Index.cshtml" />
     <Content Include="Views\BankAccounts\Create.cshtml" />
     <Content Include="Views\BankAccounts\Delete.cshtml" />
     <Content Include="Views\BankAccounts\Details.cshtml" />
     <Content Include="Views\BankAccounts\Edit.cshtml" />
-    <Content Include="Views\BankAccounts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -48,18 +48,13 @@ namespace FinancialPortal.Web.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            if (String.IsNullOrWhiteSpace(userId) || Helpers.HelperMethods.GetCurrentUserHouseholdId() == null)
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
             {
                 return RedirectToAction("Index", "Households");
             }
             if (ModelState.IsValid)
             {
-                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-                if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
-                {
-                    return RedirectToAction("Index", "Households");
-                }
-
                 budget.OwnerId = userId;
                 budget.Created = DateTime.Now;
                 _dbContext.Budgets.Add(budget);

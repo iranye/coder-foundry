@@ -67,19 +67,19 @@
 
         <div class="card shadow mb-4">
             <a href="#household-accounts" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="household-accounts">
-                <h6 class="m-0 font-weight-bold text-primary">Budgets</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Household Accounts</h6>
             </a>
             <div class="collapse show" id="household-accounts">
                 <div class="card-body">
                     <p>
-                        @Html.ActionLink("Create New", "Create", "Budgets")
+                        @Html.ActionLink("Create New", "Create", "BankAccounts")
                     </p>
 
                     <ul>
-                        @foreach (var item in Model.Budgets)
+                        @foreach (var item in Model.BankAccounts)
                         {
                             <li>
-                                <a href="@Url.Action("Details", "Budgets", new {id = item.Id})">@item.Name</a>
+                                <a href="@Url.Action("Details", "BankAccounts", new {id = item.Id})">@item.Name</a>
                             </li>
                         }
                     </ul>
