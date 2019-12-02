@@ -37,6 +37,23 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
+
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
+            var currentRole = _roleHelper.GetRoleByUserId(userId);
+            if (currentRole != "Admin")
+            {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || houseHold.Id != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+            }
+
             return View(houseHold);
         }
 
@@ -44,7 +61,7 @@ namespace FinancialPortal.Web.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("Index", "Households");
+                return RedirectToAction("Index");
             }
             Household houseHold = _dbContext.Households.Find(id);
             if (houseHold == null)
@@ -53,14 +70,21 @@ namespace FinancialPortal.Web.Controllers
             }
 
             var userId = User.Identity.GetUserId();
-            var user = _dbContext.Users.Find(userId);
-
-            // If user has no household or is not a member of this one, direct them to the Index
-            if (user.HouseholdId == null || user.HouseholdId != id)
+            if (String.IsNullOrWhiteSpace(userId))
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
 
+            var currentRole = _roleHelper.GetRoleByUserId(userId);
+            if (currentRole != "Admin")
+            {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || houseHold.Id != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+            }
+            
             return View(houseHold);
         }
 
@@ -172,6 +196,23 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
+
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentRole = _roleHelper.GetRoleByUserId(userId);
+            if (currentRole != "Admin")
+            {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || houseHold.Id != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+            }
+
             return View(houseHold);
         }
 
@@ -179,15 +220,32 @@ namespace FinancialPortal.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Greeting,Created")] Household houseHold)
         {
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentRole = _roleHelper.GetRoleByUserId(userId);
+            if (currentRole != "Admin")
+            {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || houseHold.Id != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _dbContext.Entry(houseHold).State = EntityState.Modified;
                 _dbContext.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard");
             }
             return View(houseHold);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -199,14 +257,6 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(houseHold);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Household houseHold = _dbContext.Households.Find(id);
             _dbContext.Households.Remove(houseHold);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");

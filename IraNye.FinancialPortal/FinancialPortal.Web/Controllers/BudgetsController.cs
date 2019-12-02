@@ -16,15 +16,7 @@ namespace FinancialPortal.Web.Controllers
     public class BudgetsController : Controller
     {
         private ApplicationDbContext _dbContext = new ApplicationDbContext();
-
-        // GET: Budgets
-        public ActionResult Index()
-        {
-            var budgets = _dbContext.Budgets.Include(b => b.Household).Include(b => b.Owner);
-            return View(budgets.ToList());
-        }
-
-        // GET: Budgets/Details/5
+        
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -39,7 +31,6 @@ namespace FinancialPortal.Web.Controllers
             return View(budget);
         }
 
-        // GET: Budgets/Create
         public ActionResult Create()
         {
             int householdId = HelperMethods.GetCurrentUserHouseholdId().GetValueOrDefault();
@@ -47,89 +38,87 @@ namespace FinancialPortal.Web.Controllers
             {
                 return RedirectToAction("Index", "Households");
             }
+
             return View(new Budget{HouseholdId = householdId});
         }
 
-        // POST: Budgets/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Description,TargetAmount,CurrentAmount")] Budget budget)
         {
             var userId = User.Identity.GetUserId();
 
-            if (String.IsNullOrWhiteSpace(userId))
+            if (String.IsNullOrWhiteSpace(userId) || Helpers.HelperMethods.GetCurrentUserHouseholdId() == null)
             {
                 return RedirectToAction("Index", "Households");
             }
             if (ModelState.IsValid)
             {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+
                 budget.OwnerId = userId;
                 budget.Created = DateTime.Now;
                 _dbContext.Budgets.Add(budget);
                 _dbContext.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Households", new{id=budget.HouseholdId});
             }
 
             return View(budget);
         }
 
-        // GET: Budgets/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var userId = User.Identity.GetUserId();
+
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
             Budget budget = _dbContext.Budgets.Find(id);
             if (budget == null)
             {
                 return HttpNotFound();
             }
+
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
             return View(budget);
         }
 
-        // POST: Budgets/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,Description,Created,OwnerId,TargetAmount,CurrentAmount")] Budget budget)
         {
+            var userId = User.Identity.GetUserId();
+
+            if (String.IsNullOrWhiteSpace(userId) || Helpers.HelperMethods.GetCurrentUserHouseholdId() == null)
+            {
+                return RedirectToAction("Index", "Households");
+            }
             if (ModelState.IsValid)
             {
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
                 _dbContext.Entry(budget).State = EntityState.Modified;
                 _dbContext.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Households");
             }
             return View(budget);
-        }
-
-        // GET: Budgets/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Budget budget = _dbContext.Budgets.Find(id);
-            if (budget == null)
-            {
-                return HttpNotFound();
-            }
-            return View(budget);
-        }
-
-        // POST: Budgets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Budget budget = _dbContext.Budgets.Find(id);
-            _dbContext.Budgets.Remove(budget);
-            _dbContext.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

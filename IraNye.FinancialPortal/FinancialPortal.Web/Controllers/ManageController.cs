@@ -327,7 +327,8 @@ namespace FinancialPortal.Web.Controllers
                         avatarsDir = WebConfigurationManager.AppSettings["AvatarsDirectoryName"].Trim();
                     }
 
-                    if (!String.IsNullOrWhiteSpace(user.AvatarPath) && user.AvatarPath != Path.Combine($"{avatarsDir}", "default_user.png"))
+                    string defaultAvatarFileName = "default_user.png";
+                    if (!String.IsNullOrWhiteSpace(user.AvatarPath) && !user.AvatarPath.EndsWith(defaultAvatarFileName))
                     {
                         pathToOldAvatar = user.AvatarPath;
                     }

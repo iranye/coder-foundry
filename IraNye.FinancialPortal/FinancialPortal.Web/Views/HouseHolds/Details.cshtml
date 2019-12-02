@@ -4,39 +4,47 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="col-lg-6 mb-4">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Household Details - @Model.Name</h6>
+        </div>
+        <div class="card-body">
+		
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
 
-<div>
-    <h4>HouseHold</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Greeting)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Greeting)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Greeting)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Greeting)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Created)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Created)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-
-    </dl>
+            </dl>
+            @if (User.IsInRole("Admin") || User.IsInRole("HeadOfHousehold"))
+            {
+                <p>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                    @Html.ActionLink("Back to List", "Index")
+                </p>
+            }
+        </div> <!-- end card-body -->
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
