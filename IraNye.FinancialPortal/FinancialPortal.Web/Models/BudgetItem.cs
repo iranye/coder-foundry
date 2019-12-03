@@ -18,6 +18,7 @@ namespace FinancialPortal.Web.Models
         [StringLength(255)]
         public string Description { get; set; }
 
+        public DateTime Created { get; set; }
         public decimal TargetAmount { get; set; }
         public decimal CurrentAmount { get; set; }
 

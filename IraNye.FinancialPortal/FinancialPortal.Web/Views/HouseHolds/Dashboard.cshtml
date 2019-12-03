@@ -71,10 +71,6 @@
             </a>
             <div class="collapse show" id="household-accounts">
                 <div class="card-body">
-                    <p>
-                        @Html.ActionLink("Create New", "Create", "BankAccounts")
-                    </p>
-
                     <ul>
                         @foreach (var item in Model.BankAccounts)
                         {
@@ -84,6 +80,9 @@
                         }
                     </ul>
 
+                    <p>
+                        @Html.ActionLink("Create New", "Create", "BankAccounts")
+                    </p>
                 </div> <!-- end card-body -->
             </div>
         </div>
@@ -94,10 +93,6 @@
             </a>
             <div class="collapse show" id="household-budgets">
                 <div class="card-body">
-                    <p>
-                        @Html.ActionLink("Create New", "Create", "Budgets")
-                    </p>
-
                     <ul>
                         @foreach (var item in Model.Budgets)
                         {
@@ -107,6 +102,9 @@
                         }
                     </ul>
 
+                    <p>
+                        @Html.ActionLink("Create New", "Create", "Budgets")
+                    </p>
                 </div> <!-- end card-body -->
             </div>
         </div>

@@ -28,6 +28,18 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
             return View(budget);
         }
 

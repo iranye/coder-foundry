@@ -2,77 +2,242 @@
 @model FinancialPortal.Web.Models.Budget
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Budget Details";
 }
 
+<style>
+    .detail-label {
+        font-size: .8em;
+        text-transform: uppercase;
+    }
 
+    div.detail-label {
+        margin-top: 4px;
+    }
+</style>
 
-<div class="col-lg-6 mb-4">
+<div class="col-lg-9 mb-4">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">@Model.Name</h6>
         </div>
         <div class="card-body">
 
-            <dl class="dl-horizontal">
-                <dt>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayName("Household")
-                </dt>
-
-                <dd>
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.Household.Name)
-                </dd>
-
-                <dt>
-                    @Html.DisplayName("Budget")
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
-
-                <dt>
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayNameFor(model => model.Description)
-                </dt>
-
-                <dd>
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.Description)
-                </dd>
-
-                <dt>
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayName("Owner")
-                </dt>
-
-                <dd>
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.Owner.DisplayName)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Created)
-                </dt>
-
-                <dd>
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Creation Date")
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.Created)
-                </dd>
-
-                <dt>
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayNameFor(model => model.TargetAmount)
-                </dt>
-
-                <dd>
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.TargetAmount)
-                </dd>
-
-                <dt>
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayNameFor(model => model.CurrentAmount)
-                </dt>
-
-                <dd>
+                </div>
+                <div class="col-sm-6">
                     @Html.DisplayFor(model => model.CurrentAmount)
-                </dd>
-            </dl>
+                </div>
+            </div>
+
             <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
             <a href="@Url.Action("Dashboard", "Households", new { id = Model.HouseholdId })">Back to Dashboard</a>
         </div> <!-- end card-body -->
     </div>
+
+    <div class="card shadow mb-4">
+        <a href="#budget-items" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="budget-items">
+            <h6 class="m-0 font-weight-bold text-primary">Budget Items</h6>
+        </a>
+        <div class="collapse show" id="budget-items">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Description")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Target Amount")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Current Amount")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Creation Date")
+                                </th>
+                                <th>@Html.DisplayName("Options")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var budgetItem in Model.BudgetItems.OrderBy(c => c.Created))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(m => budgetItem.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => budgetItem.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => budgetItem.TargetAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => budgetItem.CurrentAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => budgetItem.Created)
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Delete", "BudgetItems", new {id = budgetItem.Id})" title="Delete Budget Item">
+                                            <i class="fas fa-fw fa-car-crash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div> <!-- end table div -->
+            </div> <!-- end card-body -->
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Add New Budget Item</h6>
+        </div>
+        <div class="card-body">
+
+            @using (Html.BeginForm("Create", "BudgetItems", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            @Html.Editor("BudgetItemName", new { htmlAttributes = new { @class = "form-control budget-item-field", placeholder = "Name ..." } })
+                        </div>
+                        <div class="form-group">
+                            @Html.Editor("BudgetItemDescription", new { htmlAttributes = new { @class = "form-control budget-item-field", placeholder = "Description ..." } })
+                        </div>
+                        <div class="form-group">
+                            @Html.Editor("BudgetItemTargetAmount", new { htmlAttributes = new { @class = "form-control budget-item-field", placeholder = "Target Amount ..." } })
+                        </div>
+                        <div class="form-group">
+                            @Html.Editor("BudgetItemCurrentAmount", new { htmlAttributes = new { @class = "form-control budget-item-field", placeholder = "Current Amount ..." } })
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit" id="btnSubmitNewBudgetItem">Save</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div> <!-- end card-body -->
+    </div>
+
 </div>
+
+
+@section scripts
+{
+    <script>
+
+        $('#btnSubmitNewBudgetItem').prop("disabled", true);
+        var initName = $('#BudgetItemName').val();
+        var initDescription = $('#BudgetItemDescription').val();
+        var initTargetAmount = $('#BudgetItemTargetAmount').val();
+        var initCurrentAmount = $('#BudgetItemCurrentAmount').val();
+
+        $(document).ready(function () {
+            console.log("READY!");
+
+            var strLimit = 100;
+
+            var nameOk = false;
+            $('#BudgetItemName').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                if ($(this).val().length > 0 && $(this).val() !== initName) {
+                    nameOk = true;
+                } else {
+                    nameOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            var descriptionOk = false;
+            $('#BudgetItemDescription').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                if ($(this).val().length > 0 && $(this).val() !== initDescription) {
+                    descriptionOk = true;
+                } else {
+                    descriptionOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            var targetAmountOk = false;
+            $('#BudgetItemTargetAmount').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                console.log("TargetAmount: " + $(this).val());
+                if ($(this).val().length > 0 && $(this).val() !== initTargetAmount && isValidDollarAmount($(this).val())) {
+                    targetAmountOk = true;
+                    $('#BudgetItemCurrentAmount').val($(this).val());
+                } else {
+                    targetAmountOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            function checkBtnEnabled() {
+                if (nameOk && descriptionOk && targetAmountOk) {
+                    $('#btnSubmitNewBudgetItem').prop("disabled", false);
+                } else {
+                    $('#btnSubmitNewBudgetItem').prop("disabled", true);
+                }
+            }
+
+            function isValidDollarAmount(floatVal) {
+                var pattern = /^\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(.[0-9][0-9])?$/;
+                return pattern.test(floatVal);
+            }
+        });
+    </script>
+}
+

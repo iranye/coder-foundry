@@ -51,10 +51,89 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input id="btnSubmitNewBudget" type="submit" value="Create" class="btn btn-primary" />
                     </div>
                 </div>
             </div>
         }
     </div> <!-- end card-body -->
 </div>
+
+@section scripts
+{
+    <script>
+
+        $('#btnSubmitNewBudget').prop("disabled", true);
+        var initName = $('#Name').val();
+        var initDescription = $('#Description').val();
+        var initTargetAmount = $('#TargetAmount').val();
+        var initCurrentAmount = $('#CurrentAmount').val();
+
+        $(document).ready(function () {
+            console.log("READY!");
+
+            var strLimit = 100;
+
+            var nameOk = false;
+            $('#Name').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                if ($(this).val().length > 0 && $(this).val() !== initName) {
+                    nameOk = true;
+                } else {
+                    nameOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            var descriptionOk = false;
+            $('#Description').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                if ($(this).val().length > 0 && $(this).val() !== initDescription) {
+                    descriptionOk = true;
+                } else {
+                    descriptionOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            var targetAmountOk = false;
+            $('#TargetAmount').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                console.log("TargetAmount: " + $(this).val());
+                if ($(this).val().length > 0 && $(this).val() !== initTargetAmount && isValidDollarAmount($(this).val())) {
+                    targetAmountOk = true;
+                    $('#CurrentAmount').val($(this).val());
+                } else {
+                    targetAmountOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            var currentAmountOk = false;
+            $('#CurrentAmount').keyup(function () {
+                $(this).val($(this).val().substring(0, strLimit));
+                console.log("currentAmount: " + $(this).val());
+                if ($(this).val().length > 0 && $(this).val() !== initCurrentAmount && isValidDollarAmount($(this).val())) {
+                    currentAmountOk = true;
+                    $('#CurrentAmount').val($(this).val());
+                } else {
+                    currentAmountOk = false;
+                }
+                checkBtnEnabled();
+            });
+
+            function checkBtnEnabled() {
+                if (nameOk && descriptionOk && targetAmountOk) {
+                    $('#btnSubmitNewBudget').prop("disabled", false);
+                } else {
+                    $('#btnSubmitNewBudget').prop("disabled", true);
+                }
+            }
+
+            function isValidDollarAmount(floatVal) {
+                var pattern = /^\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(.[0-9][0-9])?$/;
+                return pattern.test(floatVal);
+            }
+        });
+    </script>
+}

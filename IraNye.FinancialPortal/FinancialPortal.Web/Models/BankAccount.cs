@@ -17,6 +17,7 @@ namespace FinancialPortal.Web.Models
 
         public AccountType AccountType { get; set; }
         public DateTime Created { get; set; }
+        public string OwnerId { get; set; }
         public decimal StartingBalance { get; set; }
         public decimal CurrentBalance { get; set; }
         public decimal LowBalanceLevel { get; set; }

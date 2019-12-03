@@ -172,6 +172,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
+    <Compile Include="Controllers\BudgetItemsController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseholdsController.cs" />
@@ -212,6 +213,10 @@
     <Compile Include="Migrations\201911271717522_AddSprocToAddUserToHouseholdByInvitation.Designer.cs">
       <DependentUpon>201911271717522_AddSprocToAddUserToHouseholdByInvitation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912031534138_AddPropertiesToBankAccountAndBudgetItem.cs" />
+    <Compile Include="Migrations\201912031534138_AddPropertiesToBankAccountAndBudgetItem.Designer.cs">
+      <DependentUpon>201912031534138_AddPropertiesToBankAccountAndBudgetItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -227,6 +232,7 @@
     <Compile Include="Models\TransactionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ConfigureViewModel.cs" />
     <Compile Include="ViewModels\MainDashboardViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +375,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911271717522_AddSprocToAddUserToHouseholdByInvitation.resx">
       <DependentUpon>201911271717522_AddSprocToAddUserToHouseholdByInvitation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912031534138_AddPropertiesToBankAccountAndBudgetItem.resx">
+      <DependentUpon>201912031534138_AddPropertiesToBankAccountAndBudgetItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

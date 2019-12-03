@@ -25,7 +25,7 @@ namespace FinancialPortal.Web.Models
 
         // Navs
         public virtual Household Household { get; set; }
-        public virtual ICollection<BudgetItem> BudgetTypes { get; set; } = new HashSet<BudgetItem>();
+        public virtual ICollection<BudgetItem> BudgetItems { get; set; } = new HashSet<BudgetItem>();
         public virtual ApplicationUser Owner { get; set; }
     }
 }
