@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.Controllers
 {
+    [Authorize]
     public class TransactionsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
@@ -164,18 +165,26 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
-        }
+            var userId = User.Identity.GetUserId();
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return RedirectToAction("Index", "Households");
+            }
 
-        // POST: Transactions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Transaction transaction = _db.Transactions.Find(id);
+            transaction.BankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
+            if (transaction.BankAccount == null)
+            {
+                return HttpNotFound();
+            }
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || transaction.BankAccount.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
             _db.Transactions.Remove(transaction);
             _db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "BankAccounts", new {id= transaction.BankAccountId});
         }
 
         protected override void Dispose(bool disposing)

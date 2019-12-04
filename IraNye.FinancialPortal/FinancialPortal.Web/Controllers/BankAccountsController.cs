@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using FinancialPortal.Web.Helpers;
 using FinancialPortal.Web.Models;
+using FinancialPortal.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.Controllers
@@ -41,6 +42,15 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Index", "Households");
             }
 
+            var transactions = db.Transactions.AsNoTracking();
+            foreach (var transaction in transactions)
+            {
+                if (transaction.BankAccountId == id && !bankAccount.Transactions.Contains(transaction))
+                {
+                    bankAccount.Transactions.Add(transaction);
+                }
+            }
+            
             return View(bankAccount);
         }
 
@@ -133,18 +143,15 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(bankAccount);
-        }
 
-        // POST: BankAccounts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            BankAccount bankAccount = db.BankAccounts.Find(id);
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
             db.BankAccounts.Remove(bankAccount);
             db.SaveChanges();
-            return RedirectToAction("Dashboard", "Households");
+            return RedirectToAction("Dashboard", "Households", new { id = currentUserHouseholdId });
         }
 
         protected override void Dispose(bool disposing)
