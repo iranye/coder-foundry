@@ -58,13 +58,14 @@ namespace FinancialPortal.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Description,TargetAmount,CurrentAmount")] Budget budget)
         {
-            var userId = User.Identity.GetUserId();
-
             var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
             if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
             {
                 return RedirectToAction("Index", "Households");
             }
+
+            var userId = User.Identity.GetUserId();
+
             if (ModelState.IsValid)
             {
                 budget.OwnerId = userId;

@@ -6,7 +6,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Create Budget</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Create Budget <span style="font-size: .6em;">(At least one is Required to Add Transactions)</span></h6>
     </div>
     <div class="card-body">
         @using (Html.BeginForm())
@@ -65,7 +65,6 @@
 
         $('#btnSubmitNewBudget').prop("disabled", true);
         var initName = $('#Name').val();
-        var initDescription = $('#Description').val();
         var initTargetAmount = $('#TargetAmount').val();
         var initCurrentAmount = $('#CurrentAmount').val();
 
@@ -84,16 +83,9 @@
                 }
                 checkBtnEnabled();
             });
-
-            var descriptionOk = false;
+            
             $('#Description').keyup(function () {
                 $(this).val($(this).val().substring(0, strLimit));
-                if ($(this).val().length > 0 && $(this).val() !== initDescription) {
-                    descriptionOk = true;
-                } else {
-                    descriptionOk = false;
-                }
-                checkBtnEnabled();
             });
 
             var targetAmountOk = false;
@@ -123,7 +115,7 @@
             });
 
             function checkBtnEnabled() {
-                if (nameOk && descriptionOk && targetAmountOk) {
+                if (nameOk && targetAmountOk) {
                     $('#btnSubmitNewBudget').prop("disabled", false);
                 } else {
                     $('#btnSubmitNewBudget').prop("disabled", true);

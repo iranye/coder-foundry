@@ -8,8 +8,8 @@ namespace FinancialPortal.Web.Models
 {
     public enum AccountType
     {
-        Checking,
-        Savings,
-        MoneyMarket
+        Checking = 1,
+        Savings = 2,
+        MoneyMarket = 3
     }
 }

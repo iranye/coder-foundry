@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using FinancialPortal.Web.Models;
+using FinancialPortal.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.Controllers
@@ -37,34 +38,41 @@ namespace FinancialPortal.Web.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Create
         public ActionResult Create()
         {
-            ViewBag.BankAccountId = new SelectList(_db.BankAccounts, "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(_db.BudgetItems, "Id", "Name");
+            var householdViewModel = new MainDashboardViewModel();
+            if (householdViewModel.BankAccounts.Count == 0)
+            {
+                return RedirectToAction("Create", "BankAccounts");
+            }
+            if (householdViewModel.Budgets.Count == 0)
+            {
+                return RedirectToAction("Create", "Budgets");
+            }
+            if (householdViewModel.BudgetItems.Count == 0)
+            {
+                return RedirectToAction("Create", "BudgetItems");
+            }
+            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name");
             ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type");
             return View();
         }
 
-        // POST: Transactions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "BankAccountId,BudgetItemId,TransactionTypeId,Amount,Memo")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
-                var userId = User.Identity.GetUserId();
-                if (String.IsNullOrWhiteSpace(userId))
+                transaction.BudgetItem = _db.BudgetItems.Find(transaction.BudgetItemId);
+                if (transaction.BudgetItem == null)
                 {
                     return RedirectToAction("Index", "Households");
                 }
-
-                transaction.BudgetItem = _db.BudgetItems.Find(transaction.BudgetItemId);
                 transaction.BudgetItem.Budget = _db.Budgets.Find(transaction.BudgetItem.BudgetId);
 
-                if (transaction.BudgetItem == null || transaction.BudgetItem.Budget == null)
+                if (transaction.BudgetItem.Budget == null)
                 {
                     return RedirectToAction("Index", "Households");
                 }
@@ -74,6 +82,11 @@ namespace FinancialPortal.Web.Controllers
                     return RedirectToAction("Index", "Households");
                 }
 
+                var userId = User.Identity.GetUserId();
+                if (String.IsNullOrWhiteSpace(userId))
+                {
+                    return RedirectToAction("Index", "Households");
+                }
                 transaction.Created = DateTime.Now;
                 transaction.CreatedById = userId;
                 _db.Transactions.Add(transaction);

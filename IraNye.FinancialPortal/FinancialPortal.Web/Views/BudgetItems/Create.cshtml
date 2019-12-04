@@ -1,14 +1,13 @@
-﻿@model FinancialPortal.Web.Models.Transaction
+﻿@model FinancialPortal.Web.Models.BudgetItem
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Budget Item";
 }
-
 
 <div class="col-lg-6 mb-4">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Create New Transaction</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Create Budget Item <span style="font-size: .6em;">(At least one is Required to Add Transactions)</span></h6>
         </div>
         <div class="card-body">
 
@@ -17,70 +16,68 @@
                 @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
-                    <h4>Transaction</h4>
-                    <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
                     <div class="form-group">
-                        @Html.LabelFor(model => model.BankAccountId, "Bank", htmlAttributes: new { @class = "col" })
+                        @Html.LabelFor(model => model.BudgetId, "Budget", htmlAttributes: new { @class = "col" })
                         <div class="col-md-10">
-                            @Html.DropDownList("BankAccountId", null, "-- Select Bank --", htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-danger" })
+                            @Html.DropDownList("BudgetId", null, "-- Select Budget --", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.BudgetId, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.BudgetItemId, "Budget Item", htmlAttributes: new { @class = "col" })
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col" })
                         <div class="col-md-10">
-                            @Html.DropDownList("BudgetItemId", null, "-- Select Budget Item --", htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.TransactionTypeId, "Transaction Type", htmlAttributes: new { @class = "col" })
+                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col" })
                         <div class="col-md-10">
-                            @Html.DropDownList("TransactionTypeId", null, "-- Select Type --", htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TransactionTypeId, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "col" })
+                        @Html.LabelFor(model => model.TargetAmount, htmlAttributes: new { @class = "col" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.TargetAmount, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TargetAmount, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Memo, htmlAttributes: new { @class = "col" })
+                        @Html.LabelFor(model => model.CurrentAmount, htmlAttributes: new { @class = "col" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Memo, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Memo, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.CurrentAmount, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CurrentAmount, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-md-10">
-                            <input type="submit" value="Create" class="btn btn-primary" />
+                            <input id="btnSubmitNewBudgetItem" type="submit" value="Create" class="btn btn-primary" />
                         </div>
                     </div>
                 </div>
             }
 
             <div>
-                @Html.ActionLink("Main Page", "Index", "Home")
+                @Html.ActionLink("Back to List", "Dashboard", "Households")
             </div>
 
         </div> <!-- end card-body -->
     </div>
 </div>
+
 @section scripts
 {
     <script>
 
-        $('#btnSubmitNewBudget').prop("disabled", true);
+        $('#btnSubmitNewBudgetItem').prop("disabled", true);
         var initName = $('#Name').val();
         var initTargetAmount = $('#TargetAmount').val();
         var initCurrentAmount = $('#CurrentAmount').val();
@@ -89,6 +86,16 @@
             console.log("READY!");
 
             var strLimit = 100;
+
+            var budgetIdOk = false;
+            $('#BudgetId').change(function () {
+                console.log("budgetId CHANGE!");
+                var selection = $(this).children("option:selected").val();
+                console.log(selection);
+                budgetIdOk = $.isNumeric(selection) && selection > 0;
+                console.log("budgetIdOk: " + budgetIdOk);
+                checkBtnEnabled();
+            });
 
             var nameOk = false;
             $('#Name').keyup(function () {
@@ -99,10 +106,6 @@
                     nameOk = false;
                 }
                 checkBtnEnabled();
-            });
-
-            $('#Description').keyup(function () {
-                $(this).val($(this).val().substring(0, strLimit));
             });
 
             var targetAmountOk = false;
@@ -132,10 +135,10 @@
             });
 
             function checkBtnEnabled() {
-                if (nameOk && targetAmountOk) {
-                    $('#btnSubmitNewBudget').prop("disabled", false);
+                if (budgetIdOk && nameOk && targetAmountOk) {
+                    $('#btnSubmitNewBudgetItem').prop("disabled", false);
                 } else {
-                    $('#btnSubmitNewBudget').prop("disabled", true);
+                    $('#btnSubmitNewBudgetItem').prop("disabled", true);
                 }
             }
 

@@ -51,24 +51,34 @@ namespace FinancialPortal.Web.Controllers
             {
                 return RedirectToAction("Index", "Households");
             }
-            return View(new BankAccount { HouseholdId = householdId });
+
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
         {
             var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-            if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+            if (currentUserHouseholdId == null || currentUserHouseholdId == 0)
             {
                 return RedirectToAction("Index", "Households");
             }
+
+            bankAccount.HouseholdId = currentUserHouseholdId.GetValueOrDefault();
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                if (String.IsNullOrWhiteSpace(userId))
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+
+                bankAccount.OwnerId = userId;
                 bankAccount.Created = DateTime.Now;
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
-                return RedirectToAction("Dashboard", "Households");
+                return RedirectToAction("Dashboard", "Households", new {id=currentUserHouseholdId});
             }
 
             return View(bankAccount);
