@@ -96,9 +96,22 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Dashboard", "Households", new { id = currentUserHouseholdId });
             }
 
-            ViewBag.BankAccountId = new SelectList(_db.BankAccounts, "Id", "Name", transaction.BankAccountId);
-            ViewBag.BudgetItemId = new SelectList(_db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
-            ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type", transaction.TransactionTypeId);
+            var householdViewModel = new MainDashboardViewModel();
+            if (householdViewModel.BankAccounts.Count == 0)
+            {
+                return RedirectToAction("Create", "BankAccounts");
+            }
+            if (householdViewModel.Budgets.Count == 0)
+            {
+                return RedirectToAction("Create", "Budgets");
+            }
+            if (householdViewModel.BudgetItems.Count == 0)
+            {
+                return RedirectToAction("Create", "BudgetItems");
+            }
+            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name");
+            ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type");
             return View(transaction);
         }
 

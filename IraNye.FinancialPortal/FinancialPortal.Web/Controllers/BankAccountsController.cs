@@ -42,14 +42,7 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Index", "Households");
             }
 
-            var transactions = db.Transactions.AsNoTracking();
-            foreach (var transaction in transactions)
-            {
-                if (transaction.BankAccountId == id && !bankAccount.Transactions.Contains(transaction))
-                {
-                    bankAccount.Transactions.Add(transaction);
-                }
-            }
+            bankAccount.Owner = db.Users.Find(bankAccount.OwnerId);
             
             return View(bankAccount);
         }

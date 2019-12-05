@@ -126,7 +126,7 @@
                                     </td>
                                     <td>
                                         <a href="@Url.Action("Delete", "BudgetItems", new {id = budgetItem.Id})" title="Delete Budget Item">
-                                            <i class="fas fa-fw fa-car-crash"></i>
+                                            <i class="fas fa-fw fa-minus-square"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -201,15 +201,8 @@
                 checkBtnEnabled();
             });
 
-            var descriptionOk = false;
             $('#BudgetItemDescription').keyup(function () {
                 $(this).val($(this).val().substring(0, strLimit));
-                if ($(this).val().length > 0 && $(this).val() !== initDescription) {
-                    descriptionOk = true;
-                } else {
-                    descriptionOk = false;
-                }
-                checkBtnEnabled();
             });
 
             var targetAmountOk = false;
@@ -226,7 +219,7 @@
             });
 
             function checkBtnEnabled() {
-                if (nameOk && descriptionOk && targetAmountOk) {
+                if (nameOk && targetAmountOk) {
                     $('#btnSubmitNewBudgetItem').prop("disabled", false);
                 } else {
                     $('#btnSubmitNewBudgetItem').prop("disabled", true);

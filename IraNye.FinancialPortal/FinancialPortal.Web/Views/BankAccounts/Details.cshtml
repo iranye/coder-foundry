@@ -4,133 +4,150 @@
     ViewBag.Title = "Details";
 }
 
+<style>
+    .detail-label {
+        font-size: .8em;
+        text-transform: uppercase;
+    }
 
-    <div class="col-lg-9 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Bank Account</h6>
-            </div>
-            <div class="card-body">
-                <div>
-                    <dl class="dl-horizontal">
+    div.detail-label {
+        margin-top: 4px;
+    }
+</style>
 
-                        <dt>
-                            @Html.DisplayNameFor(model => model.Name)
-                        </dt>
+<div class="col-lg-9 mb-4">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Bank Account</h6>
+        </div>
+        <div class="card-body">
 
-                        <dd>
-                            @Html.DisplayFor(model => model.Name)
-                        </dd>
-
-                        <dt>
-                            @Html.DisplayNameFor(model => model.AccountType)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.AccountType)
-                        </dd>
-
-                        <dt>
-                            @Html.DisplayNameFor(model => model.Created)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.Created)
-                        </dd>
-
-                        <dt>
-                            @Html.DisplayNameFor(model => model.StartingBalance)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.StartingBalance)
-                        </dd>
-
-                        <dt>
-                            @Html.DisplayNameFor(model => model.CurrentBalance)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.CurrentBalance)
-                        </dd>
-
-                        <dt>
-                            @Html.DisplayNameFor(model => model.LowBalanceLevel)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.LowBalanceLevel)
-                        </dd>
-
-                    </dl>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Household")
                 </div>
-                <p>
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
-                    <a href="@Url.Action("Dashboard", "Households", new { id = Model.HouseholdId })">Back to Dashboard</a>
-                </p>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.Household.Name)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayNameFor(model => model.Name)
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Account Type")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.AccountType)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Owner")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.Owner.DisplayName)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Creation Date")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.Created)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Current Balance")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.CurrentBalance)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Low Balance Level")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.LowBalanceLevel)
+                </div>
+            </div>
+            <p>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+                <a href="@Url.Action("Dashboard", "Households", new {id = Model.HouseholdId})">Back to Dashboard</a>
+            </p>
 
+        </div> <!-- end card-body -->
+    </div>
+    <div class="card shadow mb-4">
+        <a href="#transactions" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="transactions">
+            <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+        </a>
+        <div class="collapse show" id="transactions">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Budget Item")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Transaction Type")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Amount")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Memo")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Creation Date")
+                                </th>
+                                <th>@Html.DisplayName("Options")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in Model.Transactions.OrderBy(c => c.Created))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(m => transaction.BudgetItem.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => transaction.TransactionType.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => transaction.Amount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => transaction.Memo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => transaction.Created)
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Delete", "Transactions", new {id = transaction.Id})" title="Delete Transaction">
+                                            <i class="fas fa-fw fa-minus-square"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div> <!-- end table div -->
+                <div class="row">
+                    <a class="nav-link" href="@Url.Action("Create", "Transactions")">Add New Transaction</a>
+                </div>
             </div> <!-- end card-body -->
         </div>
-        <div class="card shadow mb-4">
-            <a href="#transactions" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="transactions">
-                <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
-            </a>
-            <div class="collapse show" id="transactions">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayName("Budget Item")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Transaction Type")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Amount")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Memo")
-                                    </th>
-                                    <th>
-                                        @Html.DisplayName("Creation Date")
-                                    </th>
-                                    <th>@Html.DisplayName("Options")</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var transaction in Model.Transactions.OrderBy(c => c.Created))
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(m => transaction.BudgetItem.Name)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(m => transaction.TransactionType.Type)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(m => transaction.Amount)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(m => transaction.Memo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(m => transaction.Created)
-                                        </td>
-                                        <td>
-                                            <a href="@Url.Action("Delete", "Transactions", new {id = transaction.Id})" title="Delete Transaction">
-                                                <i class="fas fa-fw fa-minus-square"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div> <!-- end table div -->
-                </div> <!-- end card-body -->
-            </div>
-        </div>
     </div>
+</div>
 

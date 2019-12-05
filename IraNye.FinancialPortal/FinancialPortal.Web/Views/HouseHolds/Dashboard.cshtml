@@ -9,7 +9,18 @@
     .selectable {
         cursor: pointer; /* "hand" cursor */
     }
+    
+    .detail-label {
+        font-size: .8em;
+        text-transform: uppercase;
+    }
+
+    div.detail-label {
+        margin-top: 4px;
+    }
+
 </style>
+
 <!-- Content Row -->
 <div class="row">
 
@@ -21,32 +32,31 @@
             </a>
             <div class="collapse show" id="household-info">
                 <div class="card-body">
-                    <dl class="dl-horizontal">
-                        <dt>
+
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
                             @Html.DisplayNameFor(model => model.Name)
-                        </dt>
-
-                        <dd>
+                        </div>
+                        <div class="col-sm-6">
                             @Html.DisplayFor(model => model.Name)
-                        </dd>
-
-                        <dt>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
                             @Html.DisplayNameFor(model => model.Greeting)
-                        </dt>
-
-                        <dd>
+                        </div>
+                        <div class="col-sm-6">
                             @Html.DisplayFor(model => model.Greeting)
-                        </dd>
-
-                        <dt>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="h5 col-sm-6 detail-label">
                             @Html.DisplayNameFor(model => model.Created)
-                        </dt>
-
-                        <dd>
+                        </div>
+                        <div class="col-sm-6">
                             @Html.DisplayFor(model => model.Created)
-                        </dd>
-
-                    </dl>
+                        </div>
+                    </div>
 
                     @if (User.IsInRole("HeadOfHousehold"))
                     {

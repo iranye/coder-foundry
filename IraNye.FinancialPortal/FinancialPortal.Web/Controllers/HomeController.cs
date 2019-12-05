@@ -13,13 +13,6 @@ namespace FinancialPortal.Web.Controllers
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
 
-        public ActionResult Index()
-        {
-            MainDashboardViewModel viewModel = new MainDashboardViewModel();
-            return View(viewModel);
-        }
-        
-        // Scotty Code
         public ActionResult Dashboard()
         {
             if (!Request.IsAuthenticated)

@@ -222,6 +222,10 @@
     <Compile Include="Migrations\201912031917152_PopulateTransactionTypeTable.Designer.cs">
       <DependentUpon>201912031917152_PopulateTransactionTypeTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912051440275_BankAccountModelUpdates.cs" />
+    <Compile Include="Migrations\201912051440275_BankAccountModelUpdates.Designer.cs">
+      <DependentUpon>201912051440275_BankAccountModelUpdates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -322,7 +326,6 @@
     <Content Include="Views\HouseHolds\Details.cshtml" />
     <Content Include="Views\HouseHolds\Edit.cshtml" />
     <Content Include="Views\HouseHolds\Index.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Manage\UpdateInfo.cshtml" />
     <Content Include="Views\HouseHolds\Dashboard.cshtml" />
     <Content Include="webfonts\fa-brands-400.eot" />
@@ -393,6 +396,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912031917152_PopulateTransactionTypeTable.resx">
       <DependentUpon>201912031917152_PopulateTransactionTypeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912051440275_BankAccountModelUpdates.resx">
+      <DependentUpon>201912051440275_BankAccountModelUpdates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

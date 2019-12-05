@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinancialPortal.Web.Models
 {
-    public sealed class BankAccount
+    public class BankAccount
     {
         public int Id { get; set; }
         public int HouseholdId { get; set; }
@@ -23,7 +23,8 @@ namespace FinancialPortal.Web.Models
         public decimal LowBalanceLevel { get; set; }
 
         // Navs
-        public Household Household { get; set; }
-        public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
+        public virtual Household Household { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
+        public virtual ApplicationUser Owner { get; set; }
     }
 }
