@@ -136,10 +136,10 @@ namespace FinancialPortal.Web.Controllers
             var randomPaddedStr = rand.Next(1, 999).ToString("000");
             RegisterViewModel registerViewModel = new RegisterViewModel
             {
-                FirstName = "Joey",
-                LastName = "Ramone",
-                DisplayName = "Joey-" + randomPaddedStr,
-                Email = $"jr-{randomPaddedStr}@mailinator.com"
+                FirstName = "Betty",
+                LastName = "Budgetter",
+                DisplayName = "Betty Budgetter-" + randomPaddedStr,
+                Email = $"bb-{randomPaddedStr}@mailinator.com"
             };
             return View(registerViewModel);
         }
@@ -186,7 +186,7 @@ namespace FinancialPortal.Web.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 AddErrors(result);
             }
@@ -287,7 +287,7 @@ namespace FinancialPortal.Web.Controllers
                     HelperMethods.AddUserToHousehold(model.Email, hId);
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 AddErrors(result);
             }
@@ -562,7 +562,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

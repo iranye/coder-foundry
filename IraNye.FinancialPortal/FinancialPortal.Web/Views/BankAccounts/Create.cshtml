@@ -72,11 +72,9 @@
 {
     <script>
 
+        // TODO: This is broken when user gets kicked back due to an error (e.g., bad LowBalanceLevel). Create button stays disabled.
+        // init values end up getting set to model values
         $('#btnSubmitNewBankAccount').prop("disabled", true);
-        var initName = $('#Name').val();
-        var initDescription = $('#Description').val();
-        var initStartingBalance = $('#StartingBalance').val();
-        var initCurrentBalance = $('#CurrentBalance').val();
 
         $(document).ready(function () {
             console.log("READY!");
@@ -86,7 +84,7 @@
             var nameOk = false;
             $('#Name').keyup(function () {
                 $(this).val($(this).val().substring(0, strLimit));
-                if ($(this).val().length > 0 && $(this).val() !== initName) {
+                if ($(this).val().length > 0) {
                     nameOk = true;
                 } else {
                     nameOk = false;
@@ -100,7 +98,6 @@
                 var selection = $(this).children("option:selected").val();
                 console.log(selection);
                 accountTypeOk = $.isNumeric(selection) && selection > 0;
-                console.log("accountTypeOk: " + accountTypeOk);
                 checkBtnEnabled();
             });
 
@@ -108,9 +105,8 @@
             $('#StartingBalance').keyup(function () {
                 $(this).val($(this).val().substring(0, strLimit));
                 console.log("StartingBalance: " + $(this).val());
-                if ($(this).val().length > 0 && $(this).val() !== initStartingBalance && isValidDollarAmount($(this).val())) {
+                if ($(this).val().length > 0 && isValidDollarAmount($(this).val())) {
                     startingBalanceOk = true;
-                    console.log("Starting Bal: " + $(this).val());
                     $('#CurrentBalance').val($(this).val());
                 } else {
                     startingBalanceOk = false;

@@ -352,7 +352,7 @@ namespace FinancialPortal.Web.Controllers
                         pathToOldAvatar = Server.MapPath($"~/{pathToOldAvatar}");
                         System.IO.File.Delete(pathToOldAvatar);
                     }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
             }
 
