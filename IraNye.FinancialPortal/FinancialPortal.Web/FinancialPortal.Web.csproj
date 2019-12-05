@@ -277,7 +277,7 @@
     <Content Include="Scripts\chart-area-demo.js" />
     <Content Include="Scripts\chart-bar-demo.js" />
     <Content Include="Scripts\chart-pie-demo.js" />
-    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\datatables-demo.js" />
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="webfonts\fa-brands-400.svg" />
