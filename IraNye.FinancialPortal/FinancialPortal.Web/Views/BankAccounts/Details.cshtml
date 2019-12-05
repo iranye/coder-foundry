@@ -78,7 +78,7 @@
                     @Html.DisplayFor(model => model.LowBalanceLevel)
                 </div>
             </div>
-            <p>
+            <p style="margin-top: 20px;">
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
                 <a href="@Url.Action("Dashboard", "Households", new {id = Model.HouseholdId})">Back to Dashboard</a>
@@ -115,7 +115,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var transaction in Model.Transactions.OrderBy(c => c.Created))
+                            @foreach (var transaction in Model.Transactions.OrderByDescending(c => c.Created))
                             {
                                 <tr>
                                     <td>
@@ -136,6 +136,9 @@
                                     <td>
                                         <a href="@Url.Action("Delete", "Transactions", new {id = transaction.Id})" title="Delete Transaction">
                                             <i class="fas fa-fw fa-minus-square"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Transactions", new {id = transaction.Id})" title="Edit Transaction">
+                                            <i class="fas fa-fw fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>

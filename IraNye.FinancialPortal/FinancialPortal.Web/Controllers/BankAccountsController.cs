@@ -108,7 +108,7 @@ namespace FinancialPortal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
+        public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,AccountType,StartingBalance,Created,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
@@ -118,8 +118,8 @@ namespace FinancialPortal.Web.Controllers
                     return RedirectToAction("Index", "Households");
                 }
                 db.Entry(bankAccount).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Dashboard", "Households");
+                var ret = db.SaveChanges();
+                return RedirectToAction("Dashboard", "Households", new {id = currentUserHouseholdId });
             }
             return View(bankAccount);
         }

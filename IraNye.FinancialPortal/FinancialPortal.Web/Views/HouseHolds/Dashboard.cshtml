@@ -60,13 +60,14 @@
 
                     @if (User.IsInRole("HeadOfHousehold"))
                     {
-                        <p>
+
+                        <p style="margin-top: 20px;">
                             <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })</span>
                         </p>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <p>
+                        <p style="margin-top: 20px;">
                             <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
                             @Html.ActionLink("Back to List", "Index")
                         </p>

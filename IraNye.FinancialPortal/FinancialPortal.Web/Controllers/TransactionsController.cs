@@ -127,8 +127,9 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.BankAccountId = new SelectList(_db.BankAccounts, "Id", "Name", transaction.BankAccountId);
-            ViewBag.BudgetItemId = new SelectList(_db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
+            var householdViewModel = new MainDashboardViewModel();
+            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name");
             ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type", transaction.TransactionTypeId);
             return View(transaction);
         }
@@ -138,31 +139,37 @@ namespace FinancialPortal.Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,Memo")] Transaction transaction)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,Created,CreatedById,Memo")] Transaction transaction, string createdById)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    var userId = User.Identity.GetUserId();
-            //    if (String.IsNullOrWhiteSpace(userId))
-            //    {
-            //        return RedirectToAction("Index", "Households");
-            //    }
-            //    transaction.Budget = _db budget
-            //    var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-            //    if (currentUserHouseholdId == null || .HouseholdId != currentUserHouseholdId)
-            //    {
-            //        return RedirectToAction("Index", "Households");
-            //    }
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                if (String.IsNullOrWhiteSpace(userId))
+                {
+                    return RedirectToAction("Index", "Households");
+                }
 
-            //    transaction.Created = DateTime.Now;
-            //    _db.Entry(transaction).State = EntityState.Modified;
-            //    _db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-            //ViewBag.BankAccountId = new SelectList(_db.BankAccounts, "Id", "Name", transaction.BankAccountId);
-            //ViewBag.BudgetItemId = new SelectList(_db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
+                var bankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
+                if (bankAccount == null)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
 
-            //ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type", transaction.TransactionTypeId);
+                //transaction.CreatedById = createdById;
+                _db.Entry(transaction).State = EntityState.Modified;
+                var ret = _db.SaveChanges();
+                return RedirectToAction("Details", "BankAccounts", new {id= bankAccount.Id});
+            }
+
+            var householdViewModel = new MainDashboardViewModel();
+            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name");
+            ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type", transaction.TransactionTypeId);
             return View(transaction);
         }
 
