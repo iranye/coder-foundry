@@ -173,26 +173,26 @@
                                     Alerts Center
                                 </h6>
                                 @*@foreach (var unreadNotification in @NotificationHelper.GetUnreadNotifications())
-                                {
-                                    using (Html.BeginForm("Dismiss", "TicketNotifications", FormMethod.Post))
                                     {
-                                        @Html.AntiForgeryToken()
-                                        @Html.Hidden("unreadNotificationId", unreadNotification.Id)
-                                        <button class="dropdown-item d-flex align-items-center" type="submit">
-                                            <div class="mr-3">
-                                                <div class="icon-circle bg-primary">
-                                                    <i class="fas fa-dollar-sign text-white"></i>
+                                        using (Html.BeginForm("Dismiss", "TicketNotifications", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("unreadNotificationId", unreadNotification.Id)
+                                            <button class="dropdown-item d-flex align-items-center" type="submit">
+                                                <div class="mr-3">
+                                                    <div class="icon-circle bg-primary">
+                                                        <i class="fas fa-dollar-sign text-white"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <div class="small text-gray-500">@unreadNotification.FormattedCreatedDateTime</div>
-                                                <span class="font-weight-bold">@unreadNotification.Subject</span>
-                                                <br />
-                                                <span>@unreadNotification.NotificationBody</span>
-                                            </div>
-                                        </button>
-                                    }
-                                }*@
+                                                <div>
+                                                    <div class="small text-gray-500">@unreadNotification.FormattedCreatedDateTime</div>
+                                                    <span class="font-weight-bold">@unreadNotification.Subject</span>
+                                                    <br />
+                                                    <span>@unreadNotification.NotificationBody</span>
+                                                </div>
+                                            </button>
+                                        }
+                                    }*@
 
                                 @*<a class="dropdown-item text-center small text-gray-500" href="@Url.Action("Index", "TicketNotifications")">Show All Alerts</a>*@
                             </div>
@@ -300,6 +300,10 @@
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
     <script src="~/Scripts/datatables-demo.js"></script>
+    <script src="~/Scripts/chart-area-demo.js"></script>
+    <script src="~/Scripts/chart-bar-demo.js"></script>
+    <script src="~/Scripts/chart-pie-demo.js"></script>
+    <script src="~/Scripts/Chart.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
