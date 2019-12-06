@@ -105,27 +105,10 @@
     
     <div class="col-xl-8 col-lg-7">
 
-        <!-- Bar Chart -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Transaction Amounts</h6>
-            </div>
-            <div class="card-body">
-                <div class="chart-bar">
-                    <canvas id="myBarChart"></canvas>
-                </div>
-                <hr>
-                Styling for the bar chart can be found in the <code>/js/demo/chart-bar-demo.js</code> file.
-            </div>
-            <div>
-                <button id="getDemoBarChartData">GetBarChartData</button>
-            </div>
-        </div>
-
         <!-- Transactions Bar Chart -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Transaction Amounts</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Transaction vs Budget Amounts</h6>
             </div>
             <div class="card-body">
                 <div class="chart-bar">
@@ -133,7 +116,7 @@
                 </div>
             </div>
             <div>
-                <button id="getBarChartDataTransactions">GetBarChartData</button>
+                <button id="getBarChartDataTransactions">Refresh</button>
             </div>
         </div>
 
@@ -148,7 +131,9 @@
         $(document).ready(function () {
             console.log("READY!");
             
-            $("#getDemoBarChartData").click(function() {
+            buildTransactionsChart();
+
+            $("#getDemoBarChartData").click(function () {
                 console.log("Getting DemoBarChartData!");
             });
 
@@ -160,11 +145,10 @@
             //TicketYpeLiquidChart
             function buildTransactionsChart() {
                 // ajaxForTransactionsChart('@Url.Action("BarChartData", "Charts")');
-                ajaxForbarChartTransactions('@Url.Action("BarChartDataTransactions", "Charts")');
+                ajaxForbarChartTransactions('@Url.Action("BarChartData", "Charts")');
             }
             
             function ajaxForbarChartTransactions(dataUrl) {
-                console.log("dataUrl: " + dataUrl);
                 $.ajax({
                     url: dataUrl,
                     type: "post",
@@ -187,12 +171,20 @@
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: "Total Spent",
-                            backgroundColor: "#4e73df",
-                            hoverBackgroundColor: "#2e59d9",
-                            borderColor: "#4e73df",
-                            data: data.values
-                        }]
+                                label: "Total Spent",
+                                backgroundColor: "#4e73df",
+                                hoverBackgroundColor: "#2e59d9",
+                                borderColor: "#4e73df",
+                                data: data.values
+                            },
+                            {
+                                label: "Budget",
+                                backgroundColor: "#1cc88a",
+                                hoverBackgroundColor: "#2cd89a",
+                                borderColor: "#1cc88a",
+                                data: data.values
+                            }
+                        ],
                     },
                     options: {
                         maintainAspectRatio: false,
@@ -221,7 +213,7 @@
                             yAxes: [{
                                 ticks: {
                                     min: 0,
-                                    max: 15000,
+                                    max: 2000,
                                     maxTicksLimit: 5,
                                     padding: 10,
                                     // Include a dollar sign in the ticks

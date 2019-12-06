@@ -83,6 +83,13 @@
             }
 
             <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Dashboard", "Home")">
+                    <i class="fas fa-fw fa-dollar-sign"></i>
+                    <span>Main Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="@Url.Action("Dashboard", "Households", new { id = @HelperMethods.GetCurrentUserHouseholdId() })">
                     <i class="fas fa-fw fa-home"></i>
                     <span>My Household</span>
