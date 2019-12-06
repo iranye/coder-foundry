@@ -60,6 +60,7 @@ namespace FinancialPortal.Web.Controllers
 
             // Get only MY transactions
             var householdTransactions = _mainDashboardViewModel.Transactions.ToList();
+            decimal totalMonthlyBudget = _mainDashboardViewModel.TotalMonthlyBudgetDecimal;
             DateTime monthToReport = DateTime.Now.AddMonths(-12);
             DateTime nextMonth = DateTime.Now.AddMonths(1);
             DateTime dateTimeReportCutoff = new DateTime(nextMonth.Year, nextMonth.Month, 1);
@@ -84,12 +85,14 @@ namespace FinancialPortal.Web.Controllers
                         sum += transaction.Amount;
                     }
                     transactionTotals.Add(sum);
+                    budgetTotals.Add(totalMonthlyBudget);
 
                     monthToReport = monthToReport.AddMonths(1);
                 } while (monthToReport < dateTimeReportCutoff);
 
                 householdBarChart.labels = months.ToArray();
                 householdBarChart.transactionvalues = transactionTotals.ToArray();
+                householdBarChart.budgetvalues = budgetTotals.ToArray();
                 // For each month, sum the total transactions amount and collect into values
             }
 

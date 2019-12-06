@@ -122,9 +122,9 @@ namespace FinancialPortal.Web.Controllers
                 {
                     return RedirectToAction("Index", "Households");
                 }
-                _dbContext.Entry(budget).State = EntityState.Modified;
+                var ret = _dbContext.Entry(budget).State = EntityState.Modified;
                 _dbContext.SaveChanges();
-                return RedirectToAction("Index", "Households");
+                return RedirectToAction("Dashboard", "Households", new { id = budget.HouseholdId });
             }
             return View(budget);
         }

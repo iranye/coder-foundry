@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div>
-                <button id="getBarChartDataTransactions">Refresh</button>
+                <button id="getBarChartDataTransactions" title="Reload Transactions Data">Reload</button>
             </div>
         </div>
 
@@ -152,7 +152,7 @@
                 </div>
             </div>
             <div>
-                <button id="getBarChartDataHousehold">Refresh</button>
+                <button id="getBarChartDataHousehold" title="Reload Transactions & Budget Data">Reload</button>
             </div>
         </div>
 
@@ -167,13 +167,20 @@
         $(document).ready(function () {
             console.log("READY!");
             
-            buildTransactionsChart();
+            buildAllCharts();
             
+            // Chart All Transactions vs All Budgets for each Month
+            function buildAllCharts() {
+                buildTransactionsChart();
+                buildHouseholdChart();
+            }
+            
+            // Transactions Only Chart
             $("#getBarChartDataTransactions").click(function() {
-                console.log("Getting BarChartData!");
+                console.log("Getting BarChartData for Transactions Only!");
                 buildTransactionsChart();
             });
-
+            
             // Chart All Transactions vs All Budgets for each Month
             function buildTransactionsChart() {
                 ajaxForbarChartTransactions('@Url.Action("BarChartDataForTransactions", "Charts")');
@@ -189,7 +196,29 @@
                     }
                 });
             }
+
+            // Household Chart
+            $("#getBarChartDataHousehold").click(function() {
+                console.log("Getting BarChartData for Household!");
+                buildTransactionsChart();
+            });
+
+            // Chart All Transactions vs All Budgets for each Month
+            function buildHouseholdChart() {
+                ajaxForbarChartHousehold('@Url.Action("BarChartDataForHousehold", "Charts")');
+            }
             
+            function ajaxForbarChartHousehold(dataUrl) {
+                $.ajax({
+                    url: dataUrl,
+                    type: "post",
+                    dataType: "json",
+                    success: function (response) {
+                        fillbarChartHousehold(response);
+                    }
+                });
+            }
+
             function fillbarChartTransactions(data) {
                 var ctx = document.getElementById("barChartTransactions");
                 if (ctx === null) {
@@ -276,12 +305,6 @@
                         },
                     }
                 });
-
-                $.each(data.labels,
-                    function(index, obj) {
-                        console.log("index: " + index);
-                        console.log("obj.label: " + obj);
-                    });
             }
             
             function fillbarChartHousehold(data) {
@@ -300,7 +323,15 @@
                                 hoverBackgroundColor: "#2e59d9",
                                 borderColor: "#df73df4e",
                                 data: data.transactionvalues
-                            }],
+                            },
+                            {
+                                label: "Total Budget",
+                                backgroundColor: "#dfa38e",
+                                hoverBackgroundColor: "#2e99d9",
+                                borderColor: "#dfa38e",
+                                data: data.budgetvalues
+                            }
+                            ],
                     },
                     options: {
                         maintainAspectRatio: false,
@@ -329,7 +360,7 @@
                             yAxes: [{
                                 ticks: {
                                     min: 0,
-                                    max: 2000,
+                                    max: 4000,
                                     maxTicksLimit: 5,
                                     padding: 10,
                                     // Include a dollar sign in the ticks
@@ -370,12 +401,6 @@
                         },
                     }
                 });
-
-                $.each(data.labels,
-                    function(index, obj) {
-                        console.log("index: " + index);
-                        console.log("obj.label: " + obj);
-                    });
             }
 
         });

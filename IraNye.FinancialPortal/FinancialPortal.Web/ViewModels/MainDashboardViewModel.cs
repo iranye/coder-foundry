@@ -7,7 +7,27 @@ namespace FinancialPortal.Web.ViewModels
     public class MainDashboardViewModel
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        
+
+        private int? _currentUserHouseholdId = null;
+
+        public int CurrentUserHouseholdId
+        {
+            get
+            {
+                int currentUserHouseholdId = 0;
+                if (_currentUserHouseholdId == null)
+                {
+                    currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId().GetValueOrDefault();
+                    _currentUserHouseholdId = currentUserHouseholdId;
+                }
+                else
+                {
+                    currentUserHouseholdId = _currentUserHouseholdId.GetValueOrDefault();
+                }
+                return currentUserHouseholdId;
+            }
+        }
+
         public Household Household { get; set; }
 
         public string HouseholdName => Household.Name;
@@ -19,13 +39,12 @@ namespace FinancialPortal.Web.ViewModels
 
         public MainDashboardViewModel()
         {
-            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-            if (currentUserHouseholdId != null)
+            if (CurrentUserHouseholdId != 0)
             {
-                Household = _db.Households.AsNoTracking().FirstOrDefault(h => h.Id == currentUserHouseholdId);
+                Household = _db.Households.AsNoTracking().FirstOrDefault(h => h.Id == CurrentUserHouseholdId);
 
-                BankAccounts.AddRange(_db.BankAccounts.AsNoTracking().Where(b => b.HouseholdId == currentUserHouseholdId).ToList());
-                Budgets.AddRange(_db.Budgets.AsNoTracking().Where(b => b.HouseholdId == currentUserHouseholdId).ToList());
+                BankAccounts.AddRange(_db.BankAccounts.AsNoTracking().Where(b => b.HouseholdId == CurrentUserHouseholdId).ToList());
+                Budgets.AddRange(_db.Budgets.AsNoTracking().Where(b => b.HouseholdId == CurrentUserHouseholdId).ToList());
 
                 BudgetItems.AddRange(Budgets.SelectMany(b => b.BudgetItems));
 
@@ -54,17 +73,25 @@ namespace FinancialPortal.Web.ViewModels
         {
             get { return BudgetItems.Count(); }
         }
-        
-        public string TotalMonthlyBudget
+
+        public decimal TotalMonthlyBudgetDecimal
         {
             get
             {
                 decimal sum = 0m;
                 foreach (var budget in Budgets)
                 {
-                    sum += budget.CurrentAmount;
+                    sum += budget.TargetAmount;
                 }
-                return string.Format("{0:C}", sum);
+                return sum;
+            }
+        }
+
+        public string TotalMonthlyBudget
+        {
+            get
+            {
+                return string.Format("{0:C}", TotalMonthlyBudgetDecimal);
             }
         }
 

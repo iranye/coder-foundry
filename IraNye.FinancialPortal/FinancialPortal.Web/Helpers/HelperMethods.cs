@@ -58,6 +58,7 @@ namespace FinancialPortal.Web.Helpers
                 SqlParameter param1 = new SqlParameter("@UserId", currentUserId);
 
                 ret = DbContext.Database.SqlQuery<int?>("GetCurrentUserHouseholdId @UserId", param1).FirstOrDefault();
+                DbContext.Database.Connection.Close();
             }
 
             return ret;
