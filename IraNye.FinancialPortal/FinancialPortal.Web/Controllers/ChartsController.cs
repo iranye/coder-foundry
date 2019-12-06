@@ -20,19 +20,15 @@ namespace FinancialPortal.Web.Controllers
             return Json(barChartData);
         }
 
-        public JsonResult TransactionsBarChartData()
+        public JsonResult BarChartDataTransactions()
         {
-            var transactionsBarChart = new TransactionsBarChart();
+            var transactionsBarChart = new BarChartTransactions();
             return Json(transactionsBarChart);
         }
     }
 
-    public class TransactionsBarChart
+    public class BarChartTransactions
     {
-        public TransactionsBarChart()
-        {
-            
-        }
         public string[] labels = new[] { "October", "November", "December" };
         public decimal[] values = new[] { 4324m, 1234m, 5678m };
     }

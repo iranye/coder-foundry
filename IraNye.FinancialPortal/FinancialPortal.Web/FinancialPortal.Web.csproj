@@ -274,9 +274,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\chart-area-demo.js" />
     <Content Include="Scripts\chart-bar-demo.js" />
-    <Content Include="Scripts\chart-pie-demo.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\datatables-demo.js" />
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
