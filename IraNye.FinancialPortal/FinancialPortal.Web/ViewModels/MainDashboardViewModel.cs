@@ -54,6 +54,19 @@ namespace FinancialPortal.Web.ViewModels
         {
             get { return BudgetItems.Count(); }
         }
+        
+        public string TotalMonthlyBudget
+        {
+            get
+            {
+                decimal sum = 0m;
+                foreach (var budget in Budgets)
+                {
+                    sum += budget.CurrentAmount;
+                }
+                return string.Format("{0:C}", sum);
+            }
+        }
 
         public int TotalBankAccounts
         {

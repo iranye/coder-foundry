@@ -42,6 +42,10 @@ namespace FinancialPortal.Web.Controllers
         public ActionResult Create()
         {
             var householdViewModel = new MainDashboardViewModel();
+            if (householdViewModel.Household == null)
+            {
+                return RedirectToAction("Index", "Households");
+            }
             if (householdViewModel.BankAccounts.Count == 0)
             {
                 return RedirectToAction("Create", "BankAccounts");

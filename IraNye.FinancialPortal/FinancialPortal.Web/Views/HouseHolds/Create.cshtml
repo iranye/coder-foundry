@@ -36,14 +36,14 @@
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
             </div>
+
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+
         </div> <!-- end card-body -->
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

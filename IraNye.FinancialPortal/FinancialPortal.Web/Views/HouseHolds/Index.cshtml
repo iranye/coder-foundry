@@ -12,10 +12,35 @@
         <div class="card-body">
             @if (!@ViewBag.UserIsHouseholdMember)
             {
+                <div class="h3">
+                    Welcome to My Financial Portal!
+                </div>
+                <div>
+                    <p>This application is intended to allow someone to manage Finances and Budgets for their Household.</p>
+                    <p>
+                        To Get Started, click "Create New Household". Once your Household is created, you'll need to add at least One each of the following prior to entering in Transactions or Expenses:
+                        <ul>
+                            <li>Bank Account</li>
+                            <li>Budget</li>
+                            <li>Budget Category</li>
+                        </ul>
+                    </p>
+
+                    <p>From the Household Dashboard, You'll also be able to invite Members to your Household via Email.</p>
+
+                    <p><strong>Thanks and Have Fun!</strong></p>
+
+                </div>
+                <br />
                 <p>
-                    @Html.ActionLink("Create New", "Create")
+                    @Html.ActionLink("Create New Household", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
                 </p>
+                <br />
             }
+            
+            <p>
+                Here is the current list of Households:
+            </p>
             <table class="table">
                 <tr>
                     <th>
