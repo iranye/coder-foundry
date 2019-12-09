@@ -73,6 +73,7 @@
             </div>
 
             <span>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })&nbsp;|</span>
+            
             <a href="@Url.Action("Dashboard", "Households", new { id = Model.HouseholdId })">Back to Dashboard</a>
         </div> <!-- end card-body -->
     </div>
@@ -125,8 +126,8 @@
                                         @Html.DisplayFor(m => budgetItem.Created)
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Delete", "BudgetItems", new {id = budgetItem.Id})" title="Delete Budget Item">
-                                            <i class="fas fa-fw fa-minus-square"></i>
+                                        <a href="@Url.Action("Edit", "BudgetItems", new {id = budgetItem.Id})" title="Edit Budget Item">
+                                            <i class="fas fa-fw fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>

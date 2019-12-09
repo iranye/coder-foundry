@@ -360,6 +360,7 @@
     <Content Include="Views\Transactions\Index.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\BudgetItems\Create.cshtml" />
+    <Content Include="Views\BudgetItems\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

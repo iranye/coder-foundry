@@ -29,7 +29,5 @@ namespace FinancialPortal.Web.Controllers
 
             return View(viewModel);
         }
-
-
     }
 }

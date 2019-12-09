@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -78,6 +79,61 @@ namespace FinancialPortal.Web.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("Details", "Budgets", new { id= budgetId });
+        }
+
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            BudgetItem budgetItem = _db.BudgetItems.Find(id);
+            if (budgetItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            budgetItem.Budget = _db.Budgets.Find(budgetItem.BudgetId);
+            if (budgetItem.Budget == null)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || budgetItem.Budget.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+            var householdViewModel = new MainDashboardViewModel();
+            if (householdViewModel.Budgets.Count == 0)
+            {
+                return RedirectToAction("Create", "Budgets");
+            }
+            ViewBag.BudgetId = new SelectList(householdViewModel.Budgets, "Id", "Name");
+            return View(budgetItem);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,BudgetId,Name,Description,TargetAmount,CurrentAmount,Created")] BudgetItem budgetItem)
+        {
+            if (ModelState.IsValid)
+            {
+                budgetItem.Budget = _db.Budgets.Find(budgetItem.BudgetId);
+                if (budgetItem.Budget == null)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+                var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+                if (currentUserHouseholdId == null || budgetItem.Budget.HouseholdId != currentUserHouseholdId)
+                {
+                    return RedirectToAction("Index", "Households");
+                }
+                _db.Entry(budgetItem).State = EntityState.Modified;
+                var ret = _db.SaveChanges();
+                return RedirectToAction("Dashboard", "Households", new { id = currentUserHouseholdId });
+            }
+            return View(budgetItem);
         }
 
         public ActionResult Delete(int? id)

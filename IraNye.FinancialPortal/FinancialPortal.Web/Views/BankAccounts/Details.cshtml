@@ -134,9 +134,6 @@
                                         @Html.DisplayFor(m => transaction.Created)
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Delete", "Transactions", new {id = transaction.Id})" title="Delete Transaction">
-                                            <i class="fas fa-fw fa-minus-square"></i>
-                                        </a>
                                         <a href="@Url.Action("Edit", "Transactions", new {id = transaction.Id})" title="Edit Transaction">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>

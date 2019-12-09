@@ -16,7 +16,7 @@ namespace FinancialPortal.Web.Controllers
     [Authorize]
     public class BankAccountsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext _db = new ApplicationDbContext();
         
         public ActionResult Details(int? id)
         {
@@ -24,7 +24,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.BankAccounts.Find(id);
+            BankAccount bankAccount = _db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -42,7 +42,7 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Index", "Households");
             }
 
-            bankAccount.Owner = db.Users.Find(bankAccount.OwnerId);
+            bankAccount.Owner = _db.Users.Find(bankAccount.OwnerId);
             
             return View(bankAccount);
         }
@@ -79,8 +79,8 @@ namespace FinancialPortal.Web.Controllers
 
                 bankAccount.OwnerId = userId;
                 bankAccount.Created = DateTime.Now;
-                db.BankAccounts.Add(bankAccount);
-                db.SaveChanges();
+                _db.BankAccounts.Add(bankAccount);
+                _db.SaveChanges();
                 return RedirectToAction("Dashboard", "Households", new {id=currentUserHouseholdId});
             }
 
@@ -93,7 +93,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.BankAccounts.Find(id);
+            BankAccount bankAccount = _db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -117,8 +117,8 @@ namespace FinancialPortal.Web.Controllers
                 {
                     return RedirectToAction("Index", "Households");
                 }
-                db.Entry(bankAccount).State = EntityState.Modified;
-                var ret = db.SaveChanges();
+                _db.Entry(bankAccount).State = EntityState.Modified;
+                var ret = _db.SaveChanges();
                 return RedirectToAction("Dashboard", "Households", new {id = currentUserHouseholdId });
             }
             return View(bankAccount);
@@ -131,7 +131,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.BankAccounts.Find(id);
+            BankAccount bankAccount = _db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -142,8 +142,8 @@ namespace FinancialPortal.Web.Controllers
             {
                 return RedirectToAction("Index", "Households");
             }
-            db.BankAccounts.Remove(bankAccount);
-            db.SaveChanges();
+            _db.BankAccounts.Remove(bankAccount);
+            _db.SaveChanges();
             return RedirectToAction("Dashboard", "Households", new { id = currentUserHouseholdId });
         }
 
@@ -151,7 +151,7 @@ namespace FinancialPortal.Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
