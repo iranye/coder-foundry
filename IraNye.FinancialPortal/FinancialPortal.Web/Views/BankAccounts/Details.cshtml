@@ -64,6 +64,14 @@
             </div>
             <div class="row">
                 <div class="h5 col-sm-6 detail-label">
+                    @Html.DisplayName("Starting Balance")
+                </div>
+                <div class="col-sm-6">
+                    @Html.DisplayFor(model => model.StartingBalance)
+                </div>
+            </div>
+            <div class="row">
+                <div class="h5 col-sm-6 detail-label">
                     @Html.DisplayName("Current Balance")
                 </div>
                 <div class="col-sm-6">
@@ -80,7 +88,6 @@
             </div>
             <p style="margin-top: 20px;">
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
                 <a href="@Url.Action("Dashboard", "Households", new {id = Model.HouseholdId})">Back to Dashboard</a>
             </p>
 

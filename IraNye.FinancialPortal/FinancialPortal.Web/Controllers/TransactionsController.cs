@@ -132,8 +132,8 @@ namespace FinancialPortal.Web.Controllers
                 return HttpNotFound();
             }
             var householdViewModel = new MainDashboardViewModel();
-            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name");
+            ViewBag.BankAccountId = new SelectList(householdViewModel.BankAccounts, "Id", "Name", transaction.BankAccountId);
+            ViewBag.BudgetItemId = new SelectList(householdViewModel.BudgetItems, "Id", "Name", transaction.BudgetItemId);
             ViewBag.TransactionTypeId = new SelectList(_db.TransactionTypes, "Id", "Type", transaction.TransactionTypeId);
             return View(transaction);
         }
