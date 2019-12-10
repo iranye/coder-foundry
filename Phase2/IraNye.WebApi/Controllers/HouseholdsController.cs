@@ -54,5 +54,14 @@ namespace IraNye.WebApi.Controllers
             return await _db.GetHouseholdById(id);
         }
 
+        /// <summary>
+        /// This is a mechanism to add a new Household.
+        /// </summary>
+        [HttpGet, Route("AddHousehold")]
+        public IHttpActionResult AddHousehold(string name, string greeting)
+        // public async Task<int> AddHousehold(string name, string greeting)
+        {
+            return Ok(_db.AddHousehold(name, greeting));
+        }
     }
 }

@@ -97,7 +97,7 @@ namespace IraNye.WebApi.Models
         //    @memo", param1).FirstOrDefaultAsync();
         //}
 
-        public void AddTransaction(int bankAccountId, int budgetItemId, int transactionTypeId, string createdById,
+        public int AddTransaction(int bankAccountId, int budgetItemId, int transactionTypeId, string createdById,
             decimal amount, DateTime created, string memo)
         {
             SqlParameter param1 = new SqlParameter("@bankAccountId", bankAccountId);
@@ -108,9 +108,23 @@ namespace IraNye.WebApi.Models
             SqlParameter param6 = new SqlParameter("@created", created);
             SqlParameter param7 = new SqlParameter("@memo", memo);
 
-            var ret = Database.SqlQuery<Transaction>("GetTransactionByTransactionId @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
-            "@amount, @created, @memo", param1, param2, param3, param4, param5, param6, param7).FirstOrDefaultAsync();
+            //var ret = Database.SqlQuery<Transaction>("GetTransactionByTransactionId @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
+            //"@amount, @created, @memo", param1, param2, param3, param4, param5, param6, param7).FirstOrDefaultAsync();
+            
+            // TODO: Parameterize any & all user input
+            var ret = Database.ExecuteSqlCommand("GetTransactionByTransactionId @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
+                                                 "@amount, @created, @memo", param1, param2, param3, param4, param5, param6, param7);
+            return ret;
         }
+
+        public int AddHousehold(string name, string greeting)
+        {
+            SqlParameter param1 = new SqlParameter("@name", name);
+            SqlParameter param2 = new SqlParameter("@greeting", greeting);
+
+            return Database.ExecuteSqlCommand("AddHousehold @name, @greeting", param1, param2);
+        }
+
         /*
 
         AddTransaction
