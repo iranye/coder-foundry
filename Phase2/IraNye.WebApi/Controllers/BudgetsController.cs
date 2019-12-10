@@ -1,18 +1,15 @@
-﻿using System;
+﻿using IraNye.WebApi.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using IraNye.WebApi.Models;
-using Newtonsoft.Json;
 
 namespace IraNye.WebApi.Controllers
 {
     [RoutePrefix("Api/Budgets")]
     public class BudgetsController : ApiController
     {
-        private ApiContext _db = new ApiContext();
+        private readonly ApiContext _db = new ApiContext();
 
         /// <summary>
         /// This is a mechanism for returning a list of Budgets formatted in JSON.
@@ -26,35 +23,34 @@ namespace IraNye.WebApi.Controllers
         }
 
         /// <summary>
-        /// This is a mechanism for returning a list of Households formatted in XML.
+        /// This is a mechanism for returning a list of Budgets formatted in JSON.
         /// </summary>
         /// <returns></returns>
-        [Route("GetAllHouseholdsXml")]
-        public async Task<List<Household>> GetAllHouseholdsXml()
+        [Route("GetBudgetsByHouseholdIdXml")]
+        public async Task<List<Budget>> GetBudgetsByHouseholdIdXml(int hhId)
         {
-            return await _db.GetAllHouseholds();
+            return await _db.GetBudgetsByHouseholdId(hhId);
         }
 
         /// <summary>
-        /// This is a mechanism for returning Details for a specific Household formatted in JSON.
+        /// This is a mechanism for returning a Budget instance by BudgetID formatted in JSON.
         /// </summary>
-        /// <param name="id">Primary Key of Household</param>
-        [Route("GetHousehold")]
-        public async Task<IHttpActionResult> GetHousehold(int id)
+        /// <returns></returns>
+        [Route("GetBudgetDetails")]
+        public async Task<IHttpActionResult> GetBudgetDetails(int bId)
         {
-            var data = await _db.GetHouseholdById(id);
+            var data = await _db.GetBudgetByBudgetId(bId);
             return Json(data, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         /// <summary>
-        /// This is a mechanism for returning Details for a specific Household formatted in XML.
+        /// This is a mechanism for returning a Budget instance by BudgetID formatted in XML.
         /// </summary>
-        /// <param name="id">Primary Key of Household</param>
         /// <returns></returns>
-        [Route("GetHouseholdXml")]
-        public async Task<Household> GetHouseholdXml(int id)
+        [Route("GetBudgetDetailsXml")]
+        public async Task<Budget> GetBudgetDetailsXml(int bId)
         {
-            return await _db.GetHouseholdById(id);
+            return await _db.GetBudgetByBudgetId(bId);
         }
 
     }

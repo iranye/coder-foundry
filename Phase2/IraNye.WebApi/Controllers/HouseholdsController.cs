@@ -1,19 +1,15 @@
-﻿using System;
+﻿using IraNye.WebApi.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using IraNye.WebApi.Models;
-using Newtonsoft.Json;
 
 namespace IraNye.WebApi.Controllers
 {
     [RoutePrefix("Api/Households")]
     public class HouseholdsController : ApiController
     {
-        private ApiContext _db = new ApiContext();
+        private readonly ApiContext _db = new ApiContext();
 
         /// <summary>
         /// This is a mechanism for returning a list of Households formatted in JSON.
@@ -40,7 +36,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning Details for a specific Household formatted in JSON.
         /// </summary>
         /// <param name="id">Primary Key of Household</param>
-        [Route("GetHousehold")]
+        [Route("GetHouseholdDetails")]
         public async Task<IHttpActionResult> GetHousehold(int id)
         {
             var data = await _db.GetHouseholdById(id);
@@ -52,7 +48,7 @@ namespace IraNye.WebApi.Controllers
         /// </summary>
         /// <param name="id">Primary Key of Household</param>
         /// <returns></returns>
-        [Route("GetHouseholdXml")]
+        [Route("GetHouseholdDetailsXml")]
         public async Task<Household> GetHouseholdXml(int id)
         {
             return await _db.GetHouseholdById(id);

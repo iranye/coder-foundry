@@ -40,6 +40,18 @@ namespace IraNye.WebApi.Models
             return await Database.SqlQuery<Budget>("GetBudgetByBudgetId @id", param1).FirstOrDefaultAsync();
         }
 
+        public async Task<List<BudgetItem>> GetBudgetItemsByBudgetId(int bId)
+        {
+            SqlParameter param1 = new SqlParameter("@budgetId", bId);
+            return await Database.SqlQuery<BudgetItem>("GetAllBudgetItemsByBudgetId @budgetId", param1).ToListAsync();
+        }
+
+        public async Task<BudgetItem> GetBudgetItemByBudgetItemId(int budgetItemId)
+        {
+            SqlParameter param1 = new SqlParameter("@id", budgetItemId);
+            return await Database.SqlQuery<BudgetItem>("GetBudgetItemByBudgetItemId @id", param1).FirstOrDefaultAsync();
+        }
+
         /*
 
         GetAllTransactionsByBankAccountId
@@ -47,9 +59,6 @@ namespace IraNye.WebApi.Models
         AddBankAccount
         AddBudget
 
-        GetBudgetsByHouseholdId
-        GetAllBudgetItemsByHouseholdId
-        GetAllBudgetItemsByBudgetId
         GetAllBankAccountsByHouseholdId
 
          */
@@ -58,12 +67,6 @@ namespace IraNye.WebApi.Models
         {
             SqlParameter param1 = new SqlParameter("@id", bankAccountId);
             return await Database.SqlQuery<BankAccount>("GetBankAccountByBankAccountId @id", param1).FirstOrDefaultAsync();
-        }
-
-        public async Task<BudgetItem> GetBudgetItemByBudgetItemId(int budgetItemId)
-        {
-            SqlParameter param1 = new SqlParameter("@id", budgetItemId);
-            return await Database.SqlQuery<BudgetItem>("GetBudgetItemByBudgetItemId @id", param1).FirstOrDefaultAsync();
         }
 
         public async Task<Transaction> GetTransactionByTransactionId(int transactionId)
