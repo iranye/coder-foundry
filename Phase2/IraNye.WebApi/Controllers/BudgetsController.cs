@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using IraNye.WebApi.Models;
@@ -10,19 +9,19 @@ using Newtonsoft.Json;
 
 namespace IraNye.WebApi.Controllers
 {
-    [RoutePrefix("Api/Households")]
-    public class HouseholdsController : ApiController
+    [RoutePrefix("Api/Budgets")]
+    public class BudgetsController : ApiController
     {
         private ApiContext _db = new ApiContext();
 
         /// <summary>
-        /// This is a mechanism for returning a list of Households formatted in JSON.
+        /// This is a mechanism for returning a list of Budgets formatted in JSON.
         /// </summary>
         /// <returns></returns>
-        [Route("GetAllHouseholds")]
-        public async Task<IHttpActionResult> GetAllHouseholds()
+        [Route("GetBudgetsByHouseholdId")]
+        public async Task<IHttpActionResult> GetBudgetsByHouseholdId(int hhId)
         {
-            var data = await _db.GetAllHouseholds();
+            var data = await _db.GetBudgetsByHouseholdId(hhId);
             return Json(data, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
