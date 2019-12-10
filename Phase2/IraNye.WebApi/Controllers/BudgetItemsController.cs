@@ -1,11 +1,8 @@
-﻿using System;
+﻿using IraNye.WebApi.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using IraNye.WebApi.Models;
-using Newtonsoft.Json;
 
 namespace IraNye.WebApi.Controllers
 {
