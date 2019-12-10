@@ -55,32 +55,40 @@ namespace IraNye.WebApi.Controllers
         }
 
         /// <summary>
-        /// This is a mechanism for Adding a new instance of Transaction.
+        /// This is a mechanism for Adding a new Transaction.
         /// </summary>
         /// <returns></returns>
-        [Route("AddTransaction")]
-        public IHttpActionResult AddTransaction()
+        [HttpGet, Route("AddTransaction")]
+        public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, string amount, string memo)
         {
-            //10,	2, 9,	'cbfd605b-e7de-4ab1-9404-71db3477bafa', 385.00,	'Weekly Rate'
-            int bankAccountId = 10;
-            int budgetItemId = 2;
-            int transactionTypeId = 9;
-            //Guid createdById = new Guid('cbfd605b-e7de-4ab1-9404-71db3477bafa');
-            string createdById = "cbfd605b-e7de-4ab1-9404-71db3477bafa";
-            decimal amount = 385.00m;
+            int bankAccountId = bId;
+            int budgetItemId = biId;
+            int transactionTypeId = ttId;
+            try
+            {
+                Guid createdByGuid = new Guid(createdById);
+            }
+            catch (FormatException e)
+            {
+                return BadRequest($"Invalid Value for createdById: '{createdById}'");
+            }
+            if (!Decimal.TryParse(amount, out var amountDecResult))
+            {
+                return BadRequest($"Invalid Value for amount: '{amount}'");
+            }
             DateTime created = DateTime.Now;
-            string memo = "Weekly Rate";
+
             var transaction = new Transaction
             {
                 BankAccountId = bankAccountId,
                 BudgetItemId = budgetItemId,
                 TransactionTypeId = transactionTypeId,
                 CreatedById = createdById,
-                Amount = amount,
+                Amount = amountDecResult,
                 Created = DateTime.Now,
                 Memo = memo
             };
-            return Ok(_db.AddTransaction(bankAccountId, budgetItemId, transactionTypeId, createdById, amount, created, memo));
+            return Ok(_db.AddTransaction(transaction));
         }
     }
 }
