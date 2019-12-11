@@ -3,9 +3,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace IraNye.WebApi.Controllers
 {
+    /// <summary>
+    /// Budgets Controller Class
+    /// </summary>
     [RoutePrefix("Api/Budgets")]
     public class BudgetsController : ApiController
     {
@@ -15,6 +19,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning a list of Budgets formatted in JSON.
         /// </summary>
         /// <returns></returns>
+        [ResponseType(typeof(List<Budget>))]
         [Route("GetBudgetsByHouseholdId")]
         public async Task<IHttpActionResult> GetBudgetsByHouseholdId(int hhId)
         {
@@ -36,6 +41,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning a Budget instance by BudgetID formatted in JSON.
         /// </summary>
         /// <returns></returns>
+        [ResponseType(typeof(Budget))]
         [Route("GetBudgetDetails")]
         public async Task<IHttpActionResult> GetBudgetDetails(int bId)
         {

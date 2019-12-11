@@ -4,9 +4,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace IraNye.WebApi.Controllers
 {
+    /// <summary>
+    /// Transactions Controller Class
+    /// </summary>
     [RoutePrefix("Api/Transactions")]
     public class TransactionsController : ApiController
     {
@@ -16,6 +20,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning a list of Transactions for a specific BankAccount formatted in JSON.
         /// </summary>
         /// <returns></returns>
+        [ResponseType(typeof(List<Transaction>))]
         [Route("GetTransactionsByBankAccountId")]
         public async Task<IHttpActionResult> GetTransactionsByBankAccountId(int baId)
         {
@@ -36,7 +41,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of Transaction by TransactionId formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Transaction</returns>
+        [ResponseType(typeof(Transaction))]
         [Route("GetTransactionDetails")]
         public async Task<IHttpActionResult> GetTransactionDetails(int id)
         {
@@ -58,6 +64,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for Adding a new Transaction.
         /// </summary>
         /// <returns></returns>
+        [ResponseType(typeof(Int32))]
         [HttpGet, Route("AddTransaction")]
         public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, string amount, string memo)
         {

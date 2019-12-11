@@ -6,6 +6,9 @@ using System.Web.Mvc;
 
 namespace IraNye.WebApi.Controllers
 {
+    /// <summary>
+    /// Home Controller Class
+    /// </summary>
     public class HomeController : Controller
     {
         public ActionResult Index()
