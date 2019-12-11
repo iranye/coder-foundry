@@ -1,4 +1,5 @@
-﻿using IraNye.WebApi.Models;
+﻿using System;
+using IraNye.WebApi.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -57,6 +58,50 @@ namespace IraNye.WebApi.Controllers
         public async Task<BankAccount> GetBankAccountDetailsXml(int id)
         {
             return await _db.GetBankAccountByBankAccountId(id);
+        }
+
+        /// <summary>
+        /// This is a mechanism for Adding a new BankAccount.
+        /// </summary>
+        /// <returns></returns>
+        [ResponseType(typeof(Int32))]
+        [HttpGet, Route("AddBankAccount")]
+        public IHttpActionResult AddBankAccount(int hId, string name, int type, string startBal, string lowBal, string ownerId)
+        {
+            try
+            {
+                Guid ownerIdGuid = new Guid(ownerId);
+            }
+            catch (FormatException e)
+            {
+                return BadRequest($"Invalid Value for ownerId: '{ownerId}'");
+            }
+
+            if (!Enum.IsDefined(typeof(AccountType), type))
+            {
+                return BadRequest($"Invalid Value for AccountType: '{type}'");
+            }
+            if (!Decimal.TryParse(startBal, out var startBalDecResult))
+            {
+                return BadRequest($"Invalid Value for amount: '{startBal}'");
+            }
+            if (!Decimal.TryParse(lowBal, out var lowBalDecResult))
+            {
+                return BadRequest($"Invalid Value for amount: '{lowBal}'");
+            }
+            DateTime created = DateTime.Now;
+
+            var bankAccount = new BankAccount
+            {
+                HouseholdId = hId,
+                Name = name,
+                AccountType = (AccountType) type,
+                StartingBalance = startBalDecResult,
+                CurrentBalance = startBalDecResult,
+                LowBalanceLevel = lowBalDecResult,
+                OwnerId = ownerId
+            };
+            return Ok(_db.AddBankAccount(bankAccount));
         }
     }
 }

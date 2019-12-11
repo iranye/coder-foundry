@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
+#pragma warning disable 1591
 namespace IraNye.WebApi.Models
 {
     public class ApiContext : DbContext
@@ -77,26 +78,6 @@ namespace IraNye.WebApi.Models
             return await Database.SqlQuery<Transaction>("GetTransactionByTransactionId @id", param1).FirstOrDefaultAsync();
         }
 
-        //public async Task<Transaction> AddTransaction(int bankAccountId, int budgetItemId, int transactionTypeId, string createdById,
-        //    decimal amount, DateTime created, string memo)
-        //{
-        //    SqlParameter param001 = new SqlParameter("@bankAccountId", bankAccountId);
-        //    SqlParameter param002 = new SqlParameter("@budgetItemId", budgetItemId);
-        //    SqlParameter param003 = new SqlParameter("@transactionTypeId", transactionTypeId);
-        //    SqlParameter param004 = new SqlParameter("@createdById", createdById);
-        //    SqlParameter param005 = new SqlParameter("@amount", amount);
-        //    SqlParameter param006 = new SqlParameter("@created", created);
-        //    SqlParameter param007 = new SqlParameter("@memo", memo);
-
-        //    return await Database.SqlQuery<Transaction>("GetTransactionByTransactionId @bankAccountId,
-        //    @budgetItemId,
-        //    @transactionTypeId,
-        //    @createdById,
-        //    @amount,
-        //    @created,
-        //    @memo", param1).FirstOrDefaultAsync();
-        //}
-
         public int AddTransaction(int bankAccountId, int budgetItemId, int transactionTypeId, string createdById,
             decimal amount, DateTime created, string memo)
         {
@@ -116,6 +97,35 @@ namespace IraNye.WebApi.Models
             return ret;
         }
 
+        public int AddHousehold(string name, string greeting)
+        {
+            SqlParameter param1 = new SqlParameter("@name", name);
+            SqlParameter param2 = new SqlParameter("@greeting", greeting);
+
+            return Database.ExecuteSqlCommand("AddHousehold @name, @greeting", param1, param2);
+        }
+
+        public int AddBankAccount(BankAccount bankAccount)
+        {
+            SqlParameter param1 = new SqlParameter("@housholdId", bankAccount.HouseholdId);
+            SqlParameter param2 = new SqlParameter("@name", bankAccount.Name);
+            SqlParameter param3 = new SqlParameter("@accountType", bankAccount.AccountType);
+            SqlParameter param4 = new SqlParameter("@startingBalance", bankAccount.StartingBalance);
+            SqlParameter param5 = new SqlParameter("@currentBalance", bankAccount.CurrentBalance);
+            SqlParameter param6 = new SqlParameter("@lowBalanceLevel", bankAccount.LowBalanceLevel);
+            SqlParameter param7 = new SqlParameter("@ownerId", bankAccount.OwnerId);
+            return Database.ExecuteSqlCommand("AddBankAccount @housholdId, @name, @accountType, @startingBalance, @currentBalance, " +
+                                              "@lowBalanceLevel, @ownerId ", param1, param2, param3, param4, param5, param6, param7);
+        }
+
+        public int AddBudget(string name, string greeting)
+        {
+            SqlParameter param1 = new SqlParameter("@name", name);
+            SqlParameter param2 = new SqlParameter("@greeting", greeting);
+
+            return Database.ExecuteSqlCommand("AddBudget @name, @greeting", param1, param2);
+        }
+
         public int AddTransaction(Transaction transaction)
         {
             SqlParameter param1 = new SqlParameter("@bankAccountId", transaction.BankAccountId);
@@ -130,23 +140,7 @@ namespace IraNye.WebApi.Models
                                                  "@amount, @memo", param1, param2, param3, param4, param5, param6);
             return ret;
         }
-
-        public int AddHousehold(string name, string greeting)
-        {
-            SqlParameter param1 = new SqlParameter("@name", name);
-            SqlParameter param2 = new SqlParameter("@greeting", greeting);
-
-            return Database.ExecuteSqlCommand("AddHousehold @name, @greeting", param1, param2);
-        }
-
-        /*
-
-        AddTransaction
-        AddBankAccount
-        AddBudget
-        
-        */
-
     }
 }
+#pragma warning restore 1591
 
