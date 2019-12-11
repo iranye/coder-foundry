@@ -118,12 +118,16 @@ namespace IraNye.WebApi.Models
                                               "@lowBalanceLevel, @ownerId ", param1, param2, param3, param4, param5, param6, param7);
         }
 
-        public int AddBudget(string name, string greeting)
+        public int AddBudget(Budget budget)
         {
-            SqlParameter param1 = new SqlParameter("@name", name);
-            SqlParameter param2 = new SqlParameter("@greeting", greeting);
-
-            return Database.ExecuteSqlCommand("AddBudget @name, @greeting", param1, param2);
+            SqlParameter param1 = new SqlParameter("@housholdId", budget.HouseholdId);
+            SqlParameter param2 = new SqlParameter("@name", budget.Name);
+            SqlParameter param3 = new SqlParameter("@description", budget.Description);
+            SqlParameter param4 = new SqlParameter("@ownerId", budget.OwnerId);
+            SqlParameter param5 = new SqlParameter("@targetAmount", budget.TargetAmount);
+            SqlParameter param6 = new SqlParameter("@currentAmount", budget.CurrentAmount);
+            return Database.ExecuteSqlCommand("AddBudget @housholdId, @name, @description, @ownerId, @targetAmount, @currentAmount ",
+                                              param1, param2, param3, param4, param5, param6);
         }
 
         public int AddTransaction(Transaction transaction)

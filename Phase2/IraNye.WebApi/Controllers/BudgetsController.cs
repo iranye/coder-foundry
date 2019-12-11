@@ -1,4 +1,5 @@
-﻿using IraNye.WebApi.Models;
+﻿using System;
+using IraNye.WebApi.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -59,5 +60,39 @@ namespace IraNye.WebApi.Controllers
             return await _db.GetBudgetByBudgetId(bId);
         }
 
+        /// <summary>
+        /// This is a mechanism for Adding a new Budget.
+        /// </summary>
+        /// <returns></returns>
+        [ResponseType(typeof(Int32))]
+        [HttpGet, Route("AddBudget")]
+        public IHttpActionResult AddBudget(int hId, string name, string desc, string ownerId, string tgt)
+        {
+            try
+            {
+                Guid ownerIdGuid = new Guid(ownerId);
+            }
+            catch (FormatException e)
+            {
+                return BadRequest($"Invalid Value for ownerId: '{ownerId}'");
+            }
+
+            if (!Decimal.TryParse(tgt, out var tgtAmountDecResult))
+            {
+                return BadRequest($"Invalid Value for amount: '{tgt}'");
+            }
+            DateTime created = DateTime.Now;
+
+            var budget = new Budget
+            {
+                HouseholdId = hId,
+                Name = name,
+                Description = desc,
+                OwnerId = ownerId,
+                TargetAmount = tgtAmountDecResult,
+                CurrentAmount = 0
+            };
+            return Ok(_db.AddBudget(budget));
+        }
     }
 }
