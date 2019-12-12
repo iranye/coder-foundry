@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Configuration;
+using FinancialPortal.Web.Models;
 using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.Helpers
@@ -31,5 +32,63 @@ namespace FinancialPortal.Web.Helpers
         {
             return str.Trim().ToLower();
         }
+
+        public static void UpdateBalances(this Transaction transaction)
+        {
+            // if (transaction != deposit) Budget & Budget Item CurrentAmount += transaction.Amount;
+        }
+
+        public static void ManageNotifications(this Transaction transaction)
+        {
+            var currentBal = transaction.BankAccount.CurrentBalance;
+            string householdName = String.Empty;
+            string recipientId = String.Empty;
+            string subject = String.Empty;
+            string notifyBody = String.Empty;
+            bool notificationRequired = false;
+
+            if (currentBal < 0)
+            {
+                notificationRequired = true;
+                householdName = transaction.BankAccount.Household.Name;
+                recipientId = transaction.BankAccount.OwnerId;
+                subject = "Overdraft Notification";
+                notifyBody =
+                    $"The transaction in the amount of {transaction.Amount} has caused an Over-Draft on Account '{transaction.BankAccount.Name}'";
+            }
+            if (currentBal >= 0 && currentBal < transaction.BankAccount.LowBalanceLevel)
+            {
+                notificationRequired = true;
+                householdName = transaction.BankAccount.Household.Name;
+                recipientId = transaction.BankAccount.OwnerId;
+                subject = "Low-Balance Notification";
+                notifyBody =
+                    $"The transaction in the amount of {transaction.Amount} has caused an Over-Draft on Account '{transaction.BankAccount.Name}'";
+            }
+            if (notificationRequired)
+            {
+                CreateNotification(householdName, recipientId, subject, notifyBody);
+            }
+        }
+
+
+
+        private static void CreateNotification(string householdName, string recipientId, string subject, string messageBody)
+        {
+            var notification = new
+            {
+                Subject = subject,
+                Body = messageBody,
+                Created = DateTime.Now,
+                HouseholdName = householdName,
+                IsRead = false,
+                RecipientId = recipientId
+            };
+        }
+    }
+
+    public class Notification
+    {
+
     }
 }

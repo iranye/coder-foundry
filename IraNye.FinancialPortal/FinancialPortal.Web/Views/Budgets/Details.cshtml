@@ -212,7 +212,6 @@
                 console.log("TargetAmount: " + $(this).val());
                 if ($(this).val().length > 0 && $(this).val() !== initTargetAmount && isValidDollarAmount($(this).val())) {
                     targetAmountOk = true;
-                    $('#BudgetItemCurrentAmount').val($(this).val());
                 } else {
                     targetAmountOk = false;
                 }

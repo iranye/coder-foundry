@@ -1,6 +1,17 @@
 ﻿<style>
-    body {
-        background-color:lightgray;
+    img.bg {
+        /* Set rules to fill background */
+        min-height: 100%;
+        min-width: 1024px;
+	
+        /* Set up proportionate scaling */
+        width: 100%;
+        height: auto;
+	
+        /* Set up positioning */
+        position: fixed;
+        top: 0;
+        left: 0;
     }
     ul {
         list-style-type: none;
@@ -26,13 +37,13 @@
         background-color: #111111;
         color: white;
     }
-
 </style>
+<img src="~/Content/background-image.jpg" alt="bckgound" class="bg" />
 <div class="row">
     <div class="col">
         <ul>
             <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
-            <li>@Html.ActionLink("API", "", "Swagger", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+            <li>@Html.ActionLink("API", "Index", "Swagger", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
 
         </ul>
         <br/>

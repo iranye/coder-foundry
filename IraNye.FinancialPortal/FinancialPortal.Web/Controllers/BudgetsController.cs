@@ -51,7 +51,7 @@ namespace FinancialPortal.Web.Controllers
                 return RedirectToAction("Index", "Households");
             }
 
-            return View(new Budget{HouseholdId = householdId});
+            return View(new Budget{HouseholdId = householdId, CurrentAmount = 0});
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace FinancialPortal.Web.Controllers
             var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
             if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
             {
-                return RedirectToAction("Index", "Households");
+                return RedirectToAction("Dashboard", "Home");
             }
 
             var userId = User.Identity.GetUserId();

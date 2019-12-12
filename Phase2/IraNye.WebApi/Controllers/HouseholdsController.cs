@@ -71,5 +71,7 @@ namespace IraNye.WebApi.Controllers
         {
             return Ok(_db.AddHousehold(name, greeting));
         }
+
+
     }
 }

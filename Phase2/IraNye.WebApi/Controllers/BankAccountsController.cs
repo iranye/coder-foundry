@@ -66,7 +66,7 @@ namespace IraNye.WebApi.Controllers
         /// <returns></returns>
         [ResponseType(typeof(Int32))]
         [HttpGet, Route("AddBankAccount")]
-        public IHttpActionResult AddBankAccount(int hId, string name, int type, string startBal, string lowBal, string ownerId)
+        public IHttpActionResult AddBankAccount(int hId, string name, AccountType type, float startBal, float lowBal, string ownerId)
         {
             try
             {
@@ -81,21 +81,24 @@ namespace IraNye.WebApi.Controllers
             {
                 return BadRequest($"Invalid Value for AccountType: '{type}'");
             }
-            if (!Decimal.TryParse(startBal, out var startBalDecResult))
-            {
-                return BadRequest($"Invalid Value for amount: '{startBal}'");
-            }
-            if (!Decimal.TryParse(lowBal, out var lowBalDecResult))
-            {
-                return BadRequest($"Invalid Value for amount: '{lowBal}'");
-            }
+
+            var startBalDecResult = Convert.ToDecimal(Math.Round(startBal, 2));
+            var lowBalDecResult = Convert.ToDecimal(Math.Round(lowBal, 2));
+            //if (!Decimal.TryParse(startBal, out var startBalDecResult))
+            //{
+            //    return BadRequest($"Invalid Value for amount: '{startBal}'");
+            //}
+            //if (!Decimal.TryParse(lowBal, out var lowBalDecResult))
+            //{
+            //    return BadRequest($"Invalid Value for amount: '{lowBal}'");
+            //}
             DateTime created = DateTime.Now;
 
             var bankAccount = new BankAccount
             {
                 HouseholdId = hId,
                 Name = name,
-                AccountType = (AccountType) type,
+                AccountType = type,
                 StartingBalance = startBalDecResult,
                 CurrentBalance = startBalDecResult,
                 LowBalanceLevel = lowBalDecResult,

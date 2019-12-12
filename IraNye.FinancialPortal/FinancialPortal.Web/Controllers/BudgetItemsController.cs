@@ -38,7 +38,7 @@ namespace FinancialPortal.Web.Controllers
             if (budget == null)
             {
                 ModelState.AddModelError("Budget", @"Failed to find associated Budget");
-                return RedirectToAction("Dashboard", "Households");
+                return RedirectToAction("Dashboard", "Home");
             }
 
             if (ModelState.IsValid)
@@ -46,13 +46,13 @@ namespace FinancialPortal.Web.Controllers
                 var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
                 if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
                 {
-                    return RedirectToAction("Index", "Households");
+                    return RedirectToAction("Dashboard", "Home");
                 }
 
                 var userId = User.Identity.GetUserId();
                 if (String.IsNullOrWhiteSpace(userId))
                 {
-                    return RedirectToAction("Index", "Households");
+                    return RedirectToAction("Dashboard", "Home");
                 }
 
                 budgetItem.BudgetId = budget.Id;
@@ -70,7 +70,21 @@ namespace FinancialPortal.Web.Controllers
                     var targetAmount = budgetItemTargetAmount.TrimStart(new Char[] { '$' });
                     budgetItem.TargetAmount = Decimal.Parse(targetAmount);
                 }
-                if (budgetItem.CurrentAmount == default(Decimal))
+
+                var childBudgetItemsTargetTotal = 0m;
+                foreach (var item in budget.BudgetItems)
+                {
+                    childBudgetItemsTargetTotal += item.TargetAmount;
+                }
+
+                childBudgetItemsTargetTotal += budgetItem.TargetAmount;
+                if (childBudgetItemsTargetTotal > budget.TargetAmount)
+                {
+                    ModelState.AddModelError("Budget", @"Failed to find associated Budget");
+                    return RedirectToAction("Details", "Budgets", new { id = budgetId });
+                }
+
+                if (budgetItem.CurrentAmount == default(Decimal) && !String.IsNullOrWhiteSpace(budgetItemCurrentAmount))
                 {
                     var currentAmount = budgetItemCurrentAmount.TrimStart(new Char[] { '$' });
                     budgetItem.CurrentAmount = Decimal.Parse(currentAmount);
