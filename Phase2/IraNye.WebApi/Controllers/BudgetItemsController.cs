@@ -18,7 +18,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of BudgetItems for a specific Budget formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="bId">Budget Id</param>
+        /// <returns>Collection of BudgetItems</returns>
         [ResponseType(typeof(List<BudgetItem>))]
         [Route("GetBudgetItemsByBudgetId")]
         public async Task<IHttpActionResult> GetBudgetItemsByBudgetId(int bId)
@@ -30,7 +31,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of BudgetItems for a specific Budget formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="bId">Budget Id</param>
+        /// <returns>Collection of BudgetItems</returns>
         [Route("GetBudgetItemsByBudgetIdXml")]
         public async Task<List<BudgetItem>> GetBudgetItemsByBudgetIdXml(int bId)
         {
@@ -40,22 +42,25 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of BudgetItem by BudgetItemId formatted in JSON.
         /// </summary>
+        /// <param name="id">BudgetItem Id</param>
+        /// <returns>BudgetItem</returns>
         [ResponseType(typeof(BudgetItem))]
         [Route("GetBudgetItemDetails")]
-        public async Task<IHttpActionResult> GetBudgetItemDetails(int biId)
+        public async Task<IHttpActionResult> GetBudgetItemDetails(int id)
         {
-            var data = await _db.GetBudgetItemByBudgetItemId(biId);
+            var data = await _db.GetBudgetItemByBudgetItemId(id);
             return Json(data, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         /// <summary>
         /// This is a mechanism for returning an instance of BudgetItem by BudgetItemId formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">BudgetItem Id</param>
+        /// <returns>BudgetItem</returns>
         [Route("GetBudgetItemDetailsXml")]
-        public async Task<BudgetItem> GetBudgetItemDetailsXml(int biId)
+        public async Task<BudgetItem> GetBudgetItemDetailsXml(int id)
         {
-            return await _db.GetBudgetItemByBudgetItemId(biId);
+            return await _db.GetBudgetItemByBudgetItemId(id);
         }
     }
 }

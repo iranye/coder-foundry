@@ -19,7 +19,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Transactions for a specific BankAccount formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="baId">Bank Account Id</param>
+        /// <returns>Collection of Transactions</returns>
         [ResponseType(typeof(List<Transaction>))]
         [Route("GetTransactionsByBankAccountId")]
         public async Task<IHttpActionResult> GetTransactionsByBankAccountId(int baId)
@@ -31,7 +32,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Transactions for a specific BankAccount formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="baId">Bank Account Id</param>
+        /// <returns>Collection of Transactions</returns>
         [Route("GetTransactionsByBankAccountIdXml")]
         public async Task<List<Transaction>> GetTransactionsByBankAccountIdXml(int baId)
         {
@@ -41,6 +43,7 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of Transaction by TransactionId formatted in JSON.
         /// </summary>
+        /// <param name="id">Transaction Id</param>
         /// <returns>Transaction</returns>
         [ResponseType(typeof(Transaction))]
         [Route("GetTransactionDetails")]
@@ -53,7 +56,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of Transaction by TransactionId formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">Transaction Id</param>
+        /// <returns>Transaction</returns>
         [Route("GetTransactionDetailsXml")]
         public async Task<Transaction> GetTransactionDetailsXml(int id)
         {
@@ -63,14 +67,17 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for Adding a new Transaction.
         /// </summary>
-        /// <returns></returns>
-        [ResponseType(typeof(Int32))]
-        [HttpGet, Route("AddTransaction")]
-        public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, string amount, string memo)
+        /// <param name="bId">Bank Account Id</param>
+        /// <param name="biId">Budget Item Id</param>
+        /// <param name="ttId">Transaction Type Id</param>
+        /// <param name="createdById">Transaction Created-By Owner Id (Guid)</param>
+        /// <param name="amount">Transaction Amount</param>
+        /// <param name="memo">Transaction Memo</param>
+        /// <returns>IHttpActionResult</returns>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpGet, HttpPost, Route("AddTransaction")]
+        public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, float amount, string memo)
         {
-            int bankAccountId = bId;
-            int budgetItemId = biId;
-            int transactionTypeId = ttId;
             try
             {
                 Guid createdByGuid = new Guid(createdById);
@@ -79,17 +86,14 @@ namespace IraNye.WebApi.Controllers
             {
                 return BadRequest($"Invalid Value for createdById: '{createdById}'");
             }
-            if (!Decimal.TryParse(amount, out var amountDecResult))
-            {
-                return BadRequest($"Invalid Value for amount: '{amount}'");
-            }
+            var amountDecResult = Convert.ToDecimal(Math.Round(amount, 2));
             DateTime created = DateTime.Now;
 
             var transaction = new Transaction
             {
-                BankAccountId = bankAccountId,
-                BudgetItemId = budgetItemId,
-                TransactionTypeId = transactionTypeId,
+                BankAccountId = bId,
+                BudgetItemId = biId,
+                TransactionTypeId = ttId,
                 CreatedById = createdById,
                 Amount = amountDecResult,
                 Created = DateTime.Now,

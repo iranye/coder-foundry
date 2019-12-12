@@ -19,7 +19,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of BankAccounts for a specific Household formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="hhId">Household Id</param>
+        /// <returns>Collection of BankAccounts for specified Household</returns>
         [ResponseType(typeof(List<BankAccount>))]
         [Route("GetBankAccountsByHouseholdId")]
         public async Task<IHttpActionResult> GetBankAccountsByHouseholdId(int hhId)
@@ -31,7 +32,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of BankAccounts for a specific Household formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="hhId">Household Id</param>
+        /// <returns>Collection of BankAccounts</returns>
         [Route("GetBankAccountsByHouseholdIdXml")]
         public async Task<List<BankAccount>> GetBankAccountsByHouseholdIdXml(int hhId)
         {
@@ -41,7 +43,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of BankAccount by BankAccountId formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">Bank Account Id</param>
+        /// <returns>BankAccount</returns>
         [ResponseType(typeof(BankAccount))]
         [Route("GetBankAccountDetails")]
         public async Task<IHttpActionResult> GetBankAccountDetails(int id)
@@ -53,7 +56,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning an instance of BankAccount by BankAccountId formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">Bank Account Id</param>
+        /// <returns>BankAccount</returns>
         [Route("GetBankAccountDetailsXml")]
         public async Task<BankAccount> GetBankAccountDetailsXml(int id)
         {
@@ -61,11 +65,17 @@ namespace IraNye.WebApi.Controllers
         }
 
         /// <summary>
-        /// This is a mechanism for Adding a new BankAccount.
+        /// This is a mechanism for Adding a new Bank Account.
         /// </summary>
         /// <returns></returns>
-        [ResponseType(typeof(Int32))]
-        [HttpGet, Route("AddBankAccount")]
+        /// <param name="hId">Household Id</param>
+        /// <param name="name">Bank Account Name</param>
+        /// <param name="type">Bank Account Type</param>
+        /// <param name="startBal">Starting Account Balance</param>
+        /// <param name="lowBal">Low Balance Threshold Amount</param>
+        /// <param name="ownerId">Bank Account Owner Id (Guid)</param>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpGet, HttpPost, Route("AddBankAccount")]
         public IHttpActionResult AddBankAccount(int hId, string name, AccountType type, float startBal, float lowBal, string ownerId)
         {
             try
@@ -84,14 +94,6 @@ namespace IraNye.WebApi.Controllers
 
             var startBalDecResult = Convert.ToDecimal(Math.Round(startBal, 2));
             var lowBalDecResult = Convert.ToDecimal(Math.Round(lowBal, 2));
-            //if (!Decimal.TryParse(startBal, out var startBalDecResult))
-            //{
-            //    return BadRequest($"Invalid Value for amount: '{startBal}'");
-            //}
-            //if (!Decimal.TryParse(lowBal, out var lowBalDecResult))
-            //{
-            //    return BadRequest($"Invalid Value for amount: '{lowBal}'");
-            //}
             DateTime created = DateTime.Now;
 
             var bankAccount = new BankAccount

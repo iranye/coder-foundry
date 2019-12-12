@@ -19,7 +19,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Budgets formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="hhId">Household Id</param>
+        /// <returns>Collection of Budgets for specified Household</returns>
         [ResponseType(typeof(List<Budget>))]
         [Route("GetBudgetsByHouseholdId")]
         public async Task<IHttpActionResult> GetBudgetsByHouseholdId(int hhId)
@@ -31,7 +32,8 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Budgets formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="hhId">Household Id</param>
+        /// <returns>Collection of Budgets for specified Household</returns>
         [Route("GetBudgetsByHouseholdIdXml")]
         public async Task<List<Budget>> GetBudgetsByHouseholdIdXml(int hhId)
         {
@@ -41,32 +43,38 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a Budget instance by BudgetID formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">Budget Id</param>
+        /// <returns>Budget</returns>
         [ResponseType(typeof(Budget))]
         [Route("GetBudgetDetails")]
-        public async Task<IHttpActionResult> GetBudgetDetails(int bId)
+        public async Task<IHttpActionResult> GetBudgetDetails(int id)
         {
-            var data = await _db.GetBudgetByBudgetId(bId);
+            var data = await _db.GetBudgetByBudgetId(id);
             return Json(data, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         /// <summary>
         /// This is a mechanism for returning a Budget instance by BudgetID formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">Budget Id</param>
+        /// <returns>Budget</returns>
         [Route("GetBudgetDetailsXml")]
-        public async Task<Budget> GetBudgetDetailsXml(int bId)
+        public async Task<Budget> GetBudgetDetailsXml(int id)
         {
-            return await _db.GetBudgetByBudgetId(bId);
+            return await _db.GetBudgetByBudgetId(id);
         }
 
         /// <summary>
         /// This is a mechanism for Adding a new Budget.
         /// </summary>
-        /// <returns></returns>
-        [ResponseType(typeof(Int32))]
-        [HttpGet, Route("AddBudget")]
-        public IHttpActionResult AddBudget(int hId, string name, string desc, string ownerId, string tgt)
+        /// <param name="hId">Household Id</param>
+        /// <param name="name">Budget Name</param>
+        /// <param name="desc">Budget Description</param>
+        /// <param name="ownerId">Budget Owner ID (Guid)</param>
+        /// <param name="tgt">Budget Target Amount</param>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpGet, HttpPost, Route("AddBudget")]
+        public IHttpActionResult AddBudget(int hId, string name, string desc, string ownerId, float tgt)
         {
             try
             {
@@ -77,10 +85,7 @@ namespace IraNye.WebApi.Controllers
                 return BadRequest($"Invalid Value for ownerId: '{ownerId}'");
             }
 
-            if (!Decimal.TryParse(tgt, out var tgtAmountDecResult))
-            {
-                return BadRequest($"Invalid Value for amount: '{tgt}'");
-            }
+            var targetDecResult = Convert.ToDecimal(Math.Round(tgt, 2, MidpointRounding.AwayFromZero));
             DateTime created = DateTime.Now;
 
             var budget = new Budget
@@ -89,7 +94,7 @@ namespace IraNye.WebApi.Controllers
                 Name = name,
                 Description = desc,
                 OwnerId = ownerId,
-                TargetAmount = tgtAmountDecResult,
+                TargetAmount = targetDecResult,
                 CurrentAmount = 0
             };
             return Ok(_db.AddBudget(budget));

@@ -19,7 +19,7 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Households formatted in JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Collection of Households</returns>
         [ResponseType(typeof(List<Household>))]
         [Route("GetAllHouseholds")]
         public async Task<IHttpActionResult> GetAllHouseholds()
@@ -31,7 +31,7 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism for returning a list of Households formatted in XML.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Collection of Households</returns>
         [Route("GetAllHouseholdsXml")]
         public async Task<List<Household>> GetAllHouseholdsXml()
         {
@@ -42,6 +42,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning Details for a specific Household formatted in JSON.
         /// </summary>
         /// <param name="id">Primary Key of Household</param>
+        /// <returns>Household</returns>
         [ResponseType(typeof(Household))]
         [Route("GetHouseholdDetails")]
         public async Task<IHttpActionResult> GetHousehold(int id)
@@ -54,7 +55,7 @@ namespace IraNye.WebApi.Controllers
         /// This is a mechanism for returning Details for a specific Household formatted in XML.
         /// </summary>
         /// <param name="id">Primary Key of Household</param>
-        /// <returns></returns>
+        /// <returns>Household</returns>
         [Route("GetHouseholdDetailsXml")]
         public async Task<Household> GetHouseholdXml(int id)
         {
@@ -64,14 +65,15 @@ namespace IraNye.WebApi.Controllers
         /// <summary>
         /// This is a mechanism to add a new Household.
         /// </summary>
-        [ResponseType(typeof(Int32))]
-        [HttpGet, Route("AddHousehold")]
+        /// <param name="name">Household Name</param>
+        /// <param name="greeting">Household Greeting</param>
+        /// <returns>IHttpActionResult</returns>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpGet, HttpPost, Route("AddHousehold")]
         public IHttpActionResult AddHousehold(string name, string greeting)
-        // public async Task<int> AddHousehold(string name, string greeting)
         {
             return Ok(_db.AddHousehold(name, greeting));
         }
-
 
     }
 }
