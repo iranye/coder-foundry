@@ -18,7 +18,7 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-color: #333333;
+        background-color: #2e8b57;
     }
 
     li {
@@ -34,11 +34,11 @@
     }
 
     li a:hover {
-        background-color: #111111;
+        background-color: #3e6b57;
         color: white;
     }
 </style>
-<img src="~/Content/background-image.jpg" alt="bckgound" class="bg" />
+<img src="~/Content/background-image.jpg" alt="background" class="bg" />
 <div class="row">
     <div class="col">
         <ul>
@@ -46,9 +46,10 @@
             <li>@Html.ActionLink("API", "Index", "Swagger", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
 
         </ul>
-        <br/>
+        <br />
         <h2>IraNye Web API</h2>
-        <p class="lead">This site is intended as a guide to using the API.</p>
-        <p>To use this information, click the "API" link which will take you to the swagger documentation on how to interact with the API.</p>
+        <br />
+        <p class="h3">This site is intended as a guide to using the API.</p>
+        <p>To start, click the "API" link which will take you to the swagger documentation on how to interact with the API.</p>
     </div>
 </div>

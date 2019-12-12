@@ -1,3 +1,25 @@
 ﻿.swagger-section #header {
-    background-color: rebeccapurple;
+    background-color: green;
+}
+#logo {
+    margin-left: 50px;
+}
+
+.swagger-section #header a#logo {
+    background: transparent url(/Content/api-logo.png) no-repeat left center;
+    background-size: 100%;
+}
+
+.swagger-section #header form#api_selector .input a#explore {
+    background-color: #2e8b57;
+}
+
+.swagger-section #header form#api_selector .input a#explore:hover {
+    background-color: #3e6b57;
+}
+
+body {
+    background-image: url(/Content/background-image.jpg);
+    background-size: cover;
+    z-index: -999;
 }
