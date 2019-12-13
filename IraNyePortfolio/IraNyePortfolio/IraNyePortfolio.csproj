@@ -84,6 +84,7 @@
     <Content Include="images\iranye.bugtracker.png" />
     <Content Include="images\iranye.finport.png" />
     <Content Include="images\iranye.mobile-app.jpg" />
+    <Content Include="images\iranye.web-api.jpg" />
     <Content Include="images\iranye.web-api.png" />
     <Content Include="images\js-challenge-factorial.png" />
     <Content Include="images\js-challenge-facts-from-five.png" />
