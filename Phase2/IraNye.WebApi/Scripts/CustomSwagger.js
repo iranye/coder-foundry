@@ -2,7 +2,12 @@
 $(document).ready(function () {
     console.log("READY!");
     $("#logo").html("&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ");
-    $("#logo").attr("href", "#");
+    var baseUrl = getBaseUrl();
+    console.log("baseUrl: " + baseUrl);
+
+    var homeUrl = getBaseUrl() + "/Home/Index";
+    console.log("homeUrl: " + homeUrl);
+    $("#logo").attr("href", homeUrl);
 
     $("input[name='baseUrl'], input[name='apiKey'] ").css("display", "none");
 
@@ -21,4 +26,7 @@ $(document).ready(function () {
         });
     });
 
+    function getBaseUrl() {
+        return window.location.origin;
+    }
 });
