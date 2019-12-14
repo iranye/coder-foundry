@@ -16,7 +16,7 @@ namespace WeatherApp
         {
             InitializeComponent();
             this.Title = "Sample Weather App";
-            getWeatherBtn.Clicked += GetWeatherBtn_Clicked;
+            GetWeatherBtn.Clicked += GetWeatherBtn_Clicked;
 
             this.BindingContext = new WeatherViewModel();
         }
@@ -24,7 +24,7 @@ namespace WeatherApp
         private async void GetWeatherBtn_Clicked(object sender, EventArgs e)
         {
             WeatherViewModel weather = await Core.GetWeatherViewModel("27106");
-            getWeatherBtn.Text = weather.Title;
+            GetWeatherBtn.Text = weather.Title;
         }
     }
 }

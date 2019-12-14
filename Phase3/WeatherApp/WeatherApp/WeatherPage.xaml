@@ -5,12 +5,86 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="WeatherApp.WeatherPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="Small"></Setter>
+            </Style>
+
+            <Style x:Key="fieldStyle" TargetType="Label">
+                <Setter Property="TextColor">
+                    <OnPlatform x:TypeArguments="Color" 
+                                Android="Black"
+                                iOS="Black">
+                    </OnPlatform>
+                </Setter>
+                <Setter Property="FontSize" Value="Medium" />
+            </Style>
+
+            <Style x:Key="fieldView" TargetType="ContentView">
+                <Setter Property="Padding" Value="10,0,0,0" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Button x:Name="getWeatherBtn" Text ="Get Weather" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout>
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal"
+                                 HorizontalOptions="FillAndExpand"
+                                 BackgroundColor="#545454">
+                        <StackLayout Padding="10,10,10,10"
+                                     HorizontalOptions="Start">
+                            <Label Text="Search by Zip Code"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   FontSize="Medium" />
+                            <Label x:Name="zipCodeLabel"
+                                   Text="Zip Code"
+                                   Style="{StaticResource labelStyle}" />
+                            <Entry x:Name="zipCodeEntry" />
+                        </StackLayout>
+
+                        <StackLayout Padding="0,0,0,10"
+                                     VerticalOptions="End">
+                            <Button x:Name="GetWeatherBtn" 
+                                    Text ="Get Weather"
+                                    WidthRequest="185"
+                                    BorderWidth="1">
+                                <Button.TextColor>
+                                    <OnPlatform x:TypeArguments="Color" iOS="White" />
+                                </Button.TextColor>
+                                <Button.BorderColor>
+                                    <OnPlatform x:TypeArguments="Color" iOS="White" />
+                                </Button.BorderColor>
+                            </Button>
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout Padding="10,10,10,10"
+                             HorizontalOptions="Start">
+                    <Label Text="Location"
+                           Style="{StaticResource labelStyle}" />
+                    <ContentView Style="{StaticResource fieldView}">
+                        <Label Text="{Binding Title}"
+                               Style="{StaticResource fieldStyle}" />
+                    </ContentView>
+                    <Label Text="Temperature"
+                           Style="{StaticResource labelStyle}" />
+
+                    <ContentView Style="{StaticResource fieldView}">
+                        <Label x:Name="tempLabel"
+                               Text="{Binding Temperature}"
+                               Style="{StaticResource fieldStyle}" />
+                    </ContentView>
+                </StackLayout>
+            </StackLayout>
+
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
