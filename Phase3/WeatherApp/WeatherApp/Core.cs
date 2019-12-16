@@ -21,6 +21,9 @@ namespace WeatherApp
             {
                 Rootobject weatherData = JsonConvert.DeserializeObject<Rootobject>(results);
 
+                DateTime time = new System.DateTime(1970,1,1,0,0,0,0);
+                DateTime sunrise = time.AddSeconds((double) weatherData.sys.sunrise);
+                DateTime sunset = time.AddSeconds((double)weatherData.sys.sunset);
                 viewModel = new WeatherViewModel
                 {
                     Title = weatherData.name,
@@ -28,8 +31,8 @@ namespace WeatherApp
                     Wind = weatherData.wind.speed.ToString(),
                     Humidity = weatherData.main.humidity.ToString(),
                     Visibility = weatherData.visibility.ToString(),
-                    Sunrise = weatherData.sys.sunrise.ToString(),
-                    Sunset = weatherData.sys.sunset.ToString()
+                    Sunrise = sunrise.ToString("hh:mm") + "UTC",
+                    Sunset = sunset.ToString("hh:mm") + "UTC"
                 };
             }
 

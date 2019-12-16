@@ -23,8 +23,12 @@ namespace WeatherApp
 
         private async void GetWeatherBtn_Clicked(object sender, EventArgs e)
         {
-            WeatherViewModel weather = await Core.GetWeatherViewModel("27106");
-            GetWeatherBtn.Text = weather.Title;
+            if (!String.IsNullOrWhiteSpace(zipCodeEntry.Text))
+            {
+                WeatherViewModel weather = await Core.GetWeatherViewModel("27106");
+                this.BindingContext = weather;
+                GetWeatherBtn.Text = "Search Again";
+            }
         }
     }
 }
