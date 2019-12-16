@@ -35,10 +35,10 @@ namespace FinancialPortal.Web.Helpers
 
         public static void UpdateBalances(this Transaction transaction, int? oldBankAccountId = null)
         {
-            if (oldBankAccountId != null)
-            {
-                var oldBankAccount = 
-            }
+            //if (oldBankAccountId != null)
+            //{
+            //    var oldBankAccount = 
+            //}
             // if (transaction != deposit) Budget & Budget Item CurrentAmount += transaction.Amount;
         }
 
