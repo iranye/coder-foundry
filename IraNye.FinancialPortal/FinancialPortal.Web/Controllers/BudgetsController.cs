@@ -56,7 +56,7 @@ namespace FinancialPortal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Description,TargetAmount,CurrentAmount")] Budget budget)
+        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Description,TargetAmount")] Budget budget)
         {
             var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
             if (currentUserHouseholdId == null || budget.HouseholdId != currentUserHouseholdId)
@@ -70,6 +70,7 @@ namespace FinancialPortal.Web.Controllers
             {
                 budget.OwnerId = userId;
                 budget.Created = DateTime.Now;
+                budget.CurrentAmount = 0m;
                 _db.Budgets.Add(budget);
                 _db.SaveChanges();
                 return RedirectToAction("Dashboard", "Households", new{id=budget.HouseholdId});

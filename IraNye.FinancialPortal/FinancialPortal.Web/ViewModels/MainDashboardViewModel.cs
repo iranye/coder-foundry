@@ -1,6 +1,9 @@
-﻿using FinancialPortal.Web.Models;
+﻿using System;
+using FinancialPortal.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using Microsoft.AspNet.Identity;
 
 namespace FinancialPortal.Web.ViewModels
 {
@@ -17,7 +20,16 @@ namespace FinancialPortal.Web.ViewModels
                 int currentUserHouseholdId = 0;
                 if (_currentUserHouseholdId == null)
                 {
-                    currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId().GetValueOrDefault();
+                    string currentUserId = HttpContext.Current.User.Identity.GetUserId();
+                    if (!String.IsNullOrWhiteSpace(currentUserId))
+                    {
+                        var currentUser = _db.Users.Find(currentUserId);
+                        if (currentUser != null)
+                        {
+                            _currentUserHouseholdId = currentUser.HouseholdId;
+                        }
+                    }
+                    currentUserHouseholdId = _currentUserHouseholdId.GetValueOrDefault();
                     _currentUserHouseholdId = currentUserHouseholdId;
                 }
                 else

@@ -33,8 +33,12 @@ namespace FinancialPortal.Web.Helpers
             return str.Trim().ToLower();
         }
 
-        public static void UpdateBalances(this Transaction transaction)
+        public static void UpdateBalances(this Transaction transaction, int? oldBankAccountId = null)
         {
+            if (oldBankAccountId != null)
+            {
+                var oldBankAccount = 
+            }
             // if (transaction != deposit) Budget & Budget Item CurrentAmount += transaction.Amount;
         }
 
@@ -70,8 +74,6 @@ namespace FinancialPortal.Web.Helpers
                 CreateNotification(householdName, recipientId, subject, notifyBody);
             }
         }
-
-
 
         private static void CreateNotification(string householdName, string recipientId, string subject, string messageBody)
         {

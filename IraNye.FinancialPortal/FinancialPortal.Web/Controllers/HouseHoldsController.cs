@@ -137,7 +137,7 @@ namespace FinancialPortal.Web.Controllers
                 //Need to 'Reauthorize' so role will take effect
                 await HelperMethods.ReauthorizeAsync();
 
-                return RedirectToAction("Dashboard", "Households");
+                return View("Dashboard", household);
             }
 
             return View(household);

@@ -63,7 +63,7 @@ namespace FinancialPortal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,AccountType,StartingBalance,CurrentBalance,LowBalanceLevel")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "Name,AccountType,StartingBalance,LowBalanceLevel")] BankAccount bankAccount)
         {
             var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
             if (currentUserHouseholdId == null || currentUserHouseholdId == 0)
@@ -82,6 +82,7 @@ namespace FinancialPortal.Web.Controllers
 
                 bankAccount.OwnerId = userId;
                 bankAccount.Created = DateTime.Now;
+                bankAccount.CurrentBalance = bankAccount.StartingBalance;
                 _db.BankAccounts.Add(bankAccount);
                 _db.SaveChanges();
                 return RedirectToAction("Dashboard", "Households", new {id=currentUserHouseholdId});

@@ -11,14 +11,28 @@ namespace FinancialPortal.Web.Controllers
     public class ChartsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
-        private MainDashboardViewModel _mainDashboardViewModel = new MainDashboardViewModel();
+
+        private MainDashboardViewModel _mainDashboardViewModel = null;
+
+        public MainDashboardViewModel MainDashboardViewModel
+        {
+            get
+            {
+                if (_mainDashboardViewModel == null)
+                {
+                    _mainDashboardViewModel = new MainDashboardViewModel();
+                }
+
+                return _mainDashboardViewModel;
+            }
+        }
 
         public JsonResult BarChartDataForTransactions()
         {
             var transactionsBarChart = new BarChartTransactions();
 
             // Get only My Household transactions
-            var householdTransactions = _mainDashboardViewModel.Transactions.ToList();
+            var householdTransactions = MainDashboardViewModel.Transactions.ToList();
             DateTime monthToReport = DateTime.Now.AddMonths(-12);
             DateTime nextMonth = DateTime.Now.AddMonths(1);
             DateTime dateTimeReportCutoff = new DateTime(nextMonth.Year, nextMonth.Month, 1);
@@ -59,8 +73,8 @@ namespace FinancialPortal.Web.Controllers
             var householdBarChart = new BarChartTransactionsAndBudgets();
 
             // Get only MY transactions
-            var householdTransactions = _mainDashboardViewModel.Transactions.ToList();
-            decimal totalMonthlyBudget = _mainDashboardViewModel.TotalMonthlyBudgetDecimal;
+            var householdTransactions = MainDashboardViewModel.Transactions.ToList();
+            decimal totalMonthlyBudget = MainDashboardViewModel.TotalMonthlyBudgetDecimal;
             DateTime monthToReport = DateTime.Now.AddMonths(-12);
             DateTime nextMonth = DateTime.Now.AddMonths(1);
             DateTime dateTimeReportCutoff = new DateTime(nextMonth.Year, nextMonth.Month, 1);
@@ -109,14 +123,14 @@ namespace FinancialPortal.Web.Controllers
 
     public class BarChartTransactions
     {
-        public string[] labels = new[] { "October", "November", "December" };
-        public decimal[] values = new[] { 4324m, 1234m, 5678m };
+        public string[] labels = new[] { "August (Demo)", "September (Demo)", "October (Demo)", "November (Demo)", "December (Demo)" };
+        public decimal[] values = new[] { 1024m, 1189m, 2324m, 1234m, 2678m };
     }
 
     public class BarChartTransactionsAndBudgets
     {
-        public string[] labels = new[] { "October", "November", "December" };
-        public decimal[] transactionvalues = new[] { 4324m, 1234m, 5678m };
-        public decimal[] budgetvalues = new[] { 4324m, 1234m, 5678m };
+        public string[] labels = new[] { "August (Demo)", "September (Demo)", "October (Demo)", "November (Demo)", "December (Demo)" };
+        public decimal[] transactionvalues = new[] { 1024m, 1189m, 2324m, 1234m, 2678m };
+        public decimal[] budgetvalues = new[] { 2000m, 2000m, 2000m, 2000m, 2000m };
     }
 }
