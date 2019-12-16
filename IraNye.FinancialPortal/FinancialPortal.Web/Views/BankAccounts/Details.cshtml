@@ -87,8 +87,9 @@
                 </div>
             </div>
             <p style="margin-top: 20px;">
+                <a href="@Url.Action("Dashboard", "Households", new {id = Model.HouseholdId})">Back to Dashboard</a> |
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                <a href="@Url.Action("Dashboard", "Households", new {id = Model.HouseholdId})">Back to Dashboard</a>
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "confirmDelete"} )
             </p>
 
         </div> <!-- end card-body -->
@@ -158,3 +159,24 @@
     </div>
 </div>
 
+@section scripts
+{
+    <script>
+
+        $(document).ready(function () {
+            console.log("READY!");
+
+            var defaultDeleteText = "Delete";
+            $(".confirmDelete").click(function (e) {
+                var actionVal = $(this).text();
+                if (actionVal.toUpperCase() === defaultDeleteText.toUpperCase()) {
+                    e.preventDefault();
+                    $(this).text("Confirm Delete?");
+                }
+            });
+            $(".confirmDelete").blur(function () {
+                $(this).text(defaultDeleteText);
+            });
+        });
+    </script>
+}

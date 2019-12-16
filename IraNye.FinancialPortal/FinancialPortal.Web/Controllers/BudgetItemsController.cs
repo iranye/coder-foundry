@@ -80,17 +80,12 @@ namespace FinancialPortal.Web.Controllers
                 childBudgetItemsTargetTotal += budgetItem.TargetAmount;
                 if (childBudgetItemsTargetTotal > budget.TargetAmount)
                 {
-                    ModelState.AddModelError("Budget", @"Failed to find associated Budget");
+                    ModelState.AddModelError("Budget", @"BudgetItem Amounts cannot exceed (Parent) Budget Amount");
                     return RedirectToAction("Details", "Budgets", new { id = budgetId });
                 }
 
-                if (budgetItem.CurrentAmount == default(Decimal) && !String.IsNullOrWhiteSpace(budgetItemCurrentAmount))
-                {
-                    var currentAmount = budgetItemCurrentAmount.TrimStart(new Char[] { '$' });
-                    budgetItem.CurrentAmount = Decimal.Parse(currentAmount);
-                }
                 _db.BudgetItems.Add(budgetItem);
-                _db.SaveChanges();
+                var ret = _db.SaveChanges();
             }
             return RedirectToAction("Details", "Budgets", new { id= budgetId });
         }

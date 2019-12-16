@@ -72,12 +72,15 @@
 {
     <script>
 
-        // TODO: This is broken when user gets kicked back due to an error (e.g., bad LowBalanceLevel). Create button stays disabled.
-        // init values end up getting set to model values
         $('#btnSubmitNewBankAccount').prop("disabled", true);
 
         $(document).ready(function () {
             console.log("READY!");
+            
+            // This check is to handle when user gets kicked back due to an error (e.g., bad LowBalanceLevel) (So Create button doesn't stay disabled).
+            if (isValidDollarAmount($('#StartingBalance').val())) {
+                $('#btnSubmitNewBankAccount').prop("disabled", false);
+            }
 
             var strLimit = 100;
 

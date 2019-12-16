@@ -61,6 +61,13 @@
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Dashboard", "Home")">
+                    <i class="fas fa-fw fa-dollar-sign"></i>
+                    <span>Main Dashboard</span>
+                </a>
+            </li>
+
             <!-- Households -->
             <div class="sidebar-heading">
                 Household
@@ -81,13 +88,6 @@
                     </a>
                 </li>
             }
-
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("Dashboard", "Home")">
-                    <i class="fas fa-fw fa-dollar-sign"></i>
-                    <span>Main Dashboard</span>
-                </a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="@Url.Action("Dashboard", "Households", new { id = @HelperMethods.GetCurrentUserHouseholdId() })">
@@ -307,6 +307,7 @@
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
     <script src="~/Scripts/datatables-demo.js"></script>
+    <script src="~/Scripts/Chart.js"></script>
     <script src="~/Scripts/chart-area-demo.js"></script>
     <script src="~/Scripts/chart-bar-demo.js"></script>
     <script src="~/Scripts/chart-pie-demo.js"></script>
