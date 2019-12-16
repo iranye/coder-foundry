@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,12 +19,20 @@ namespace WeatherApp
 
         private async void GetWeatherBtn_Clicked(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(zipCodeEntry.Text))
+            var zipCodeInput = zipCodeEntry.Text;
+            if (!String.IsNullOrWhiteSpace(zipCodeInput) && IsUSorCanadianZipCode(zipCodeInput))
             {
-                WeatherViewModel weather = await Core.GetWeatherViewModel("27106");
+                WeatherViewModel weather = await Core.GetWeatherViewModel(zipCodeInput);
                 this.BindingContext = weather;
                 GetWeatherBtn.Text = "Search Again";
             }
+        }
+
+        private bool IsUSorCanadianZipCode(string zipCode)
+        {
+            string pattern = @"^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(zipCode);
         }
     }
 }

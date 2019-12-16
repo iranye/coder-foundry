@@ -12,7 +12,7 @@ namespace WeatherApp
         public static async Task<WeatherViewModel> GetWeatherViewModel(string zipCode)
         {
             string openWeatherkey = "bab095c7df7c83c287d14b64558c6fcf";
-            string queryString = $@"http://api.openweathermap.org/data/2.5/weather?zip={zipCode},us&appid={openWeatherkey}&units=imperial";
+            string queryString = $@"https://api.openweathermap.org/data/2.5/weather?zip={zipCode},us&appid={openWeatherkey}&units=imperial";
 
             string results = await DataService.GetDataFromService(queryString).ConfigureAwait(false);
 
@@ -24,6 +24,9 @@ namespace WeatherApp
                 DateTime time = new System.DateTime(1970,1,1,0,0,0,0);
                 DateTime sunrise = time.AddSeconds((double) weatherData.sys.sunrise);
                 DateTime sunset = time.AddSeconds((double)weatherData.sys.sunset);
+                DateTime sunriseLocal = sunrise.ToLocalTime();
+                DateTime sunsetLocal = sunset.ToLocalTime();
+
                 viewModel = new WeatherViewModel
                 {
                     Title = weatherData.name,
@@ -31,8 +34,8 @@ namespace WeatherApp
                     Wind = weatherData.wind.speed.ToString(),
                     Humidity = weatherData.main.humidity.ToString(),
                     Visibility = weatherData.visibility.ToString(),
-                    Sunrise = sunrise.ToString("hh:mm") + "UTC",
-                    Sunset = sunset.ToString("hh:mm") + "UTC"
+                    Sunrise = sunriseLocal.ToString("hh:mm"),
+                    Sunset = sunsetLocal.ToString("hh:mm")
                 };
             }
 
