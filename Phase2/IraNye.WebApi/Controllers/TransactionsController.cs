@@ -72,11 +72,12 @@ namespace IraNye.WebApi.Controllers
         /// <param name="ttId">Transaction Type Id</param>
         /// <param name="createdById">Transaction Created-By Owner Id (Guid)</param>
         /// <param name="amount">Transaction Amount</param>
+        /// <param name="transactionDateTime">Transaction Date & Time</param>
         /// <param name="memo">Transaction Memo</param>
         /// <returns>IHttpActionResult</returns>
         [ResponseType(typeof(IHttpActionResult))]
         [HttpGet, HttpPost, Route("AddTransaction")]
-        public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, float amount, string memo)
+        public IHttpActionResult AddTransaction(int bId, int biId, int ttId, string createdById, float amount, string transactionDateTime, string memo)
         {
             try
             {
@@ -87,7 +88,7 @@ namespace IraNye.WebApi.Controllers
                 return BadRequest($"Invalid Value for createdById: '{createdById}'");
             }
             var amountDecResult = Convert.ToDecimal(Math.Round(amount, 2));
-            DateTime created = DateTime.Now;
+            DateTime transactionDateTimeParsed = DateTime.Parse(transactionDateTime);
 
             var transaction = new Transaction
             {
@@ -96,7 +97,7 @@ namespace IraNye.WebApi.Controllers
                 TransactionTypeId = ttId,
                 CreatedById = createdById,
                 Amount = amountDecResult,
-                Created = DateTime.Now,
+                TransactionDateTime = transactionDateTimeParsed,
                 Memo = memo
             };
             return Ok(_db.AddTransaction(transaction));

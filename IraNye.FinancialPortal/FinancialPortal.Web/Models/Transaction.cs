@@ -15,7 +15,7 @@ namespace FinancialPortal.Web.Models
         public int TransactionTypeId { get; set; }
         public string CreatedById { get; set; }
         public decimal Amount { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime TransactionDateTime { get; set; }
         
         [StringLength(100)]
         public string Memo { get; set; }

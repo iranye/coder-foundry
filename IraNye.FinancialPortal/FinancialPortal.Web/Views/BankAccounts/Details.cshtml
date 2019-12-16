@@ -123,7 +123,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var transaction in Model.Transactions.OrderByDescending(c => c.Created))
+                            @foreach (var transaction in Model.Transactions.OrderByDescending(c => c.TransactionDateTime))
                             {
                                 <tr>
                                     <td>
@@ -139,11 +139,14 @@
                                         @Html.DisplayFor(m => transaction.Memo)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(m => transaction.Created)
+                                        @Html.DisplayFor(m => transaction.TransactionDateTime)
                                     </td>
                                     <td>
                                         <a href="@Url.Action("Edit", "Transactions", new {id = transaction.Id})" title="Edit Transaction">
                                             <i class="fas fa-fw fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", "Transactions", new {id = transaction.Id})" title="Transaction Details">
+                                            <i class="fas fa-fw fa-archive"></i>
                                         </a>
                                     </td>
                                 </tr>

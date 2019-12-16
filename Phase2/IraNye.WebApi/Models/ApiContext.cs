@@ -79,21 +79,19 @@ namespace IraNye.WebApi.Models
         }
 
         public int AddTransaction(int bankAccountId, int budgetItemId, int transactionTypeId, string createdById,
-            decimal amount, DateTime created, string memo)
+            decimal amount, DateTime transactionDateTime, string memo)
         {
             SqlParameter param1 = new SqlParameter("@bankAccountId", bankAccountId);
             SqlParameter param2 = new SqlParameter("@budgetItemId", budgetItemId);
             SqlParameter param3 = new SqlParameter("@transactionTypeId", transactionTypeId);
             SqlParameter param4 = new SqlParameter("@createdById", createdById);
             SqlParameter param5 = new SqlParameter("@amount", amount);
-            SqlParameter param6 = new SqlParameter("@memo", memo);
-
-            //var ret = Database.SqlQuery<Transaction>("GetTransactionByTransactionId @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
-            //"@amount, @created, @memo", param1, param2, param3, param4, param5, param6, param7).FirstOrDefaultAsync();
-
+            SqlParameter param6 = new SqlParameter("@transactionDateTime", transactionDateTime);
+            SqlParameter param7 = new SqlParameter("@memo", memo);
+            
             // TODO: Parameterize any & all user input
             var ret = Database.ExecuteSqlCommand("AddTransaction @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
-                                                 "@amount, @memo", param1, param2, param3, param4, param5, param6);
+                                                 "@amount, @transactionDateTime, @memo", param1, param2, param3, param4, param5, param6, param7);
             return ret;
         }
 
@@ -137,11 +135,12 @@ namespace IraNye.WebApi.Models
             SqlParameter param3 = new SqlParameter("@transactionTypeId", transaction.TransactionTypeId);
             SqlParameter param4 = new SqlParameter("@createdById", transaction.CreatedById);
             SqlParameter param5 = new SqlParameter("@amount", transaction.Amount);
-            SqlParameter param6 = new SqlParameter("@memo", transaction.Memo);
+            SqlParameter param6 = new SqlParameter("@transactionDateTime", transaction.TransactionDateTime.ToString("yyyyMMdd hh:mm:ss"));
+            SqlParameter param7 = new SqlParameter("@memo", transaction.Memo);
 
             // TODO: Parameterize any & all user input
             var ret = Database.ExecuteSqlCommand("AddTransaction @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
-                                                 "@amount, @memo", param1, param2, param3, param4, param5, param6);
+                                                 "@amount, @transactionDateTime, @memo", param1, param2, param3, param4, param5, param6, param7);
             return ret;
         }
     }

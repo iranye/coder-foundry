@@ -39,9 +39,9 @@ namespace IraNye.WebApi.Models
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// Transaction Creation Date
+        /// Transaction Date & Time
         /// </summary>
-        public DateTime Created { get; set; }
+        public DateTime TransactionDateTime { get; set; }
 
         /// <summary>
         /// Transaction Memo

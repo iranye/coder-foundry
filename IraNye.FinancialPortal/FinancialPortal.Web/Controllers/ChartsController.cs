@@ -36,12 +36,12 @@ namespace FinancialPortal.Web.Controllers
             DateTime monthToReport = DateTime.Now.AddMonths(-12);
             DateTime nextMonth = DateTime.Now.AddMonths(1);
             DateTime dateTimeReportCutoff = new DateTime(nextMonth.Year, nextMonth.Month, 1);
-            var oldestTransaction = householdTransactions.OrderBy(t => t.Created).FirstOrDefault();
+            var oldestTransaction = householdTransactions.OrderBy(t => t.TransactionDateTime).FirstOrDefault();
             if (oldestTransaction != null)
             {
-                if (monthToReport < oldestTransaction.Created)
+                if (monthToReport < oldestTransaction.TransactionDateTime)
                 {
-                    monthToReport = oldestTransaction.Created;
+                    monthToReport = oldestTransaction.TransactionDateTime;
                 }
                 // Collect list of Months to report based on earliestDateToReport into labels
                 var months = new List<string>();
@@ -52,7 +52,7 @@ namespace FinancialPortal.Web.Controllers
 
                     // For each month, sum the total transactions amount and collect into values
                     decimal sum = 0m;
-                    foreach (var transaction in householdTransactions.Where(t => t.Created.Month == monthToReport.Month))
+                    foreach (var transaction in householdTransactions.Where(t => t.TransactionDateTime.Month == monthToReport.Month))
                     {
                         sum += transaction.Amount;
                     }
@@ -78,12 +78,12 @@ namespace FinancialPortal.Web.Controllers
             DateTime monthToReport = DateTime.Now.AddMonths(-12);
             DateTime nextMonth = DateTime.Now.AddMonths(1);
             DateTime dateTimeReportCutoff = new DateTime(nextMonth.Year, nextMonth.Month, 1);
-            var oldestTransaction = householdTransactions.OrderBy(t => t.Created).FirstOrDefault();
+            var oldestTransaction = householdTransactions.OrderBy(t => t.TransactionDateTime).FirstOrDefault();
             if (oldestTransaction != null)
             {
-                if (monthToReport < oldestTransaction.Created)
+                if (monthToReport < oldestTransaction.TransactionDateTime)
                 {
-                    monthToReport = oldestTransaction.Created;
+                    monthToReport = oldestTransaction.TransactionDateTime;
                 }
                 // Collect list of Months to report based on earliestDateToReport into labels
                 var months = new List<string>();
@@ -93,7 +93,7 @@ namespace FinancialPortal.Web.Controllers
                 {
                     months.Add(monthToReport.ToString("MMMM"));
                     decimal sum = 0m;
-                    foreach (var transaction in householdTransactions.Where(t => t.Created.Month == monthToReport.Month)
+                    foreach (var transaction in householdTransactions.Where(t => t.TransactionDateTime.Month == monthToReport.Month)
                     )
                     {
                         sum += transaction.Amount;

@@ -52,10 +52,10 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "col" })
+                    @Html.LabelFor(model => model.TransactionDateTime, htmlAttributes: new { @class = "col" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.TransactionDateTime, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TransactionDateTime, "", new { @class = "text-danger" })
                     </div>
                 </div>
 

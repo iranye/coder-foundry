@@ -16,15 +16,7 @@ namespace FinancialPortal.Web.Controllers
     public class TransactionsController : Controller
     {
         private ApplicationDbContext _db = new ApplicationDbContext();
-
-        // GET: Transactions
-        public ActionResult Index()
-        {
-            var transactions = _db.Transactions.Include(t => t.BankAccount).Include(t => t.BudgetItem).Include(t => t.CreatedBy).Include(t => t.TransactionType);
-            return View(transactions.ToList());
-        }
-
-        // GET: Transactions/Details/5
+        
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,6 +28,17 @@ namespace FinancialPortal.Web.Controllers
             {
                 return HttpNotFound();
             }
+
+            transaction.BudgetItem = _db.BudgetItems.Find(transaction.BudgetItem.Id);
+            transaction.BudgetItem.Budget = _db.Budgets.Find(transaction.BudgetItem.Budget.Id);
+            var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
+            if (currentUserHouseholdId == null || transaction.BudgetItem == null
+                                               || transaction.BudgetItem.Budget == null
+                                               || transaction.BudgetItem.Budget.HouseholdId != currentUserHouseholdId)
+            {
+                return RedirectToAction("Index", "Households");
+            }
+
             return View(transaction);
         }
 
@@ -92,7 +95,7 @@ namespace FinancialPortal.Web.Controllers
                 {
                     return RedirectToAction("Index", "Households");
                 }
-                transaction.Created = DateTime.Now;
+                transaction.TransactionDateTime = DateTime.Now;
                 transaction.CreatedById = userId;
                 _db.Transactions.Add(transaction);
                 _db.SaveChanges();
@@ -119,7 +122,6 @@ namespace FinancialPortal.Web.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -138,12 +140,9 @@ namespace FinancialPortal.Web.Controllers
             return View(transaction);
         }
 
-        // POST: Transactions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,Created,CreatedById,Memo")] Transaction transaction, string createdById)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,TransactionDateTime,CreatedById,Memo")] Transaction transaction, string createdById)
         {
             if (ModelState.IsValid)
             {
@@ -177,7 +176,6 @@ namespace FinancialPortal.Web.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)

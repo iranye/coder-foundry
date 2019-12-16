@@ -4,71 +4,94 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Transaction Details</h6>
+    </div>
+    <div class="card-body">
 
-<div>
-    <h4>Transaction</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.BankAccount.Name)
-        </dt>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Bank Account")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.BankAccount.Name)
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.BankAccount.Name)
-        </dd>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Budget Item")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.BudgetItem.Name)
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BudgetItem.Name)
-        </dt>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Transaction Type")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.TransactionType.Type)
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.BudgetItem.Name)
-        </dd>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Amount")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.Amount)
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedBy.FirstName)
-        </dt>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Created By")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.CreatedBy.DisplayName)
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreatedBy.FirstName)
-        </dd>
+        <div class="row">
+            <div class="h5 col-sm-6 detail-label">
+                @Html.DisplayName("Transaction Date & Time")
+            </div>
+            <div class="col-sm-6">
+                @Html.DisplayFor(model => model.TransactionDateTime)
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TransactionType.Type)
-        </dt>
+        <br />
+        <p>
+            @Html.ActionLink("Back to Dashboard", "Dashboard", "Home") |
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "confirmDelete" })
 
-        <dd>
-            @Html.DisplayFor(model => model.TransactionType.Type)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Amount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Amount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Memo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Memo)
-        </dd>
-
-    </dl>
+        </p>
+    </div> <!-- end card-body -->
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@section scripts
+{
+    <script>
+
+        $(document).ready(function () {
+            console.log("READY!");
+
+            var defaultDeleteText = "Delete";
+            $(".confirmDelete").click(function (e) {
+                var actionVal = $(this).text();
+                if (actionVal.toUpperCase() === defaultDeleteText.toUpperCase()) {
+                    e.preventDefault();
+                    $(this).text("Confirm Delete?");
+                }
+            });
+            $(".confirmDelete").blur(function () {
+                $(this).text(defaultDeleteText);
+            });
+        });
+    </script>
+}
