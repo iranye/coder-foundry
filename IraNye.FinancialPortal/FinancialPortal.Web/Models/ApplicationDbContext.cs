@@ -12,6 +12,7 @@ namespace FinancialPortal.Web.Models
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionType> TransactionTypes { get; set; }
         public DbSet<FinancialPortal.Web.Models.Invitation> Invitations { get; set; }
+        public DbSet<FinancialPortal.Web.Models.Notification> Notifications { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

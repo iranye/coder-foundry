@@ -66,14 +66,17 @@ namespace BugTracker.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            }
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
+            
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -95,9 +98,12 @@ namespace BugTracker.Controllers
         // POST : /Account/DemoLogin
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DemoLoginAsync(string demoEmail)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            }
             var email = WebConfigurationManager.AppSettings[demoEmail];
             var password = WebConfigurationManager.AppSettings["DemoPassword"];
             var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);

@@ -24,6 +24,6 @@ namespace FinancialPortal.Web.Models
         public virtual ICollection<BankAccount> BankAccounts { get; set; } = new HashSet<BankAccount>();
         public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
         public virtual ICollection<ApplicationUser> Members { get; set; } = new HashSet<ApplicationUser>();
-        public virtual ICollection<Invitation> Invitations { get; set; }
+        public virtual ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
     }
 }

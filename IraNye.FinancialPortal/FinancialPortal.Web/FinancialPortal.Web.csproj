@@ -231,6 +231,10 @@
     <Compile Include="Migrations\201912162103003_TransactionCreatedDate-to-TransactionDate.Designer.cs">
       <DependentUpon>201912162103003_TransactionCreatedDate-to-TransactionDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912172134156_AddNotifications.cs" />
+    <Compile Include="Migrations\201912172134156_AddNotifications.Designer.cs">
+      <DependentUpon>201912172134156_AddNotifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -243,6 +247,7 @@
     <Compile Include="Models\Household.cs" />
     <Compile Include="Models\Invitation.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -412,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912162103003_TransactionCreatedDate-to-TransactionDate.resx">
       <DependentUpon>201912162103003_TransactionCreatedDate-to-TransactionDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912172134156_AddNotifications.resx">
+      <DependentUpon>201912172134156_AddNotifications.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -26,5 +26,6 @@ namespace FinancialPortal.Web.Models
         public virtual Household Household { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
         public virtual ApplicationUser Owner { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     }
 }
