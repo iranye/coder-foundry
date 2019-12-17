@@ -33,13 +33,62 @@ namespace FinancialPortal.Web.Helpers
             return str.Trim().ToLower();
         }
 
-        public static void UpdateBalances(this Transaction transaction, int? oldBankAccountId = null)
+        public static bool UpdateBalances(this Transaction transaction, bool isDeleted = false, decimal oldAmount = 0m)
         {
-            //if (oldBankAccountId != null)
-            //{
-            //    var oldBankAccount = 
-            //}
-            // if (transaction != deposit) Budget & Budget Item CurrentAmount += transaction.Amount;
+            bool updatesMade = false;
+            if (transaction.Amount != 0)
+            {
+                if (isDeleted)
+                {
+                    // If Deposit, Update BankAccount.CurrentBalance with Minus, else Add
+                    if (transaction.TransactionType.Type.ToUpper() == "DEPOSIT")
+                    {
+                        transaction.BankAccount.CurrentBalance -= transaction.Amount;
+                        updatesMade = true;
+                    }
+                    else
+                    {
+                        transaction.BankAccount.CurrentBalance += transaction.Amount;
+                        if (transaction.BudgetItem != null)
+                        {
+                            transaction.BudgetItem.CurrentAmount -= transaction.Amount;
+                        }
+                        updatesMade = true;
+                    }
+                }
+                else
+                {
+                    // If Deposit, Update BankAccount.CurrentBalance with Add, else Minus
+                    if (transaction.TransactionType.Type.ToUpper() == "DEPOSIT")
+                    {
+                        if (oldAmount > 0)
+                        {
+                            transaction.BankAccount.CurrentBalance -= oldAmount;
+                        }
+                        transaction.BankAccount.CurrentBalance += transaction.Amount;
+                        updatesMade = true;
+                    }
+                    else
+                    {
+                        if (oldAmount > 0)
+                        {
+                            transaction.BankAccount.CurrentBalance += oldAmount;
+                        }
+                        transaction.BankAccount.CurrentBalance -= transaction.Amount;
+                        if (transaction.BudgetItem != null)
+                        {
+                            if (oldAmount > 0)
+                            {
+                                transaction.BudgetItem.CurrentAmount -= transaction.Amount;
+                            }
+                            transaction.BudgetItem.CurrentAmount += transaction.Amount;
+                        }
+                        updatesMade = true;
+                    }
+                }
+            }
+
+            return updatesMade;
         }
 
         public static void ManageNotifications(this Transaction transaction)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FinancialPortal.Web.Helpers;
 using FinancialPortal.Web.Models;
 using FinancialPortal.Web.ViewModels;
 using Microsoft.AspNet.Identity;
@@ -73,19 +74,11 @@ namespace FinancialPortal.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                transaction.BudgetItem = _db.BudgetItems.Find(transaction.BudgetItemId);
-                if (transaction.BudgetItem == null)
-                {
-                    return RedirectToAction("Index", "Households");
-                }
-                transaction.BudgetItem.Budget = _db.Budgets.Find(transaction.BudgetItem.BudgetId);
-
-                if (transaction.BudgetItem.Budget == null)
-                {
-                    return RedirectToAction("Index", "Households");
-                }
+                transaction.BankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
                 var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-                if (currentUserHouseholdId == null || transaction.BudgetItem.Budget.HouseholdId != currentUserHouseholdId)
+                if (currentUserHouseholdId == null
+                    || transaction.BankAccount == null
+                    || transaction.BankAccount.HouseholdId != currentUserHouseholdId)
                 {
                     return RedirectToAction("Index", "Households");
                 }
@@ -98,8 +91,26 @@ namespace FinancialPortal.Web.Controllers
                 transaction.TransactionDateTime = DateTime.Now;
                 transaction.CreatedById = userId;
                 _db.Transactions.Add(transaction);
-                _db.SaveChanges();
-                
+                var ret = _db.SaveChanges();
+                if (ret > 0)
+                {
+                    transaction.TransactionType = _db.TransactionTypes.Find(transaction.TransactionTypeId);
+
+                    if (transaction.BudgetItemId != null)
+                    {
+                        transaction.BudgetItem = _db.BudgetItems.Find(transaction.BudgetItemId.GetValueOrDefault());
+                    }
+                    if (transaction.UpdateBalances())
+                    {
+                        _db.Entry(transaction.BankAccount).State = EntityState.Modified;
+                        if (transaction.BudgetItem != null)
+                        {
+                            _db.Entry(transaction.BudgetItem).State = EntityState.Modified;
+                        }
+                        ret = _db.SaveChanges();
+                    }
+                }
+
                 return RedirectToAction("Dashboard", "Households", new { id = currentUserHouseholdId });
             }
 
@@ -142,7 +153,7 @@ namespace FinancialPortal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,TransactionDateTime,CreatedById,Memo")] Transaction transaction, string createdById)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,BudgetItemId,TransactionTypeId,Amount,TransactionDateTime,CreatedById,Memo")] Transaction transaction, string createdById, decimal oldAmount)
         {
             if (ModelState.IsValid)
             {
@@ -152,13 +163,11 @@ namespace FinancialPortal.Web.Controllers
                     return RedirectToAction("Index", "Households");
                 }
 
-                var bankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
-                if (bankAccount == null)
-                {
-                    return RedirectToAction("Index", "Households");
-                }
+                transaction.BankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
                 var currentUserHouseholdId = Helpers.HelperMethods.GetCurrentUserHouseholdId();
-                if (currentUserHouseholdId == null || bankAccount.HouseholdId != currentUserHouseholdId)
+                if (currentUserHouseholdId == null 
+                    || transaction.BankAccount == null
+                    || transaction.BankAccount.HouseholdId != currentUserHouseholdId)
                 {
                     return RedirectToAction("Index", "Households");
                 }
@@ -166,7 +175,23 @@ namespace FinancialPortal.Web.Controllers
                 //transaction.CreatedById = createdById;
                 _db.Entry(transaction).State = EntityState.Modified;
                 var ret = _db.SaveChanges();
-                return RedirectToAction("Details", "BankAccounts", new {id= bankAccount.Id});
+                if (ret > 0)
+                {
+                    transaction.TransactionType = _db.TransactionTypes.Find(transaction.TransactionTypeId);
+                    
+                    int budgetItemId = transaction.BudgetItemId.GetValueOrDefault();
+                    transaction.BudgetItem = _db.BudgetItems.Find(budgetItemId);
+                    if (transaction.UpdateBalances(isDeleted: false, oldAmount: oldAmount))
+                    {
+                        _db.Entry(transaction.BankAccount).State = EntityState.Modified;
+                        if (transaction.BudgetItem != null)
+                        {
+                            _db.Entry(transaction.BudgetItem).State = EntityState.Modified;
+                        }
+                        ret = _db.SaveChanges();
+                    }
+                }
+                return RedirectToAction("Details", "BankAccounts", new {id= transaction.BankAccount.Id});
             }
 
             var householdViewModel = new MainDashboardViewModel();
@@ -205,7 +230,23 @@ namespace FinancialPortal.Web.Controllers
             }
 
             _db.Transactions.Remove(transaction);
-            _db.SaveChanges();
+            var ret = _db.SaveChanges();
+            if (ret > 0)
+            {
+                transaction.TransactionType = _db.TransactionTypes.Find(transaction.TransactionTypeId);
+                transaction.BankAccount = _db.BankAccounts.Find(transaction.BankAccountId);
+                int budgetItemId = transaction.BudgetItemId.GetValueOrDefault();
+                transaction.BudgetItem = _db.BudgetItems.Find(budgetItemId);
+                if (transaction.UpdateBalances(isDeleted: true))
+                {
+                    _db.Entry(transaction.BankAccount).State = EntityState.Modified;
+                    if (transaction.BudgetItem != null)
+                    {
+                        _db.Entry(transaction.BudgetItem).State = EntityState.Modified;
+                    }
+                    ret = _db.SaveChanges();
+                }
+            }
             return RedirectToAction("Details", "BankAccounts", new {id= transaction.BankAccountId});
         }
 

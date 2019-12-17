@@ -43,10 +43,6 @@ namespace FinancialPortal.Web.Controllers
             }
 
             bankAccount.Owner = _db.Users.Find(bankAccount.OwnerId);
-            foreach (var transaction in bankAccount.Transactions)
-            {
-                bankAccount.CurrentBalance -= transaction.Amount;
-            }
             return View(bankAccount);
         }
 
