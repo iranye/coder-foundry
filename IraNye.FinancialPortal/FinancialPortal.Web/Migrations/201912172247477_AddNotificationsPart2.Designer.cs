@@ -7,13 +7,13 @@ namespace FinancialPortal.Web.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddNotifications : IMigrationMetadata
+    public sealed partial class AddNotificationsPart2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddNotifications));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddNotificationsPart2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201912172134156_AddNotifications"; }
+            get { return "201912172247477_AddNotificationsPart2"; }
         }
         
         string IMigrationMetadata.Source

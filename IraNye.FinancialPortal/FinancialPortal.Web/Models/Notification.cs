@@ -27,7 +27,6 @@ namespace FinancialPortal.Web.Models
         public bool IsRead { get; set; }
 
         // Navs
-        public virtual Household Household { get; set; }
         public virtual BankAccount BankAccount { get; set; }
         public virtual ApplicationUser Recipient { get; set; }
     }
