@@ -102,5 +102,58 @@ namespace IraNye.WebApi.Controllers
             };
             return Ok(_db.AddTransaction(transaction));
         }
+
+        /// <summary>
+        /// This is a mechanism for Updating an existing Transaction.
+        /// </summary>
+        /// <param name="id">Transaction Id</param>
+        /// <param name="bId">Bank Account Id</param>
+        /// <param name="biId">Budget Item Id</param>
+        /// <param name="ttId">Transaction Type Id</param>
+        /// <param name="createdById">Transaction Created-By Owner Id (Guid)</param>
+        /// <param name="amount">Transaction Amount</param>
+        /// <param name="transactionDateTime">Transaction Date & Time</param>
+        /// <param name="memo">Transaction Memo</param>
+        /// <returns>IHttpActionResult</returns>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpPut, Route("UpdateTransaction")]
+        public IHttpActionResult UpdateTransaction(int id, int bId, int biId, int ttId, string createdById, float amount, string transactionDateTime, string memo)
+        {
+            try
+            {
+                Guid createdByGuid = new Guid(createdById);
+            }
+            catch (FormatException e)
+            {
+                return BadRequest($"Invalid Value for createdById: '{createdById}'");
+            }
+            var amountDecResult = Convert.ToDecimal(Math.Round(amount, 2));
+            DateTime transactionDateTimeParsed = DateTime.Parse(transactionDateTime);
+
+            var transaction = new Transaction
+            {
+                Id = id,
+                BankAccountId = bId,
+                BudgetItemId = biId,
+                TransactionTypeId = ttId,
+                CreatedById = createdById,
+                Amount = amountDecResult,
+                TransactionDateTime = transactionDateTimeParsed,
+                Memo = memo
+            };
+            return Ok(_db.UpdateTransaction(transaction));
+        }
+
+        /// <summary>
+        /// This is a mechanism for Deleting a Transaction by TransactionId.
+        /// </summary>
+        /// <param name="id">Transaction Id</param>
+        /// <returns>Transaction</returns>
+        [ResponseType(typeof(IHttpActionResult))]
+        [HttpDelete, Route("DeleteTransaction")]
+        public IHttpActionResult DeleteTransaction(int id)
+        {
+            return Ok(_db.DeleteTransactionByTransactionId(id));
+        }
     }
 }

@@ -143,6 +143,29 @@ namespace IraNye.WebApi.Models
                                                  "@amount, @transactionDateTime, @memo", param1, param2, param3, param4, param5, param6, param7);
             return ret;
         }
+
+        public int UpdateTransaction(Transaction transaction)
+        {
+            SqlParameter param1 = new SqlParameter("@id", transaction.Id);
+            SqlParameter param2 = new SqlParameter("@bankAccountId", transaction.BankAccountId);
+            SqlParameter param3 = new SqlParameter("@budgetItemId", transaction.BudgetItemId);
+            SqlParameter param4 = new SqlParameter("@transactionTypeId", transaction.TransactionTypeId);
+            SqlParameter param5 = new SqlParameter("@createdById", transaction.CreatedById);
+            SqlParameter param6 = new SqlParameter("@amount", transaction.Amount);
+            SqlParameter param7 = new SqlParameter("@transactionDateTime", transaction.TransactionDateTime.ToString("yyyyMMdd hh:mm:ss"));
+            SqlParameter param8 = new SqlParameter("@memo", transaction.Memo);
+
+            // TODO: Parameterize any & all user input
+            var ret = Database.ExecuteSqlCommand("UpsertTransaction @id, @bankAccountId, @budgetItemId, @transactionTypeId, @createdById," +
+                                                 "@amount, @transactionDateTime, @memo", param1, param2, param3, param4, param5, param6, param7, param8);
+            return ret;
+        }
+
+        public int DeleteTransactionByTransactionId(int transactionId)
+        {
+            SqlParameter param1 = new SqlParameter("@id", transactionId);
+            return Database.ExecuteSqlCommand("DeleteTransaction @id", param1);
+        }
     }
 }
 #pragma warning restore 1591
