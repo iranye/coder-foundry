@@ -31,6 +31,7 @@ namespace BugTracker.Helpers
                 throw new Exception(message);
             }
             userManager.AddToRole(user.Id, role);
+var ret =            _db.SaveChanges();
         }
 
         public void RemoveUserFromRole(string userId, string roleToRemove)
