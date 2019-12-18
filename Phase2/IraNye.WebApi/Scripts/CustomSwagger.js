@@ -20,9 +20,9 @@ $(document).ready(function () {
     $(function () {
         console.log("Changing the icon logo!");
         // Change default Swagger icon logo
-        $("img .logo__img").attr({
-            "src": "~/Content/api-logo.jpg",
-            "height": "20px"
+        var $img = $("img .logo__img");
+        $img.attr({
+            "src": "~/Content/api-logo.jpg"
         });
     });
 
