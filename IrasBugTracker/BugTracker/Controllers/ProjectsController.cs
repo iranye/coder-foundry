@@ -53,8 +53,6 @@ namespace BugTracker.Controllers
         }
 
         [Authorize(Roles = "Admin, ProjectManager, DemoAdmin, DemoProjectManager")]
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Description")] Project project)
@@ -63,6 +61,16 @@ namespace BugTracker.Controllers
             {
                 _db.Projects.Add(project);
                 _db.SaveChanges();
+
+                var userId = User.Identity.GetUserId();
+                var role = _roleHelper.GetRoleByUserId(userId);
+                if (role.Contains("ProjectManager"))
+                {
+                    var pmUser = _db.Users.Find(userId);
+                    project.Members.Add(pmUser);
+                    _db.SaveChanges();
+                    return RedirectToAction("Details", new {id=project.Id});
+                }
                 return RedirectToAction("Index");
             }
 

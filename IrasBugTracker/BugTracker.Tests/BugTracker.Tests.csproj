@@ -53,10 +53,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="HelperMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LoginTests_.cs" />
     <Compile Include="LoginTests.cs" />
+    <Compile Include="SubmitterTests.cs" />
+    <Compile Include="ProgramManagerTests.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
