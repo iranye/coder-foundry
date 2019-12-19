@@ -26,7 +26,7 @@ namespace BugTracker.Tests
         public void Test_CanLogin_AsAdmin()
         {
             // Arrange
-            var email = "auto-tester@maillinator.com";
+            var email = "auto-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -44,7 +44,7 @@ namespace BugTracker.Tests
         public void Test_AdminLoggedIn_CanNavigateToPerformRoleChangesPage()
         {
             // Arrange
-            var email = "auto-tester@maillinator.com";
+            var email = "auto-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -85,7 +85,7 @@ namespace BugTracker.Tests
         public void Test_CanLogin_AsProjectManager()
         {
             // Arrange
-            var email = "pm-tester@maillinator.com";
+            var email = "pm-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -103,7 +103,7 @@ namespace BugTracker.Tests
         public void Test_PmLoggedIn_CanNavigateToCreateNewProjectPage()
         {
             // Arrange
-            var email = "pm-tester@maillinator.com";
+            var email = "pm-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -144,7 +144,7 @@ namespace BugTracker.Tests
         public void Test_CanLogin_AsDeveloper()
         {
             // Arrange
-            var email = "dev-tester@maillinator.com";
+            var email = "dev-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -162,7 +162,7 @@ namespace BugTracker.Tests
         public void Test_DevLoggedIn_CanNotCreateNewProjectOrTicket()
         {
             // Arrange
-            var email = "dev-tester@maillinator.com";
+            var email = "dev-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -214,7 +214,7 @@ namespace BugTracker.Tests
         public void Test_CanLogin_AsSubmitter()
         {
             // Arrange
-            var email = "submitter-tester@maillinator.com";
+            var email = "submitter-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
@@ -231,7 +231,7 @@ namespace BugTracker.Tests
         public void Test_SubmitterLoggedIn_CanGoToCreateNewTicketPage()
         {
             // Arrange
-            var email = "submitter-tester@maillinator.com";
+            var email = "submitter-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
