@@ -84,6 +84,7 @@ namespace BugTracker.Tests
             // Assert - Verify there are no Notifications
             var unreadNotifcationsCount = WebDriver.FindElement(By.Id("unread-notify-count"));
             Assert.AreEqual("0", unreadNotifcationsCount.Text);
+            Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
 
             // Arrange
             email = "pm-tester@mailinator.com";
@@ -155,7 +156,7 @@ namespace BugTracker.Tests
                 }
 
             }
-            Assert.IsNotNull(editLink);
+            Assert.IsNotNull(editLink, "Could not find an Un-assigned Ticket");
             editLink.Click();
             Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
 

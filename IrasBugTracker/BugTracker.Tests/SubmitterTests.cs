@@ -26,7 +26,7 @@ namespace BugTracker.Tests
         public void LoginAsSubmitter_CreateNewTicket_NewTicketCreated()
         {
             // Arrange
-            var email = "submitter-tester@maillinator.com";
+            var email = "submitter-tester@mailinator.com";
             var password = "Test1234$";
 
             // Act
