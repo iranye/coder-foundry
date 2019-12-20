@@ -165,6 +165,10 @@
         $('#Description').keyup(function () {
             $(this).val($(this).val().substring(0, charLimit));
         });
+
+        $('#Title').keyup(function () {
+            $(this).val($(this).val().substring(0, charLimit));
+        });
         if ($('#message').text().length === 0) {
             console.log("message length: " + $('#message').val().length);
             $('#message').css('visibility', 'collapse');

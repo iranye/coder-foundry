@@ -120,7 +120,16 @@ namespace BugTracker.Helpers
 
         public bool CanChangeStatus(string userId, Ticket ticket)
         {
-            return CanChangeAssignment(userId, ticket);
+            bool ret = CanChangeAssignment(userId, ticket);
+            if (!ret)
+            {
+                if (ticket.AssignedToId == userId)
+                {
+                    ret = true;
+                }
+            }
+
+            return ret;
         }
     }
 }
