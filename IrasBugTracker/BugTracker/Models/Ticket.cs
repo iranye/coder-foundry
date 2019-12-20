@@ -34,8 +34,14 @@ namespace BugTracker.Models
 
         // Navs
         public virtual Project Project { get; set; }
+
+        [Display(Name = "Ticket Priority")]
         public virtual TicketPriority TicketPriority { get; set; }
+
+        [Display(Name = "Ticket Status")]
         public virtual TicketStatus TicketStatus { get; set; }
+
+        [Display(Name = "Ticket Type")]
         public virtual TicketType TicketType { get; set; }
 
         public virtual ApplicationUser Owner { get; set; }

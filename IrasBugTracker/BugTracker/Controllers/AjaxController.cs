@@ -23,13 +23,5 @@ namespace BugTracker.Controllers
             var unreadNotificationsCount = NotificationHelper.GetUnreadNotificationsCount();
             return Json(unreadNotificationsCount, JsonRequestBehavior.AllowGet);
         }
-
-        //public JsonResult GetUnreadNotifications()
-        //{
-        //    var unreadNotifications = NotificationHelper.GetUnreadNotifications();
-        //    return Json(unreadTicketNotifications, JsonRequestBehavior.AllowGet);
-        //}
     }
-
-
 }
