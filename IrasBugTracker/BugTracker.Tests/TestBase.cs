@@ -11,7 +11,7 @@ namespace BugTracker.Tests
 {
     public class TestBase
     {
-        protected int SleepMs = 1000;
+        protected int SleepMs = 5000;
         protected const string Url = @"https://localhost:44306/";
         protected const string ExpectedLoggedInUrl = "https://localhost:44306/Home/Index";
 

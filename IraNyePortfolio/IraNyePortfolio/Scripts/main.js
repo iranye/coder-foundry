@@ -114,7 +114,9 @@
 
     $("#button-palindrome").click(function() {
         var input = $("#input-palindrome").val().trim();
-        var word = input.toUpperCase();
+        var word = input.replace(/[\s?.,-="']/g, '');
+        
+        word = word.toUpperCase();
         console.log(`massaged input: ${word}`);
 
         $("#error-palindrome").text("");

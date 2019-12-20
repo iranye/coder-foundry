@@ -22,56 +22,6 @@ namespace BugTracker.Tests
         }
 
         [TestMethod]
-        public void LoginAsPm_CreateNewProject_NewProjectCreated()
-        {
-            // Arrange
-            var email = "pm-tester@mailinator.com";
-            var password = "Test1234$";
-
-            // Act
-            HelperMethods.LoginUser(WebDriver, Url, email, password);
-
-            // Assert
-            var actualUrl = WebDriver.Url;
-            actualUrl = actualUrl.Trim(new[] { '/' });
-            Assert.AreEqual(ExpectedLoggedInUrl, actualUrl);
-
-            var expectedText = "New Project";
-            IWebElement roleSpecificLink = null;
-            string navLinkListItemsXpath = "//li[@class='nav-item']";
-            bool foundRoleSpecificLink = false;
-
-            if (WebDriver.FindElements(By.XPath(navLinkListItemsXpath)).Count > 0)
-            {
-                ReadOnlyCollection<IWebElement> listItems = WebDriver.FindElements(By.XPath(navLinkListItemsXpath));
-                foreach (var li in listItems)
-                {
-                    if (li.Text == expectedText)
-                    {
-                        foundRoleSpecificLink = true;
-                        roleSpecificLink = li;
-                        break;
-                    }
-                }
-            }
-            Assert.IsTrue(foundRoleSpecificLink);
-            roleSpecificLink.Click();
-            actualUrl = WebDriver.Url;
-            actualUrl = actualUrl.Trim(new[] { '/' });
-            string expectedUrlEnd = "/Projects/Create";
-            Assert.IsTrue(actualUrl.EndsWith(expectedUrlEnd));
-
-            Assert.IsTrue(HelperMethods.EnterTextInfoForId(WebDriver, "Name", "Testing Only"));
-            Assert.IsTrue(HelperMethods.EnterTextInfoForId(WebDriver, "Description", "Project Used Solely for Automation Testing"));
-
-            Assert.IsTrue(WebDriver.FindElements(By.Id("//input[@type='submit']")).Count > 0);
-            var submitButton = WebDriver.FindElement(By.Id("//input[@type='submit']"));
-            submitButton.Click();
-
-            // TODO: Verify the new Project was created
-        }
-
-        [TestMethod]
         public void LoginAsPm_AssignTicket_TicketAssigned()
         {
             // Arrange
@@ -97,19 +47,21 @@ namespace BugTracker.Tests
             var actualUrl = WebDriver.Url;
             actualUrl = actualUrl.Trim(new[] { '/' });
             Assert.AreEqual(ExpectedLoggedInUrl, actualUrl);
-
-            var expectedText = "My Projects";
-            string myProjectsXpath = "//*[text()='My Projects']";
-
+            
             // Assert My Projects has at least one item
-            Assert.IsTrue(WebDriver.FindElements(By.XPath(myProjectsXpath)).Count > 0);
-            IWebElement myProjectsLink = WebDriver.FindElement(By.XPath(myProjectsXpath));
-            myProjectsLink.Click();
-            Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
+            Assert.AreEqual(1, WebDriver.FindElements(By.Id("myProjects")).Count);
+            IWebElement myProjectsLink = WebDriver.FindElement(By.Id("myProjects"));
 
-            actualUrl = WebDriver.Url;
-            actualUrl = actualUrl.Trim(new[] { '/' });
             string expectedUrlEnd = "/Projects/AssignedIndex";
+            int retryCount = 3;
+            do
+            {
+                myProjectsLink.Click();
+                Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
+                actualUrl = WebDriver.Url;
+                actualUrl = actualUrl.Trim(new[] { '/' });
+            } while (!actualUrl.Contains("/Projects/AssignedIndex") && retryCount-- > 0);
+
             Assert.IsTrue(actualUrl.EndsWith(expectedUrlEnd));
 
             Assert.IsTrue(WebDriver.FindElements(By.TagName("td")).Count > 0);
@@ -126,21 +78,29 @@ namespace BugTracker.Tests
                 }
             }
 
+            // Go to Project Details Page
             Assert.IsTrue(testProjectExists);
-            
             testProjectLink.Click();
             Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
-
-            // Project Details Page
             actualUrl = WebDriver.Url;
             actualUrl = actualUrl.Trim(new[] { '/' });
+
             Assert.IsTrue(actualUrl.Contains("/Projects/Details/"));
 
             // Find the First Unassigned Ticket and Assign it to dev-tester@mailinator.com
             Assert.IsTrue(WebDriver.FindElements(By.TagName("tr")).Count > 0);
-            bool unassignedTicketExists = false;
-            string linkText = "Edit";
+
             IWebElement editLink = null;
+            foreach (var tr in WebDriver.FindElements(By.TagName("tr")))
+            {
+                if (tr.FindElements(By.TagName("th")).Count > 0)
+                {
+                    var assigneeColHeader = tr.FindElements(By.TagName("th"))[3];
+                    assigneeColHeader.Click();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
+                    break;
+                }
+            }
             foreach (var tr in WebDriver.FindElements(By.TagName("tr")))
             {
                 if (tr.FindElements(By.TagName("td")).Count == 0)

@@ -59,6 +59,7 @@
     <Compile Include="SubmitterTests.cs" />
     <Compile Include="ProgramManagerTests.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="DeveloperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

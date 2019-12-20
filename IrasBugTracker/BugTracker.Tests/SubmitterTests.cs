@@ -94,9 +94,28 @@ namespace BugTracker.Tests
 
             Assert.IsTrue(WebDriver.FindElements(By.TagName("td")).Count > 0);
             bool newTicketExists = false;
-            foreach (var td in WebDriver.FindElements(By.TagName("td")))
+
+            foreach (var tr in WebDriver.FindElements(By.TagName("tr")))
             {
-                if (td.Text.Contains(ticketTitle) && td.Text.Contains(dateTimeStamp))
+                if (tr.FindElements(By.TagName("th")).Count > 0)
+                {
+                    var colHeader = tr.FindElements(By.TagName("th"))[0];
+                    colHeader.Click();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(SleepMs));
+                    break;
+                }
+            }
+
+            foreach (var tr in WebDriver.FindElements(By.TagName("tr")))
+            {
+                if (tr.FindElements(By.TagName("td")).Count == 0)
+                {
+                    continue;
+                }
+
+                var ticketTitleElement = tr.FindElements(By.TagName("td"))[1];
+
+                if (ticketTitleElement.Text.Contains(ticketTitle) && ticketTitleElement.Text.Contains(dateTimeStamp))
                 {
                     newTicketExists = true;
                     break;
