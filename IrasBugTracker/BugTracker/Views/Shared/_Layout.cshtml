@@ -325,7 +325,8 @@
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
     <script src="~/Scripts/datatables-demo.js"></script>
-    
+    <script src="~/Scripts/Chart.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             getUnreadNotifyCount();
@@ -333,7 +334,7 @@
                 console.log("GetUnreadNotificationData");
                 getUnreadNotifyCount();
             });
-            
+
             function getUnreadNotifyCount() {
                 var urlGetUnreadNotificationData = "@Url.Action("GetUnreadNotificationCount", "Ajax")";
                 console.log(urlGetUnreadNotificationData);

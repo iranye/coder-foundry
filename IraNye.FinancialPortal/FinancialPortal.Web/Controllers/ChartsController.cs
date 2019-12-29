@@ -10,8 +10,6 @@ namespace FinancialPortal.Web.Controllers
 {
     public class ChartsController : Controller
     {
-        private ApplicationDbContext _db = new ApplicationDbContext();
-
         private MainDashboardViewModel _mainDashboardViewModel = null;
 
         public MainDashboardViewModel MainDashboardViewModel

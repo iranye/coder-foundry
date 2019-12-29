@@ -23,5 +23,18 @@ namespace BugTracker.Controllers
             var unreadNotificationsCount = NotificationHelper.GetUnreadNotificationsCount();
             return Json(unreadNotificationsCount, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetTicketTypes()
+        {
+            var ticketTypesBarChart = new TicketTypes();
+
+            return Json(ticketTypesBarChart);
+        }
+    }
+
+    public class TicketTypes
+    {
+        public string[] labels = new[] { "Open", "Assigned", "On Hold", "In Progress", "Needs Remediation", "Pending Approval", "Resolved" };
+        public int[] values = new[] { 20, 28, 22, 10, 10, 10, 10 };
     }
 }
