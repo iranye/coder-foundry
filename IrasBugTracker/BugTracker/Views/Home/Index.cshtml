@@ -159,7 +159,6 @@
             };
 
             function ajaxForTicketsPieChart(dataUrl) {
-                console.log("dataUrl: " + dataUrl);
                 $.ajax({
                     url: dataUrl,
                     type: "post",
@@ -171,7 +170,6 @@
             }
 
             function fillPieChartTicketTypes(data) {
-                console.log(data);
                 var ctx = document.getElementById("ticketsPieChart");
                 if (ctx === null) {
                     console.log("id to canvas element is NULL");

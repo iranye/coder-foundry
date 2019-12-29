@@ -1,10 +1,9 @@
-﻿using System;
+﻿using BugTracker.Helpers;
+using BugTracker.Models;
+using BugTracker.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using BugTracker.Helpers;
-using BugTracker.Models;
 
 namespace BugTracker.Controllers
 {
@@ -27,7 +26,38 @@ namespace BugTracker.Controllers
         public JsonResult GetTicketTypes()
         {
             var ticketTypesBarChart = new TicketTypes();
+            var viewModel = new MainDashboardViewModel();
+            List<Ticket> allTickets = viewModel.AllTickets;
 
+            if (allTickets.Count > 0)
+            {
+                Dictionary<string, int> ticketStatusCounts = new Dictionary<string, int>();
+                foreach (var status in ticketTypesBarChart.labels)
+                {
+                    ticketStatusCounts[status] = 0;
+                }
+                foreach (var ticket in allTickets)
+                {
+                    ticketStatusCounts[ticket.TicketStatus.Name]++;
+                }
+
+                for (int i = 0; i < ticketTypesBarChart.labels.Length; i++)
+                {
+                    int percentage = (100 * ticketStatusCounts[ticketTypesBarChart.labels[i]]) / allTickets.Count;
+                    ticketTypesBarChart.values[i] = percentage;
+                }
+
+                while (ticketTypesBarChart.values.Sum(s => s) < 100)
+                {
+                    for (int i = 0; i < ticketTypesBarChart.values.Length; i++)
+                    {
+                        if (ticketTypesBarChart.values[i] <  2)
+                        {
+                            ticketTypesBarChart.values[i]++;
+                        }
+                    }
+                }
+            }
             return Json(ticketTypesBarChart);
         }
     }

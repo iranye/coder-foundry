@@ -24,6 +24,15 @@ namespace BugTracker.ViewModels
             }
         }
 
+        public List<Ticket> AllTickets
+        {
+            get
+            {
+                return _db.Tickets.ToList();
+
+            }
+        }
+
         public int TotalTickets
         {
             get
