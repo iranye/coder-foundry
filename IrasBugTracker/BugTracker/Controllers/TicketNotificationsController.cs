@@ -26,6 +26,27 @@ namespace BugTracker.Controllers
             return View(ticketNotifications);
         }
 
+        public ActionResult ClearForUser()
+        {
+            string userId = User.Identity.GetUserId();
+
+            if (!String.IsNullOrWhiteSpace(userId))
+            {
+                bool atLeastOneMarked = false;
+                foreach (var ticketNotification in _db.TicketNotifications.Where(tn => tn.RecipientId == userId && !tn.IsRead))
+                {
+                    ticketNotification.IsRead = true;
+                    atLeastOneMarked = true;
+                }
+
+                if (atLeastOneMarked)
+                {
+                    _db.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Dismiss(int unreadNotificationId)

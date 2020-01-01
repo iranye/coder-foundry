@@ -1,4 +1,5 @@
-﻿using BugTracker.Helpers;
+﻿using System;
+using BugTracker.Helpers;
 using BugTracker.Models;
 using BugTracker.ViewModels;
 using System.Collections.Generic;
@@ -43,19 +44,9 @@ namespace BugTracker.Controllers
 
                 for (int i = 0; i < ticketTypesBarChart.labels.Length; i++)
                 {
-                    int percentage = (100 * ticketStatusCounts[ticketTypesBarChart.labels[i]]) / allTickets.Count;
-                    ticketTypesBarChart.values[i] = percentage;
-                }
-
-                while (ticketTypesBarChart.values.Sum(s => s) < 100)
-                {
-                    for (int i = 0; i < ticketTypesBarChart.values.Length; i++)
-                    {
-                        if (ticketTypesBarChart.values[i] <  2)
-                        {
-                            ticketTypesBarChart.values[i]++;
-                        }
-                    }
+                    float percentage = (float) 100 * ticketStatusCounts[ticketTypesBarChart.labels[i]] / allTickets.Count;
+                    percentage = (float) Math.Round(percentage);
+                    ticketTypesBarChart.values[i] = (int) percentage;
                 }
             }
             return Json(ticketTypesBarChart);
